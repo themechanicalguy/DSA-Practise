@@ -1,6 +1,8 @@
 /**
- * WAF maxSubArraySum that accepts an array in integers and a number called n. The function should calculate the maximum
- * sum of n consecutive elements in the array
+ * Pattern used to explain Sliding Window Pattern
+ *
+ * WAF maxSubArraySum that accepts an ARRAY in integers and a number called N.
+ * The function should calculate the maximum sum of N consecutive elements in the array
  */
 
 // Naive Approach
@@ -22,18 +24,20 @@ function maxSubArraySum(arr, n) {
 }
 
 // Refactor
-function maxSubArraySum(arr, n) {
+function maxSubArraySum(arr, N) {
   let maxSum = 0;
   let tempSum = 0;
-  if (arr.length < n) return false;
-  //getting the sum of first n numbers
-  for (let i = 0; i < n; i++) {
+  if (arr.length < N) return false;
+  //getting the sum of first N numbers
+  for (let i = 0; i < N; i++) {
     maxSum += arr[i];
   }
   tempSum = maxSum;
   //checking for max sum in the whole array
-  for (let i = n; i < arr.length; i++) {
-    tempSum = tempSum - arr[i - n] + arr[i];
+  for (let i = N; i < arr.length; i++) {
+    // substract previous number and add the next number
+    tempSum = tempSum - arr[i - N] + arr[i];
+    // assign maximum to maxSum
     maxSum = Math.max(tempSum, maxSum);
   }
   return maxSum;

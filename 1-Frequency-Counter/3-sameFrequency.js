@@ -1,5 +1,19 @@
 /**
  * Check if a string has all characters with same frequency with one variation allowed
+ *
+ */
+
+/**
+ * SOLUTION
+ * 1 - Given a string, check if its character has same frequency. 1 character can be exception
+ * ex :
+ * aabbcc - Yes -- Because all have same frequency
+ * '' - No -- Edge case
+ * ddccbab - yes - Because if we remove a ( 1 character them it is possible)
+ * ffggyyykkkjjii - No - Because we need to remove more than 1 character to make all frequency equal
+ * a - yes
+ * aabbb - Yes - remove  1 character them it is possible
+ * 
  * Input : string str = "abbca"
 Output : Yes
 We can make it valid by removing "c"
@@ -11,16 +25,6 @@ to make it valid.
 
 Input : string str = "abbccd"
 Output : No
- */
-/**
- * 1 - Given a string, check if its character has same frequency. 1 character can be exception
- * ex :
- * aabbcc - Yes -- Because all have same frequency
- * '' - No -- Edge case
- * ddccbab - yes - Because if we remove a ( 1 character them it is possible)
- * ffggyyykkkjjii - No - Because we need to remove more than 1 character to make all frequency equal
- * a - yes
- * aabbb - Yes - remove  1 character them it is possible
  */
 
 // Approach 1
