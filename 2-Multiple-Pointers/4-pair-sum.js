@@ -1,3 +1,7 @@
+// Given an array, find the no. of pairs which have a sum of K
+// I = [1,4,4,5,5,5,6,6,11], K=11
+// O = 6
+
 const pairSum = (arr, sum) => {
   console.log(arr.sort((a, b) => a - b));
   let left = 0;
@@ -10,13 +14,18 @@ const pairSum = (arr, sum) => {
         r = 1;
       left++;
       right--;
-      while (arr[left] === arr[left + 1]) {
-        left++;
-        l++;
-      }
-      while (arr[right] === arr[right - 1]) {
-        right--;
-        r++;
+      if (arr[left] !== arr[right]) {
+        while (arr[left] === arr[left + 1]) {
+          left++;
+          l++;
+        }
+        while (arr[right] === arr[right - 1]) {
+          right--;
+          r++;
+        }
+        pair = l * r + pair;
+      } else {
+        pair += l ** r;
       }
       // right--;
       pair = l * r + pair;
