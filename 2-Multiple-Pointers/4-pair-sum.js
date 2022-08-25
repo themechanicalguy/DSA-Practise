@@ -2,6 +2,12 @@
 // I = [1,4,4,5,5,5,6,6,11], K=11
 // O = 6
 
+// create a hashMap that stores 
+// key = k - arr[i]
+
+// (5,6),(5,6)()
+
+
 const pairSum = (arr, sum) => {
   console.log(arr.sort((a, b) => a - b));
   let left = 0;
@@ -23,9 +29,9 @@ const pairSum = (arr, sum) => {
           right--;
           r++;
         }
-        pair = l * r + pair;
+        pair += 
       } else {
-        pair += l ** r;
+        pair += (r-l) + 1;
       }
       // right--;
       pair = l * r + pair;
@@ -37,6 +43,11 @@ const pairSum = (arr, sum) => {
   }
   return pair;
 };
+
+function fact(num){
+  if(num === 1) return 1;
+  return num * fact(num-1);
+}
 
 console.log(
   pairSum([10, 12, 10, 15, -1, 7, 6, 5, 5, 5, 5, 5, 4, 2, 1, 1, 1], 10)
