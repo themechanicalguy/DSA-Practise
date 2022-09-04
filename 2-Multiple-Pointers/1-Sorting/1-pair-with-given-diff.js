@@ -73,4 +73,19 @@ Explanation 2:
 
  Pair (20, -10) gives a difference of 30 i.e 20 - (-10) => 20 + 10 => 30
 
-
+ */
+let left = 0;
+let right = 1;
+while (right < A.length) {
+  let diff = A[right] - A[left];
+  if (diff === B) {
+    return 1;
+  }
+  if (diff < B) {
+    right++;
+  } else {
+    left++;
+    if (left === right) right++;
+  }
+}
+return 0;
