@@ -2,53 +2,37 @@
 // I = [1,4,4,5,5,5,6,6,11], K=11
 // O = 6
 
-// create a hashMap that stores 
-// key = k - arr[i]
+// Naive Approach: O(n2)
+function naivePairSum(arr, sum) {
+  let count = 0;
+  // Consider all possible pairs and check their sums
+  for (let i = 0; i < n; i++)
+    for (let j = i + 1; j < n; j++) if (arr[i] + arr[j] == sum) count++;
 
-// (5,6),(5,6)()
-
-
-const pairSum = (arr, sum) => {
-  console.log(arr.sort((a, b) => a - b));
-  let left = 0;
-  let right = arr.length - 1;
-  let pair = 0;
-
-  while (left < right) {
-    if (arr[left] + arr[right] === sum) {
-      let l = 1,
-        r = 1;
-      left++;
-      right--;
-      if (arr[left] !== arr[right]) {
-        while (arr[left] === arr[left + 1]) {
-          left++;
-          l++;
-        }
-        while (arr[right] === arr[right - 1]) {
-          right--;
-          r++;
-        }
-        pair += 
-      } else {
-        pair += (r-l) + 1;
-      }
-      // right--;
-      pair = l * r + pair;
-    } else if (arr[left] + arr[right] < sum) {
-      left++;
-    } else {
-      right--;
-    }
-  }
-  return pair;
-};
-
-function fact(num){
-  if(num === 1) return 1;
-  return num * fact(num-1);
+  return count;
 }
 
+// Count pairs with given sum using Hashing in Single loop
+// TC-O(N), SC-O(N)
+
+function getPairsCount(arr, k) {
+  let map = new Map();
+  let count = 0;
+  for (let i = 0; i < arr.length; i++) {
+    let b = k - arr[i];
+    if (map.has(b)) {
+      count += map.get(b);
+    }
+    if (map.has(arr[i])) {
+      map.set(arr[i], map.get(arr[i]) + 1);
+    } else {
+      map.set(arr[i], 1);
+    }
+  }
+  return count;
+}
+getPairsCount([1, 1, 1, 1], 2);
+
 console.log(
-  pairSum([10, 12, 10, 15, -1, 7, 6, 5, 5, 5, 5, 5, 4, 2, 1, 1, 1], 10)
+  getPairsCount([10, 12, 10, 15, -1, 7, 6, 5, 5, 5, 5, 5, 4, 2, 1, 1, 1], 10)
 );

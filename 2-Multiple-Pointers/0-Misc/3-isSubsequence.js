@@ -19,7 +19,7 @@ Output: false
  */
 
 // Input: s = "abc", t = "ahcgdb"
-
+// Naive Approach:
 function subsequence(sub, str) {
   if (sub.length > str.length) return false;
   for (let i = 0; i < sub.length; i++) {
@@ -35,3 +35,20 @@ function subsequence(sub, str) {
   }
   return true;
 }
+
+// Refactored
+function subSequence(sub, str) {
+  if (sub.length > str.length) return false;
+  let i = 0;
+  // loop through str once and check for all char of sub in str
+  for (let j = 0; j < str.length; j++) {
+    if (str[j] === sub[i]) {
+      i++;
+    }
+    if (i == sub.length) {
+      return true;
+    }
+  }
+  return false;
+}
+subSequence("abc", "ahbgdc");
