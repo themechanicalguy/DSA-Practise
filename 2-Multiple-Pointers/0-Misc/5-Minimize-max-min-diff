@@ -1,5 +1,4 @@
 /**
- * 
  * Given three sorted arrays A, B, and C of not necessarily same sizes. 
  * Calculate the minimum absolute difference between the maximum and minimum
  * number of any triplet A[i], B[j], C[k] 
@@ -39,6 +38,7 @@ b[j] = 9, C[k] = 10.
 
 
 */
+// REFACTORED
 function minMaxmin(arr1, arr2, arr3) {
   let i = 0;
   let j = 0;
@@ -59,7 +59,7 @@ function minMaxmin(arr1, arr2, arr3) {
   }
 }
 
-//
+//NAIVE APPROCH
 // function minMaxmin(arr1, arr2, arr3) {
 //   let globalMin = Infinity;
 //   for (let i = 0; i < arr1.length; i++) {

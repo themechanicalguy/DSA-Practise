@@ -70,3 +70,5 @@ function pairDiff(arr, k) {
   return pair;
 }
 console.log(pairDiff([8, 12, 16, 4, 0, 20], 4));
+
+// TRY solving this problem using other approach as well

@@ -36,3 +36,5 @@ getPairsCount([1, 1, 1, 1], 2);
 console.log(
   getPairsCount([10, 12, 10, 15, -1, 7, 6, 5, 5, 5, 5, 5, 4, 2, 1, 1, 1], 10)
 );
+
+// TRy solving these problem using other approach as well
