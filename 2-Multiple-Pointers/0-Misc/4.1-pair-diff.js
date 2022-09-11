@@ -50,19 +50,24 @@ function naiveCountDiffPair(arr, diff) {
 // diff = 5-2 =3 == k
 // if diff > k, r--
 
+// [0, 4, 8, 12, 16, 20];
+// [0, 1, 2, 03, 04, 05];
 function pairDiff(arr, k) {
-  arr.sort((a, b) => a - b);
-  let l = 0;
-  let r = 0;
-  let pair = 0;
+  arr.sort((a, b) => a - b); //[0,4,8,12,16,20] 4
+  let l = 0; //4
+  let r = 0; //5
+  let pair = 0; //4
   while (r < arr.length) {
-    let diff = arr[r] - arr[l];
+    //TTTTTT
+    let diff = arr[r] - arr[l]; //44444
     if (diff === k) {
-      pair++;
-      l++;
-      r++;
+      //TTTTT
+      pair++; //5
+      l++; //5
+      r++; //6
     } else if (diff < k) {
-      r++;
+      //T
+      r++; //1
     } else {
       l++;
     }
