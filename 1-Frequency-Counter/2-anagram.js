@@ -12,6 +12,7 @@
 // 5 - How to label the important Piece if data that are part of the problem?
 
 function isAnagram(str1, str2) {
+  if (str1.length !== str2.length) return false;
   let freq1 = {};
   for (let i = 0; i < str1.length; i++) {
     let char = str1[i];
@@ -20,8 +21,11 @@ function isAnagram(str1, str2) {
   console.log(freq1);
   //   Checking for the same occurence of character in str2;
   for (let j = 1; j < str2.length; j++) {
-    let char = str2[i];
+    let char = str2[j];
     if (!freq1[char]) return false;
+    // if repetation is there delete the character
+    else freq1[char]--;
   }
   return true;
 }
+isAnagram("abbc", "abcc");

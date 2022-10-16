@@ -23,30 +23,30 @@ function maxConsecutiveOnesWithFlip(arr, K) {
   // N for length of arr
   let N = arr.length; //10
   // i to point to index
-  let i = 0; //9
+  let i = 0; //1
   // j to flip and unflip zeros
-  let j = 0; //0
+  let j = 0; //
   // flip to control K flips
-  let flip = 0; //1
+  let flip = 0; //
 
   while (i < N) {
-    //TTTTTTTTTTF
+    //TTTTTTTTTT
     // flipping the value if arr[i] is 0
     if (arr[i] === 0) {
-      //TTFFFFTFFT
+      //TTFFTFT
       flip++; //4
     }
     // Unfliping 0 if flip exceeds than K
     while (flip > K) {
-      //FFFFFFFFFT
+      //FFFFT
       if (arr[j] === 0) {
         flip--; //3
       }
-      j++; //1
+      j++; //
     }
     // length  of subsegment
-    ans = max(ans, i - j + 1); //9
-    i++; //
+    maxOnes = max(maxOnes, i - j + 1); //9
+    i++; //9
   }
   return ans;
 }

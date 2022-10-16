@@ -1,5 +1,6 @@
 /**
- * Given an integer array and a positive integer k, count all distinct pairs with differences equal to k. 
+ * Given an integer array and a positive integer k,
+ * count all distinct pairs with differences equal to k. 
 Examples: 
 Input: arr[] = {1, 5, 3, 4, 2}, k = 3
 Output: 2
