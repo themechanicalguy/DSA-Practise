@@ -13,6 +13,7 @@ function binarySearch(arr, s, e, k) {
   // base case 1
   if (s > e) return false;
   let mid = s + Number.parseInt((e - s) / 2);
+  // let mid = Number.parseInt((s + e) / 2);
 
   //base case 2
   if (arr[mid] === k) {
