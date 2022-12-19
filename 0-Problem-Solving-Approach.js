@@ -41,7 +41,6 @@ function charCount(str) {
 }
 //H1Ellooi
 function isAlphaNumeric(char) {
-  //H1
   let code = char.charCodeAt(0);
   if (
     !(code > 47 && code < 58) && //numeric
