@@ -40,13 +40,15 @@ function charCount(str) {
   return storageObj;
 }
 //H1Ellooi
-function isAlphaNumeric(char) {
-  let code = char.charCodeAt(0);
+function isAlphaNumeric(code) {
+  let code = strng.charCodeAt(0);
   if (
-    !(code > 47 && code < 58) && //numeric
-    !(code > 64 && code < 91) && //A-Z
-    !(code > 96 && code < 123) //a-z
-  )
+    (code >= 48 && code <= 57) ||
+    (code >= 65 && code <= 90) ||
+    (code >= 97 && code <= 122)
+  ) {
+    return true;
+  } else {
     return false;
-  else return true;
+  }
 }

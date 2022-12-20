@@ -36,7 +36,7 @@ function same(arr1, arr2) {
   const freqCounter1 = {};
   const freqCounter2 = {};
   for (let i = 0; i < arr1.length; i++) {
-    const code = arr1[i];
+    const code = arr1[i] ** 2;
     freqCounter1[code] = (freqCounter1[code] || 0) + 1;
   }
   /**
