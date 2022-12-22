@@ -1,0 +1,14 @@
+{
+  "name": "sorting",
+  "version": "1.0.0",
+  "description": "Contains all the sorting algorithm",
+  "main": "bubbleSort.js",
+  "scripts": {
+    "insertion": "node insertionSort.js",
+    "bubble": "node bubbleSort.js",
+    "selection": "node selectionSort.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Venkataramanan",
+  "license": "ISC"
+}
