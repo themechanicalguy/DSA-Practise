@@ -12,7 +12,7 @@ There are 5 pairs with difference 4, the pairs are {0, 4}, {4, 8},
 {8, 12}, {12, 16} and {16, 20} 
  */
 
-// Naive Approach
+// Naive Approach :O(n2)
 function naiveCountDiffPair(arr, diff) {
   let count = 0;
   for (let i = 0; i < arr.length; i++) {
@@ -64,6 +64,7 @@ function pairDiff(arr, k) {
     if (diff === k) {
       //TTTTT
       pair++; //5
+      //if pair is found increase both left and d
       l++; //5
       r++; //6
     } else if (diff < k) {

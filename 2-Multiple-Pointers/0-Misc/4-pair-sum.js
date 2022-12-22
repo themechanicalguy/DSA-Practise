@@ -2,6 +2,8 @@
 // I = [1,4,4,5,5,5,6,6,11], K=11
 // O = 6
 
+//Solve this problem before interview to remember the case of implementation
+
 // Naive Approach: O(n2)
 function naivePairSum(arr, sum) {
   let count = 0;

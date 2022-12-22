@@ -1,6 +1,5 @@
 /**
  * Check if a string has all characters with same frequency with one variation allowed
- *
  */
 
 /**
@@ -50,3 +49,71 @@ function sameFrquency(str) {
     return "No";
   }
 }
+
+//Approach 2
+function checkForVariation(str) {
+  if (str == null || str.length == 0) {
+    return true;
+  }
+
+  let map = new Map();
+
+  // Run loop from 0 to length of string
+  for (let i = 0; i < str.length; i++) {
+    if (!map.has(str[i])) map.set(str[i], 0);
+    map.set(str[i], map.get(str[i]) + 1);
+  }
+  console.log(map);
+
+  // declaration of variables
+  let first = true,
+    second = true;
+  let val1 = 0,
+    val2 = 0;
+  let countOfVal1 = 0,
+    countOfVal2 = 0;
+
+  for (let [key, value] of map.entries()) {
+    console.log(key, value);
+    let i = value; //1
+
+    // if first is true than countOfVal1 increase
+    if (first) {
+      //TFF
+      val1 = i; //1
+      first = false;
+      countOfVal1++; //1
+      continue;
+    } //FIRST -> FALSE
+
+    if (i == val1) {
+      //FFT
+      countOfVal1++; //2
+      continue;
+    }
+
+    // if second is true than countOfVal2 increase
+    if (second) {
+      //TF
+      val2 = i; //2
+      countOfVal2++; //1
+      second = false;
+      continue;
+    } //second -> FALSE
+
+    if (i == val2) {
+      //T
+      countOfVal2++; //2
+      continue;
+    }
+
+    return false;
+  }
+
+  if (countOfVal1 > 1 && countOfVal2 > 1) {
+    return false;
+  } else {
+    return true;
+  }
+}
+checkForVariation("abcbcd");

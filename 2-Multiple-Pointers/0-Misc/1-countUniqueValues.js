@@ -1,5 +1,6 @@
 /*
- * write a function called countUniqueValues, which accepts a sorted array, and count the unique values in the array.
+ * write a function called countUniqueValues, which accepts a sorted array, 
+   and count the unique values in the array.
    There can be negative numbers in the array, but it will always be sorted.
  */
 
@@ -42,17 +43,18 @@ function distinctUnique(arr) {
 
 // Using Multiple Pointer
 function countUniqueValues(arr) {
-  var countUnique = 0; //0
-  for (let j = 1; j < arr.length; j++) {
-    //5
-    if (arr[countUnique] !== arr[j]) {
-      //TFT
-      countUnique++; //3
-      arr[countUnique] = arr[j];
+  var left = 0; //0
+  for (let right = 1; right < arr.length; right++) {
+    //4
+    if (arr[left] !== arr[right]) {
+      //TFTT
+      left++; //3
+      arr[left] = arr[right];
     }
   }
-  return countUnique + 1;
+  return left + 1;
 }
 // [-1, -1, 0, 1, 1];
 console.log(countUniqueValues([-2, -1, -1, 0, 1]));
+//[-2,-1,0,1,1]
 // [0, 1, 2, 3, 4, 5];
