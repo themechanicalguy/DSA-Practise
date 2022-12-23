@@ -14,7 +14,21 @@ const removeElement = (nums, val) => {
   return k;
 };
 
+// author: saurav
+
+var removeElement = function (arr, val) {
+  let start = 0;
+  let end = arr.length - 1;
+  while (start <= end) {
+    if (arr[start] === val && arr[end] !== val)
+      [arr[start], arr[end]] = [arr[end], arr[start]];
+    if (arr[start] !== val) start++;
+    if (arr[end] == val) end--;
+  }
+  return start;
+};
+
 // const result = removeElement([3, 2, 2, 3], 3);
 const arr = [0, 1, 2, 2, 3, 0, 4, 2];
 const result = removeElement(arr, 2);
-console.log(arr, result, 'result');
+console.log(arr, result, "result");
