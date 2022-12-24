@@ -30,7 +30,7 @@ const maxsubArraySum = (arr) => {
   // assigning first element as max value
   let maxSum = arr[0];
   let currSum = 0;
-  for (let i = 0; i < arr.length; i++) {
+  for (let i of arr) {
     currSum = currSum + arr[i];
     // assigning greater sum to maxSum
     maxSum = Math.max(maxSum, currSum);
