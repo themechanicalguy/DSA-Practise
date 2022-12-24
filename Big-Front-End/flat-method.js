@@ -9,15 +9,15 @@
 
 // Recursion
 // const flatArray = (arr, res, depth = 1) => {
-//   if (!Array.isArray(arr)) return arr;
-//   for (let i = 0; i < arr.length; i++) {
-//     let temp = arr[i];
-//     if (Array.isArray(temp) && depth) {
-//       flatArray(temp, res, depth - 1);
-//     } else {
-//       res.push(temp);
-//     }
+// if (!Array.isArray(arr)) return arr;
+// for (let i = 0; i < arr.length; i++) {
+//   let temp = arr[i];
+//   if (Array.isArray(temp) && depth) {
+//     flatArray(temp, res, depth - 1);
+//   } else {
+//     res.push(temp);
 //   }
+// }
 // };
 
 // Iterative method
