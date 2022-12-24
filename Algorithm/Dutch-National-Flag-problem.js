@@ -15,26 +15,27 @@ Examples:
  */
 
 function sorted(arr) {
-  let left = 0;
-  let mid = 0;
-  let right = arr.length - 1;
+  let left = 0; //3
+  let mid = 0; //8
+  let right = arr.length - 1; //11
   while (mid <= right) {
+    //TTTF
     if (arr[mid] === 0) {
+      //TT
       // Swap
-      [arr[mid], arr[left]] = [arr[left], arr[mid]];
-      // swap(arr[left],arr[mid])
-      left++;
-      mid++;
+      [arr[mid], arr[left]] = [arr[left], arr[mid]]; //[0,0]
+      left++; //2
+      mid++; //9
     } else if (arr[mid] === 2) {
-      [arr[mid], arr[right]] = [arr[right], arr[mid]];
-      right = right - 1;
-      // mid++;
+      T[(arr[mid], arr[right])] = [arr[right], arr[mid]];
+      right = right - 1; //9
     } else {
-      mid++;
+      mid++; //8
     }
   }
   console.log(left, mid, right);
   return arr;
 }
 
+///////[0,0,0,0,0, 1, 1, 1, 1, 1, 2, 2]
 sorted([0, 1, 1, 0, 1, 2, 1, 2, 0, 0, 0, 1]);
