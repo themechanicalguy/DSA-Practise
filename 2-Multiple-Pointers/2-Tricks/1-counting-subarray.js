@@ -1,7 +1,8 @@
 /** Counting Subarrays!
 Problem Description
 Given an array A of N non-negative numbers and you are also given non-negative number B.
-You need to find the number of subarrays in A having sum less than B. We may assume that there is no overflow.
+You need to find the number of subarrays in A having sum less than B. 
+We may assume that there is no overflow.
 
 Input 1:
 
