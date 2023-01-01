@@ -1,3 +1,9 @@
+// WHAT???
+// Currying is a technique in functional programming that performs the transformation of a function with multiple arguments into several functions containing a single argument in a sequence
+
+// WHY??
+// Currying is a checking method to make sure that you get everything you need before you proceed.
+
 function curryFunction(fun) {
   return function curried(...args) {
     if (arguments.length >= fun.length) {
