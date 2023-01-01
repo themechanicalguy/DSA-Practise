@@ -1,3 +1,12 @@
+//You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].
+
+// Each element nums[i] represents the maximum length of a forward jump from index i. In other words, if you are at nums[i], you can jump to any nums[i + j] where:
+
+// 0 <= j <= nums[i] and
+// i + j < n
+// Return the minimum number of jumps to reach nums[n - 1]. The test cases are generated such that you can reach nums[n - 1].
+
+// This Time complexity is 0(n) however the code is hard to grasp.
 const jump = function (nums) {
   let count = 0;
   let i = 0;
@@ -44,6 +53,25 @@ const jumpOP = function (N) {
     next = Math.max(next, N[i] + i);
   }
   return jumps;
+};
+
+// SLIDING WINDOW APPROACH WITH BFS IN LINEAR ARRAY
+
+const JumpSolu = (nums) => {
+  let res = 0;
+  let l = (r = 0);
+
+  while (r < nums.length - 1) {
+    let farthest = 0;
+    for (let i = l; i < r + 1; i++) {
+      farthest = max(farthest, i + nums[i]);
+    }
+
+    l = r + 1;
+    r = farthest;
+    res += 1;
+  }
+  return res;
 };
 
 const result = jumpOP([2, 3, 0, 1, 4, 8]);
