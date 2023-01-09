@@ -11,7 +11,6 @@ function printCount(N) {
   //recursive relation
   printCount(N - 1);
   console.log(N);
-  return;
 }
 
 printCount(5);
