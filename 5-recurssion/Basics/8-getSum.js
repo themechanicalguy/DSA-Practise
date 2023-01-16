@@ -6,7 +6,9 @@ function getSum(arr, index, N) {
   // if (N === 0) return arr[0];
 
   //base case
+  //1 if N=0 return 0
   if (N === 0) return 0;
+  //2 if N=1 return the only item as sum
   if (N === 1) return arr[index];
 
   //recurssive relation

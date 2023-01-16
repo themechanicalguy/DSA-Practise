@@ -2,6 +2,7 @@
 // 412 i.e four one two
 
 function sayDigits(N) {
+  //0
   let arr = [
     "zero",
     "one",
@@ -15,14 +16,11 @@ function sayDigits(N) {
     "nine",
     "ten",
   ];
-  if (N === 0) return;
-  let digit = N % 10;
+  if (N === 0) return; //FFT
+  let digit = N % 10; //4
 
-  // N = N / 10;
-  // Number.parseInt(N)
-  sayDigits(Number.parseInt(N / 10));
+  sayDigits(Number.parseInt(N / 10)); //0
   console.log(arr[digit]);
-  // return;
 }
 
-console.log(sayDigits(412));
+sayDigits(412);
