@@ -2,6 +2,8 @@
  * @param {any} data
  * @return {string}
  */
+
+// Polyfill to do JSON.stringify
 function stringify(data) {
   // your code here
   const unexpectedTypes = [NaN, null, undefined, Infinity];
