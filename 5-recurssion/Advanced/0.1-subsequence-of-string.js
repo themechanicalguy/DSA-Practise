@@ -10,3 +10,39 @@ Output : a, b, c, ab, bc, ac, abc
 Input : aaa
 Output : a, a, a, aa, aa, aa, aaa
 */
+
+// String implementation
+function subsequence(str, index, output, ans) {
+  if (index === str.length) {
+    ans.push(output);
+    return;
+  }
+
+  //excluding
+  subsequence(str, index + 1, output, ans);
+  //including
+  subsequence(str, index + 1, output + str[index], ans);
+
+  return ans;
+}
+subsequence("xyz", 0, "", []);
+
+//with arrays
+function subsequence(str, index, output, ans) {
+  if (index === str.length) {
+    // output.push([res]);
+    ans.push([...output]);
+
+    return;
+  }
+
+  //excluding
+  subsequence(str, index + 1, [...output], ans);
+  //including
+  output.push(str[index]);
+  subsequence(str, index + 1, [...output], ans);
+
+  // return output;
+  return ans;
+}
+subsequence("xyz", 0, [], []);

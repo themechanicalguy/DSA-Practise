@@ -12,3 +12,26 @@ function findFibonacci(N) {
 
 let res = findFibonacci(8);
 console.log(res);
+
+//print fibonacci upto a number
+
+function fibonacci(n) {
+  //base cases
+  if (n === 0) return 0;
+  if (n === 1 || n === 2) return 1;
+
+  res.push(0);
+  res.push(1);
+
+  //recurssive relation
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+// fibonacci(10);
+function printFibonacci(n) {
+  let num = "";
+  for (let i = 0; i < n; i++) {
+    num += fibonacci(i) + " ";
+  }
+  return num;
+}
+printFibonacci(10);
