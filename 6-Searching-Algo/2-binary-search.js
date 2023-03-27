@@ -7,7 +7,7 @@ let k = 15;
 function binarSearch(arr, k) {
   let start = 0;
   let end = arr.length - 1;
-  while (start < end) {
+  while (start <= end) {
     let mid = Math.floor(start + (end - start) / 2);
     // console.log("start--> ", start, "end->>", end);
     // console.log(mid, "--> element ", arr[mid]);
@@ -16,7 +16,7 @@ function binarSearch(arr, k) {
     } else if (arr[mid] < k) {
       start = mid + 1;
     } else {
-      end = mid;
+      end = mid - 1;
     }
   }
   return -1;
