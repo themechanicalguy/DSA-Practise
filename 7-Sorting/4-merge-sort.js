@@ -27,6 +27,7 @@ function merge(arr1, arr2) {
 // merge([2,4,5],[0,1,6,8]);
 
 function mergeSort(arr) {
+  //base case
   if (arr.length <= 1) {
     return arr;
   }
