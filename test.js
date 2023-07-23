@@ -1,37 +1,25 @@
-let arr = [1, 5, 7, -1, 5];
-
-function lowerBound(arr, start, end, key) {
-  while (start < end) {
-    let mid = start + Math.floor((end - start) / 2);
-    if (arr[mid] < key) {
-      start = mid + 1;
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findMaxConsecutiveOnes = function (nums) {
+  //init a maxCount as 0
+  let maxCount = 0;
+  //start a loop from 0 to n
+  let count = 0;
+  for (let i = 0; i < nums.length; i++) {
+    console.log(nums[i]);
+    if (nums[i] === 1) {
+      count++; //3
+      maxCount = Math.max(count, maxCount); //3
+      // console.log(count, maxCount);
     } else {
-      end = mid;
+      count = 0;
     }
   }
-  return start;
-}
-
-function upperBound(arr, start, end, key) {
-  while (start < end) {
-    let mid = start + Math.floor((end - start) / 2);
-    if (arr[mid] <= key) start = mid + 1;
-    else end = mid;
-  }
-  return start;
-}
-
-function getPairsCount(arr, sum) {
-  let size = arr.length;
-  arr.sort((a, b) => a - b);
-  let count = 0;
-  for (let i = 0; i < size - 1; i++) {
-    let diff = sum - arr[i];
-    let lower = lowerBound(arr, i + 1, size, diff);
-    let upper = upperBound(arr, i + 1, size, diff);
-    count = count + upper - lower;
-  }
-  return count;
-}
-
-console.log(getPairsCount([1, 4, 4, 5, 5, 5, 6, 6, 11], 11));
+  // return maxCount;
+  //check if current element is 1, then increase count and set maxCount
+  //if it is zero, then make count 0
+  //return maxCount
+};
+console.log(findMaxConsecutiveOnes([1, 1, 0, 1, 1, 1]));
