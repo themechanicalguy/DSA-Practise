@@ -52,20 +52,22 @@ console.log(getPairsSum([1, 4, 4, 5, 5, 5, 6, 6, 11], 11));
 function getPairsSum(arr, sum) {
   const freqMap = new Map();
   //Store count of all elements in map m
-  for (let i = 0; i < arr.length; i++) {
-    if (freqMap.has(arr[i])) {
-      freqMap.set(arr[i], freqMap.get(arr[i]) + 1);
+  for (const element of arr) {
+    if (freqMap.has(element)) {
+      freqMap.set(element, freqMap.get(element) + 1);
     } else {
-      freqMap.set(arr[i], 1);
+      freqMap.set(element, 1);
     }
   }
+  console.log(freqMap);
+
   let countTwice = 0;
   //iterate through each element and increment the count(Notice that every pair is counted twice)
-  for (let i = 0; i < arr.length; i++) {
-    if (freqMap.has(sum - arr[i])) countTwice += freqMap.get(sum - arr[i]);
+  for (const element of arr) {
+    if (freqMap.has(sum - element)) countTwice += freqMap.get(sum - element);
     // if(arr[i], arr[i]) pair satisfies the condition, then we need to ensure that the count is decreased by one such that the
     // (arr[i],arr[i]) pair is not considered
-    if (sum - arr[i] === arr[i]) countTwice--;
+    if (sum - element === element) countTwice--;
   }
   return countTwice / 2;
 }

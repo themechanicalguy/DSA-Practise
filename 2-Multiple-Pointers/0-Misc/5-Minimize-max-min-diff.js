@@ -56,5 +56,7 @@ function minMaxmin(arr1, arr2, arr3) {
     }
     globalMin = Math.min(globalMin, minimize);
   }
+  return globalMin;
 }
-minMaxmin([5, 8, 10, 15], [6, 9, 15, 78, 89], [2, 3, 6, 6, 8, 8, 10]);
+// minMaxmin([5, 8, 10, 15], [6, 9, 15, 78, 89], [2, 3, 6, 6, 8, 8, 10]);
+console.log(minMaxmin([-1], [-2], [-3]));

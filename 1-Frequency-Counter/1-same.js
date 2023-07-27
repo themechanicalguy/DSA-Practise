@@ -4,15 +4,17 @@
 
 // Naive approach 1
 function same(arr1, arr2) {
+  if (arr1.length !== arr2.length) return false;
   for (let i = 0; i < arr1.length; i++) {
     let key = arr1[i] ** 2;
     let flag = 0;
     for (let j = 0; j < arr2.length; j++) {
       // find if key is there in arr2
       if (arr2[j] === key) flag = 1;
+      arr2.splice(j, 1);
     }
     if (flag === 0) {
-      return -1;
+      return false;
     }
   }
   return true;
