@@ -1,5 +1,5 @@
 /**
- * Given a sorted array of integers, WAF called serach that accepts
+ * Given a sorted array of integers, WAF called search that accepts
  * a value and returns the index where the value passed to the function is located. return -1 if not found
  */
 
