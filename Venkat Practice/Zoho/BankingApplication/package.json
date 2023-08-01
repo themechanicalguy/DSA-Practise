@@ -1,0 +1,12 @@
+{
+  "name": "bankingapplication",
+  "version": "1.0.0",
+  "description": "",
+  "main": "BankingApplication.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node BankingApplication.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

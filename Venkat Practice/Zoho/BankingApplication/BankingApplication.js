@@ -23,15 +23,17 @@ async function main() {
   let users = []; // new users
 
   // get the count from the user
-  const entriesCount = await getUserCount();
+  // const entriesCount = await getUserCount();
 
-  // get user details for all the user
-  for (let i = 0; i < entriesCount; i++) {
-    //get User Detail and add it
-    users.push(await getUserDetail());
-  }
+  // // get user details for all the user
+  // for (let i = 0; i < entriesCount; i++) {
+  //   //get User Detail and add it
+  //   users.push(await getUserDetail());
+  // }
 
+  process.stdout.write('Welcome to ');
   console.log('users: ', users);
+  process.stdout.write('Edward new gate');
 }
 
 main();
