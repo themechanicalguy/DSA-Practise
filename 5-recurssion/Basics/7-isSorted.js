@@ -8,8 +8,9 @@ function isSorted(arr, index, N) {
   if (N === 0 || N === 1) return true;
   if (arr[index] > arr[index + 1]) return false;
 
-  isSorted(arr, index + 1, N - 1);
-  return true;
+  return isSorted(arr, index + 1, N - 1);
+  // return true;
 }
-let res = isSorted([2, 1, 6, 9, 11, 13], 0, [2, 1, 6, 9, 11, 13].length);
+let arr = [1, 2, 3, 9, 13, 11];
+let res = isSorted(arr, 0, arr.length);
 console.log(res);
