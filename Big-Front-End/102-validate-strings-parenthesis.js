@@ -26,4 +26,33 @@ function validate(str) {
   else return false;
 }
 
+//most optimised as only one map ds is use and the code is so clean
+/**
+ * @param {string} str
+ * @return {boolean}
+ */
+const map = {
+  '(': ')',
+  '[': ']',
+  '{': '}',
+};
+
+function validatev2(str) {
+  const stack = [];
+  for (let char of str) {
+    if (map[char]) {
+      stack.push(char);
+    } else {
+      const top = stack.pop();
+
+      if (!top) return false;
+
+      if (map[top] !== char) {
+        return false;
+      }
+    }
+  }
+  return stack.length === 0;
+}
+
 console.log(validate('('));
