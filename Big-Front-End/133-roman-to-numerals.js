@@ -26,6 +26,29 @@ const romanToInteger = (str) => {
   return num;
 };
 
+function romanToIntegerV2(str) {
+  const numerals = new Map([
+    ['I', 1],
+    ['V', 5],
+    ['X', 10],
+    ['L', 50],
+    ['C', 100],
+    ['D', 500],
+    ['M', 1000],
+  ]);
+
+  const backwards = str.split('').reverse();
+
+  let prev = 0;
+  return backwards.reduce((sum, char) => {
+    const value = numerals.get(char);
+    sum = sum + (value >= prev ? value : -value);
+    prev = value;
+
+    return sum;
+  }, 0);
+}
+
 function main() {
   romanToInteger('CXXIII');
   // 123
