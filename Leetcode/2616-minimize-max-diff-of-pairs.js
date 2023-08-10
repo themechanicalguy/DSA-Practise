@@ -35,4 +35,4 @@ var minimizeMax = function (nums, p) {
 };
 
 const arr = [10, 1, 2, 7, 1, 3];
-console.log(minimizeMax(arr, 2);)
+console.log(minimizeMax(arr, 2));
