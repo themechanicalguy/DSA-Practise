@@ -27,7 +27,7 @@ function sorted(arr) {
       left++; //2
       mid++; //9
     } else if (arr[mid] === 2) {
-      T[(arr[mid], arr[right])] = [arr[right], arr[mid]];
+      [(arr[mid], arr[right])] = [arr[right], arr[mid]];
       right = right - 1; //9
     } else {
       mid++; //8
