@@ -1,0 +1,7 @@
+const { getInput } = require('./getInput');
+
+const main = async () => {
+  getInput();
+};
+
+main();
