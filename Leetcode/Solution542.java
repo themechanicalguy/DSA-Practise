@@ -1,4 +1,5 @@
-class Solution {
+import java.util.*;
+class Solution542 {
     final static int d[][] = {
             {0,1},
             {1,0},
