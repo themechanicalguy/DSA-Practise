@@ -43,6 +43,30 @@ var combinationSum4 = function(nums, target) {
     return ans;
 };
 
+// Below solution is a memoize of the above method
+var combinationSum4 = function(nums, target) {
+    const ans = new Map();
+    return process(ans, nums, target);    
+
+    function process( ans, nums, target){
+        if (target == 0) {
+            return 1;
+        }
+        if (ans.has(target)) {
+            return ans.get(target);
+        }
+        let count = 0;
+        for (let i = 0; i < nums.length; i++) {
+            if (nums[i] <= target) {
+                count += process(ans, nums, target - nums[i]);
+            }
+        }
+        ans.set(target, count);
+        return count;
+    }
+
+};
+
 // Below is solved using DP and it works fine
 var combinationSum4 = function(nums, target) {
         const dp = new Array(target + 1).fill(0);
