@@ -46,3 +46,74 @@ var groupThePeople = function (groupSizes) {
   }
   return Object.values(ans).flat();
 };
+
+/**
+  class Solution {
+      public List<List<Integer>> groupThePeople(int[] groupSizes) {
+          List<List<Integer>> res = new ArrayList<>();
+          HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+
+          for (int i = 0; i < groupSizes.length; i++) {
+              int g = groupSizes[i];
+              if (!map.containsKey(g)) {
+                  map.put(g, new ArrayList<>());
+              }
+
+              ArrayList<Integer> l = map.get(g);
+              l.add(i);
+
+              if (l.size() == g) {
+                  res.add(new ArrayList<>(l));
+                  l.clear();
+              }
+          }
+
+          return res;
+      }
+  }
+ */
+
+var groupThePeople2 = function (groupSizes) {
+  let res = [];
+  const map = new Map();
+
+  for (let i = 0; i < groupSizes.length; i++) {
+    let g = groupSizes[i];
+    if (!map.has(g)) {
+      map.set(g, []);
+    }
+
+    let l = map.get(g);
+    l.push(i);
+
+    if (l.length == g) {
+      res.push(l);
+      map.set(g, []);
+    }
+  }
+
+  return res;
+};
+
+// THis is as far my best solution
+var groupThePeople3 = function (groupSizes) {
+  let res = [];
+  const map = {};
+
+  for (let i = 0; i < groupSizes.length; i++) {
+    let g = groupSizes[i];
+    if (!map[g]) {
+      map[g] = [];
+    }
+
+    let l = map[g];
+    l.push(i);
+
+    if (l.length == g) {
+      res.push(l);
+      map[g] = undefined;
+    }
+  }
+
+  return res;
+};
