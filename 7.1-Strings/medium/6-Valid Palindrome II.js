@@ -1,4 +1,4 @@
-/**
+/** LC 680
  * @param {string} s
  * @return {boolean}
  */
