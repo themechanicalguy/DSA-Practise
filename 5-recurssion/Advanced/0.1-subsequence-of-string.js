@@ -11,6 +11,8 @@ Input : aaa
 Output : a, a, a, aa, aa, aa, aaa
 */
 
+//This question is solved using very important pattern pick and unpick
+
 // String implementation
 function subsequence(str, index, output, ans) {
   if (index === str.length) {
