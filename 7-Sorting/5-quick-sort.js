@@ -1,8 +1,7 @@
-//insertion sort
-//partition logic
-//recurssion call
-
 //swap function
+function swap(arr, i, j) {
+  [arr[i], arr[j]] = [arr[j], arr[i]];
+}
 //find the pivot index
 function pivot(arr, start, end) {
   let pivotItem = arr[start];
@@ -17,13 +16,7 @@ function pivot(arr, start, end) {
   swap(arr, start, swapIndex);
   return swapIndex;
 }
-
-//swap function
-//swap function
-function swap(arr, i, j) {
-  [arr[i], arr[j]] = [arr[j], arr[i]];
-}
-
+//main function
 function quickSort(arr, start = 0, end = arr.length - 1) {
   //base case
   if (start < end) {
