@@ -45,7 +45,7 @@ const flatArray = (arr, res, depth = 1) => {
   return result;
 };
 
-const arr = [1, [2], [3, [4], 'Venkat']];
-const result = flatArray(arr, '', 1);
+const arr = [1, [2], [3, [4], "Venkat"]];
+const result = flatArray(arr, "", 1);
 
 console.log(result);

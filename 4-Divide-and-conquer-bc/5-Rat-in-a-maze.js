@@ -7,21 +7,18 @@ function isSafe(x, y, visited, m, n) {
     visited[x][y] === 0 &&
     m[x][y] === 1
   );
-
-  // if (
-  //   x >= 0 &&
-  //   x < n &&
-  //   y >= 0 &&
-  //   y < n &&
-  //   visited[x][y] === 0 &&
-  //   m[x][y] === 1
-  // ) {
-  //   return true;
-  // } else {
-  //   return false;
-  // }
 }
-
+/**
+ *
+ * @param {given matrix} m
+ * @param {size of matrix} n
+ * @param {path array} ans
+ * @param {x axis index} x
+ * @param {y axis index} y
+ * @param {visited matrix} visited
+ * @param {current path followed} path
+ * @returns
+ */
 function solve(m, n, ans, x, y, visited, path) {
   //base case
   if (x === n - 1 && y === n - 1) {
@@ -36,7 +33,6 @@ function solve(m, n, ans, x, y, visited, path) {
   if (isSafe(newX, newY, visited, m, n)) {
     path += "D ";
     solve(m, n, ans, newX, newY, visited, path);
-    path.slice(0, -1);
   }
 
   //left
@@ -45,7 +41,6 @@ function solve(m, n, ans, x, y, visited, path) {
   if (isSafe(newX, newY, visited, m, n)) {
     path += "L ";
     solve(m, n, ans, newX, newY, visited, path);
-    path.slice(0, -1);
   }
 
   //right
@@ -54,7 +49,6 @@ function solve(m, n, ans, x, y, visited, path) {
   if (isSafe(newX, newY, visited, m, n)) {
     path += "R ";
     solve(m, n, ans, newX, newY, visited, path);
-    path.slice(0, -1);
   }
 
   //up
@@ -63,7 +57,6 @@ function solve(m, n, ans, x, y, visited, path) {
   if (isSafe(newX, newY, visited, m, n)) {
     path += "U ";
     solve(m, n, ans, newX, newY, visited, path);
-    path.slice(0, -1);
   }
 
   visited[x][y] = 0;
