@@ -1,25 +1,30 @@
-/**
- * @param {number[]} nums
- * @return {number}
- */
-var findMaxConsecutiveOnes = function (nums) {
-  //init a maxCount as 0
-  let maxCount = 0;
-  //start a loop from 0 to n
-  let count = 0;
-  for (let i = 0; i < nums.length; i++) {
-    console.log(nums[i]);
-    if (nums[i] === 1) {
-      count++; //3
-      maxCount = Math.max(count, maxCount); //3
-      // console.log(count, maxCount);
-    } else {
-      count = 0;
-    }
+// 0,1,1,2,3,5,8,11,19...n
+const res = [0, 1];
+
+function fibonacci(n) {
+  //base case
+  if (n <= 0) return 0;
+
+  if (n === 1) return 1;
+
+  // recurssive relation
+  const item = fibonacci(n - 1) + fibonacci(n - 2);
+
+  res.push(item);
+  // console.log(res);
+  return item;
+}
+
+// console.log(fibonacci(5)); //0 1 1 2 3 5
+// console.log(res);
+// 0,1,
+function fibonacciIterative(n) {
+  const res = [0, 1];
+  for (let i = 2; i < n; i++) {
+    let fib = res[i - 1] + res[i - 2]; //1
+    res.push(fib);
   }
-  // return maxCount;
-  //check if current element is 1, then increase count and set maxCount
-  //if it is zero, then make count 0
-  //return maxCount
-};
-console.log(findMaxConsecutiveOnes([1, 1, 0, 1, 1, 1]));
+  return res;
+}
+
+console.log(fibonacciIterative(5));
