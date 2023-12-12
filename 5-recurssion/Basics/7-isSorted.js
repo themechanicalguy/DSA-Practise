@@ -5,7 +5,7 @@ function isSorted(arr, index, N) {
   //this base case will not work in all cases
   // if (N === 0) return;
   //base case : if the array has 0 or 1 element, then it is already sorted
-  if (N === 0 || N === 1) return true;
+  if (N ===    0 || N === 1) return true;
   if (arr[index] > arr[index + 1]) return false;
   return isSorted(arr, index + 1, N - 1);
 }
