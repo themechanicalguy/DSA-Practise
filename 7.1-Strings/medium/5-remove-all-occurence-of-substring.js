@@ -44,3 +44,5 @@ var removeOccurrences = function (s, part) {
   }
   return s;
 };
+
+//this above code will not work because string is immutable

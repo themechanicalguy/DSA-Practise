@@ -1,5 +1,8 @@
 /**
- * Problem Description IMP:
+ * Problem Description IMP: NOT A MULTIPLE POINTER PROBLEM
+ * 
+ * Count of subarrays having exactly K distinct elements
+ * 
 Given an array A of positive integers,call a (contiguous,not necessarily distinct) subarray of A good,
 if the number of different integers in that subarray is exactly B.
 (For example: [1, 2, 3, 1, 2] has 3 different integers 1, 2 and 3)
@@ -74,4 +77,5 @@ let arr = [1, 2, 1, 3, 4];
 let n = arr.length;
 let k = 3;
 
-exactlyK(arr, n, k);
+const dat = exactlyK([2, 1, 2, 1, 6], 5, 2);
+console.log(dat);
