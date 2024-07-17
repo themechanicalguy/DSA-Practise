@@ -1,3 +1,4 @@
+// All common operations in Singly Linked list
 // Class to create node
 class Node {
   constructor(data) {
@@ -13,7 +14,7 @@ class SinglyLinkedList {
   }
   push(data) {
     // Create a new node using value passed to the function
-    var newNode = new Node(data);
+    let newNode = new Node(data);
     // if no head
     if (!this.head) {
       this.head = newNode;
@@ -111,7 +112,7 @@ class SinglyLinkedList {
     this.length--;
     return removed;
   }
-  remove;
+  // remove;
 }
 
 let list = new SinglyLinkedList();
