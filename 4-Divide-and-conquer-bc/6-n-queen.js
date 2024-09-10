@@ -1,12 +1,3 @@
-function printSolution(board, n) {
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) {
-      board[i][j];
-    }
-    console.log("\n");
-  }
-}
-
 function isSafe(row, col, board, n) {
   //can we place queen or not
   //Check 3 direction -> upper diagonal left, bottom diagonal left & left
@@ -14,7 +5,7 @@ function isSafe(row, col, board, n) {
   let j = col;
   //left row checking
   while (j >= 0) {
-    if (board[i][j] === 1) return false;
+    if (board[i][j] === "Q") return false;
     j--;
   }
 
@@ -22,7 +13,7 @@ function isSafe(row, col, board, n) {
   i = row;
   j = col;
   while (i < n && j >= 0) {
-    if (board[i][j] === 1) return false;
+    if (board[i][j] === "Q") return false;
     i++;
     j--;
   }
@@ -31,16 +22,18 @@ function isSafe(row, col, board, n) {
   i = row;
   j = col;
   while (i >= 0 && j >= 0) {
-    if (board[i][j] === 1) return false;
+    if (board[i][j] === "Q") return false;
     i--;
     j--;
   }
+  return true;
 }
 
 function solve(board, col, n) {
   //base case
   if (col >= n) {
-    printSolution(structuredClone(board), n);
+    board.map((item) => console.log(item));
+    console.log("\n");
     return;
   }
 
@@ -48,11 +41,11 @@ function solve(board, col, n) {
   for (let row = 0; row < n; row++) {
     if (isSafe(row, col, board, n)) {
       //safe place- place queen
-      board[row][col] = 1;
+      board[row][col] = "Q";
       //recurssively call for next column
       solve(structuredClone(board), col + 1, n);
       //backtracking -> recreate original state
-      board[row][col] = 0;
+      board[row][col] = "-";
     }
   }
 }
@@ -62,11 +55,10 @@ function main() {
   const board = [];
   // creating an nxn board
   for (let i = 0; i < n; i++) {
-    board.push(new Array(n).fill(0));
+    board.push(new Array(n).fill("-"));
   }
 
   let col = 0;
   solve(structuredClone(board), col, n);
-  return 0;
 }
-main();
+console.log(main());

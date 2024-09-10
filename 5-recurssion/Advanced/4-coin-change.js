@@ -22,3 +22,30 @@ function solve(arr, target) {
 }
 
 solve([1, 2, 5], 5);
+
+// LC - 322
+/**
+ * @param {number[]} coins
+ * @param {number} amount
+ * @return {number}
+ */
+var coinChange = function (coins, amount) {
+  //base cases
+  let result = countCoinChange(coins, amount);
+  return result === Infinity ? -1 : result;
+};
+
+const countCoinChange = (coins, amount, memo = {}) => {
+  if (amount === 0) return 0;
+  if (amount < 0) return Infinity;
+  if (memo[amount] !== undefined) return memo[amount];
+
+  let min = Infinity;
+  for (let item of coins) {
+    const restAmt = amount - item;
+    min = Math.min(countCoinChange(coins, restAmt, memo) + 1, min);
+  }
+
+  memo[amount] = min;
+  return memo[amount];
+};
