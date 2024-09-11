@@ -20,4 +20,5 @@ const subArraySum = (arr) => {
   // return maxSum;
 };
 
+// test commit fro the local space
 console.log(subArraySum([3, -2, -2, 2, -1, 3, 4, -5, 4]));
