@@ -1,5 +1,4 @@
 //All common operations on doubly linked list
-
 class Node {
   constructor(data) {
     this.data = data;
