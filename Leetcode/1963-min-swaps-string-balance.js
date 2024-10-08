@@ -30,3 +30,20 @@ var minSwaps = function(s) {
     }
     return count;
 };
+
+// Optimized solution
+// Cancel out all the matched pairs, then we'll be left with "]]]..[[[".
+// The answer is ceil(the number of unmatched pairs / 2).
+var minSwaps1 = function(s) {
+    let unmatched=0, j;
+
+    for (j of s) {
+        if (j==='[') {
+            unmatched++;
+        } else if (unmatched>0) {
+            unmatched--;
+        }
+    }
+
+    return parseInt((unmatched+1)/ 2);
+};
