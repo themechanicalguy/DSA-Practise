@@ -1,3 +1,6 @@
+// Circular queue must have limited size otherwise circular queue cannot be created.
+// Size must be passed while creating Circular Queue
+
 class CirculatQueue {
   constructor(size) {
     this.size = size;
