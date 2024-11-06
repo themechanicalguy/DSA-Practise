@@ -3,8 +3,8 @@
 function printFirstNegInt(arr, k) {
   let res = [];
   let queue = [];
-  //Process the first window of size k  for (let i = 0; i < k; i++) {
-  if (arr[i] < 0) queue.push(i);
+  //Process the first window of size k
+  for (let i = 0; i < k; i++) if (arr[i] < 0) queue.push(i);
   //process the rest of the array from k onwards
   for (let i = k; i < arr.length; i++) {
     //if there is a negative number in the queue, add it to the result, otherwise add 0
