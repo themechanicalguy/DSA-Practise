@@ -1,4 +1,4 @@
-//check whether Binary Tree is a sum tree or not
+//check whether Binary Tree is a sum tree or not -- different problem
 // Convert Binary Tree into Sum Tree.
 
 function convertIntoSumTree(root) {
