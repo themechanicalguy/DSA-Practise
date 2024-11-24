@@ -30,12 +30,12 @@ function inOrderTraversal(root) {
   inOrderTraversal(root.right);
 }
 
-let root = new Node(50);
-root = insertIntoBST(root, 30);
-root = insertIntoBST(root, 20);
-root = insertIntoBST(root, 40);
-root = insertIntoBST(root, 70);
-root = insertIntoBST(root, 60);
-root = insertIntoBST(root, 80);
+let root = new Node(5);
+root = insertIntoBST(root, 8);
+root = insertIntoBST(root, 2);
+root = insertIntoBST(root, 4);
+root = insertIntoBST(root, 10);
+root = insertIntoBST(root, 7);
+root = insertIntoBST(root, 1);
 
 console.log(root);
