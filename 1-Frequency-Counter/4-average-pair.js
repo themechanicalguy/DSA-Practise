@@ -9,12 +9,10 @@ Output: 7
 
 function averageSum(arr) {
   // make a frequency counter map, store all frequency of numbers in tha mp
-  const map = new Map();
+  const set = new Set();
   for (let i = 0; i < arr.length; i++) {
-    if (map.has(arr[i])) {
-      map.set(arr[i], arr[i] + 1);
-    } else {
-      map.set(arr[i], 1);
+    if (!set.has(arr[i])) {
+      set.add(arr[i], 1);
     }
   }
   // loop through the array and find sum of all emements
@@ -23,7 +21,7 @@ function averageSum(arr) {
   for (let i = 0; i < arr.length; i++) {
     for (let j = i + 1; j < arr.length; j++) {
       avg = (arr[i] + arr[j]) / 2;
-      if (map.has(avg)) {
+      if (set.has(avg)) {
         count++;
       }
     }

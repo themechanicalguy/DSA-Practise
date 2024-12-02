@@ -44,18 +44,17 @@ function same(arr1, arr2) {
   /**
    * Using 1 freqCounter
    */
-  for (let i = 0; i < arr2.length; i++) {
+  for (let i = 0; i < arr2.length; i++) { // Forming the frequency for the First Array
     let item = arr2[i];
     if (!freqCounter1[item]) return false;
   }
-  return true;
 
-  // console.log(freqCounter1);
-  // for (let i = 0; i < arr2.length; i++) {
-  //   const code = arr2[i];
-  //   freqCounter2[code] = (freqCounter2[code] || 0) + 1;
-  // }
-  // console.log(freqCounter2);
+  console.log(freqCounter1);
+  for (let i = 0; i < arr2.length; i++) { // Forming the frequency for the Second Array
+    const code = arr2[i];
+    freqCounter2[code] = (freqCounter2[code] || 0) + 1;
+  }
+  console.log(freqCounter2);
 
   for (let item of freqCounter1) {
     if (![item ** 2] in freqCounter2) return false;
