@@ -18,6 +18,7 @@ function averageSum(arr) {
   // loop through the array and find sum of all emements
   let avg = 0;
   let count = 0;
+  // Not the best approach
   for (let i = 0; i < arr.length; i++) {
     for (let j = i + 1; j < arr.length; j++) {
       avg = (arr[i] + arr[j]) / 2;
