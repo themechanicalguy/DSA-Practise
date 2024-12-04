@@ -14,15 +14,18 @@
 function isAnagram(str1, str2) {
   if (str1.length !== str2.length) return false;
   let freq1 = {};
-  for (let s of str1) {
-    freq1[s] = (freq1[s] || 0) + 1;
+  for (let i = 0; i < str1.length; i++) {
+    let char1 = str1[i];
+    freq1[char1] = (freq1[char1] || 0) + 1;
   }
+  console.log(freq1);
+  //   Checking for the same occurence of character in str2;
+  for (let j = 1; j < str2.length; j++) {
+    let char = str2[j];
+    if (!freq1[char]) return false;
 
-  //   Checking for the same occurence of characters present in freq1 with str2;
-  for (let item of str2) {
-    if (!freq1[item]) return false;
-    // if repetation is there delete the character -- IMP Step
-    else freq1[item]--;
+    freq1[char]--;
+    if (freq1[char] < 0) return false; // if the freq of a paticular character goes less than 0 then the anagram is false
   }
   return true;
 }

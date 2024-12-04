@@ -19,6 +19,8 @@ function sameFrequency(num1, num2) {
   for (const char of str2) {
     if (!obj[char]) return false;
     obj[char]--;
+    // if the freq of a paticular character goes less than 0 then the anagram is false
+    if (obj[char] < 0) return false;
   }
 
   return true;
