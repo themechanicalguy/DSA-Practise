@@ -20,3 +20,20 @@ var areOccurrencesEqual = function (s) {
   return true;
 };
 areOccurrencesEqual("aaabb");
+
+//Given a sting check if all the alphabets occurence are same
+
+function checkOccurence(str) {
+  if (str.length === 0) return;
+  let freqCounter = {};
+  for (let ch of str) {
+    freqCounter[ch] = (freqCounter[ch] || 0) + 1;
+  }
+  const startItem = freqCounter[str[0]];
+  for (let i of str) {
+    if (freqCounter[i] !== startItem) return false;
+  }
+  return true;
+}
+
+checkOccurence("aaabbbc");
