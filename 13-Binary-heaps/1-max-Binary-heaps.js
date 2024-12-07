@@ -1,6 +1,6 @@
 class MaxBinaryHeap {
   constructor() {
-    this.values = [41, 39, 33, 18, 27, 12];
+    this.values = [41, 39, 33, 18, 27, 12]; //Mock the values of a binary tree
   }
   left(i) {
     return 2 * i + 1;
@@ -19,10 +19,10 @@ class MaxBinaryHeap {
     this.bubbleUp();
   }
   bubbleUp() {
-    let idx = this.values.length - 1;
-    const element = this.values[idx];
+    let idx = this.values.length - 1; //last item
+    const element = this.values[idx]; //new items inserted
     while (idx > 0) {
-      let parentIdx = Math.floor((idx - 1) / 2);
+      let parentIdx = parent(idx);
       let parent = this.values[parentIdx];
       if (element < parent) break;
       this.values[parentIdx] = element;
