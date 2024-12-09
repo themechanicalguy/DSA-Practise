@@ -55,3 +55,8 @@ function power(x, n) {
 
 //Time Complexity: O(log n)
 // Auxiliary Space: O(1), for recursive call stack
+
+//Best Optimum 1 line solution using library funcitons - may not work in negative cases
+const powerOfNumber = (x, n) => Math.round(Math.exp(Math.log(x) * n));
+// Time Complexity: O(1), as both math.exp() and math.log() functions run on O(1) time complexity.
+// Auxiliary Space: O(1), as no extra space is used.
