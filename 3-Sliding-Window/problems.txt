@@ -10,4 +10,4 @@
  *
  * Smallest subarray containing minimum and maximum values
  */
-// console.log();
+
