@@ -1,4 +1,4 @@
-//1-Top doen approach
+//1-Top down approach
 
 let cache = {};
 function fib(n) {
@@ -13,11 +13,13 @@ function fib(n) {
 //2- bottom-up approach
 
 function bottomUpApproach(n) {
+  //step-1: Create DP array/obj
   let cache = {};
+  //step-2: Observe base cases in above solution and init them in dp obj here
   cache[0] = 0;
   cache[1] = 1;
-  if (n === 0) return cache[0];
-  if (n === 1) return cache[1];
+  //step-3: In bottom up approach we start from n=0 to n, so start loop from 1 to n(for loop kahn se kahn tak chalega)
+  // as 1 is already considered above so starting from 2
   for (let i = 2; i <= n; i++) {
     cache[i] = cache[i - 1] + cache[i - 2];
   }
