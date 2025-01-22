@@ -13,7 +13,7 @@ const coinChange = (arr, N, sum, startIndex = 0, result = [], track = []) => {
     arr[startIndex],
   ]);
   count1 += coinChange(arr, N, sum, startIndex + 1, result, [...track]);
-  console.log(count1, 'count1');
+  console.log(count1, "count1");
   return 0;
 };
 

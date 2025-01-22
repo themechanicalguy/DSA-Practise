@@ -23,10 +23,13 @@ function isAnagram(str1, str2) {
   for (let j = 1; j < str2.length; j++) {
     let char = str2[j];
     if (!freq1[char]) return false;
-    
+
     freq1[char]--;
     if (freq1[char] < 0) return false; // if the freq of a paticular character goes less than 0 then the anagram is false
   }
   return true;
 }
+
+isAnagram([], []);
+isAnagram("rat", "air");
 isAnagram("abbc", "abcc");

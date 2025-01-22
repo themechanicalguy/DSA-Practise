@@ -6,19 +6,14 @@
  */
 
 // Naive Approach
-function maxSubArraySum(arr, n) {
-  if (arr.length < n) {
-    return false;
-  }
-  let maxSum = Number.MIN_VALUE;
-  for (let i = 0; i < arr.length - n + 1; i++) {
+function maxSubArraySum(arr, N) {
+  if (arr.length < N) return -1;
+
+  let maxSum = -Infinity;
+  for (let i = 0; i < arr.length - N + 1; i++) {
     let tempSum = 0;
-    for (let j = 0; j < n; j++) {
-      tempSum = tempSum + arr[i + j];
-    }
-    if (tempSum > maxSum) {
-      maxSum = tempSum;
-    }
+    for (let j = 0; j < N; j++) tempSum += arr[i + j];
+    if (tempSum > maxSum) maxSum = tempSum;
   }
   return maxSum;
 }
@@ -27,7 +22,7 @@ function maxSubArraySum(arr, n) {
 function maxSubArraySum(arr, N) {
   let maxSum = 0;
   let tempSum = 0;
-  if (arr.length < N) return false;
+  if (arr.length < N) return -1;
   //getting the sum of first N numbers
   for (let i = 0; i < N; i++) {
     maxSum += arr[i];
