@@ -19,3 +19,18 @@ var validMountainArray = function(arr) {
     if (foundPeak && (arr[arr.length-1] < arr[arr.length-2]) && (arr[0] < arr[1])) return true;
     return false
 };
+
+    const validMountainArrayOther = ( arr) => {
+      if (arr.length < 3)
+        return false;
+  
+      let l = 0;
+      let r = arr.length - 1;
+  
+      while (l + 1 < arr.length && arr[l] < arr[l + 1])
+        ++l;
+      while (r > 0 && arr[r] < arr[r - 1])
+        --r;
+  
+      return l > 0 && r < arr.length - 1 && l == r;
+    }
