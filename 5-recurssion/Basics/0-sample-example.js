@@ -22,23 +22,24 @@ function fact(N) {
 // fact(6);
 
 // 4 - return the odd number array from a given array, using helper function recurssion
-function recrFunction(array,resultArr) {
-    if (array.length === 0) {
-      return resultArr;
-    }
-    if (array[0] % 2 !== 0) {
-      resultArr?.push(array[0]);
-    }
-    recrFunction(array.slice(1),resultArr);
+function recrFunction(array, resultArr) {
+  if (array.length === 0) {
+    return resultArr;
+  }
+  if (array[0] % 2 !== 0) {
+    resultArr?.push(array[0]);
+  }
+  recrFunction(array.slice(1), resultArr);
 }
 function helperFunction(arr) {
   const resultArr = [];
-  recrFunction(arr,resultArr);
+  recrFunction(arr, resultArr);
   return resultArr;
 }
 helperFunction([1, 2, 3, 4, 5]);
 
 // 5 - with pure recurssionfunction pureRecurssion(arr) { - pure recurssion is least applicable. it can be applied to only simple tasks
+function pureRecurssion(arr) {
   let resArr = [];
   if (arr.length === 0) return resArr;
 
@@ -47,4 +48,5 @@ helperFunction([1, 2, 3, 4, 5]);
   resArr = resArr.concat(pureRecurssion(arr.slice(1)));
   return resArr;
 }
+
 pureRecurssion([1, 2, 3, 4, 5]);
