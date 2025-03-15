@@ -29,18 +29,3 @@ XOR is commutative → A ^ B = B ^ A
 XOR is associative → (A ^ B) ^ C = A ^ (B ^ C)
 This is why XOR is useful in problems like "finding the single number" in an array where every element appears twice except one. 
 
-
- */
-
-//Approach 2: Using Hash Map
-function singleNumberHash(nums) {
-  let map = new Map();
-
-  for (let num of nums) {
-    map.set(num, (map.get(num) || 0) + 1);
-  }
-
-  for (let [key, value] of map.entries()) {
-    if (value === 1) return key;
-  }
-}
