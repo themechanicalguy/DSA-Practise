@@ -14,27 +14,27 @@ Examples:
     Output: {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2}
  */
 
-function sorted(arr) {
-  let left = 0; //3
-  let mid = 0; //8
-  let right = arr.length - 1; //11
-  while (mid <= right) {
-    //TTTF
-    if (arr[mid] === 0) {
-      //TT
-      // Swap
-      [arr[mid], arr[left]] = [arr[left], arr[mid]]; //[0,0]
-      left++; //2
-      mid++; //9
-    } else if (arr[mid] === 2) {
-      [(arr[mid], arr[right])] = [arr[right], arr[mid]];
-      right = right - 1; //9
+// low tracks the boundary for 0s.
+// high tracks the boundary for 2s.
+// mid iterates through the array, swapping elements as needed.
+
+function sortColors(nums) {
+  let low = 0,
+    mid = 0,
+    high = nums.length - 1;
+
+  while (mid <= high) {
+    if (nums[mid] === 0) {
+      [nums[low], nums[mid]] = [nums[mid], nums[low]];
+      low++;
+      mid++;
+    } else if (nums[mid] === 1) {
+      mid++;
     } else {
-      mid++; //8
+      [nums[mid], nums[high]] = [nums[high], nums[mid]];
+      high--;
     }
   }
-  console.log(left, mid, right);
-  return arr;
 }
 
 ///////[0,0,0,0,0, 1, 1, 1, 1, 1, 2, 2]
