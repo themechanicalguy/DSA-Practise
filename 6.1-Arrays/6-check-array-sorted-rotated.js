@@ -4,6 +4,7 @@
 // There may be duplicates in the original array.
 // An array is rotated if there is some index k where for every i and j such that i < j,
 // the array[i] <= array[j] if i <= k, and array[i] <= array[j] if k <= i.
+
 // Example 1:
 // Input: nums = [3,4,5,1,2]
 // Output: true
@@ -13,18 +14,6 @@
 // Input: nums = [2,1,3,4]
 // Output: false
 // Explanation: There is no sorted array once rotated that can make nums.
-// Example 3:
-// Input: nums = [1,2,3]
-// Output: true
-// Explanation: [1,2,3] is the original sorted array.
-// You can rotate the array by 0 positions.
-// Example 4:
-// Input: nums = [1,1,1]
-// Output: true
-// Explanation: [1,1,1] is the original sorted array.
-// You can rotate the array by 0 positions.
-// Constraints:
-// 1 <= nums.length <= 100
 
 //brute force
 function isRotatedSortedNaive(arr) {

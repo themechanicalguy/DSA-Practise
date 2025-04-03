@@ -36,3 +36,5 @@ function stringSearch(str1, str2) {
   }
   return count;
 }
+
+//KMP String search algorithm

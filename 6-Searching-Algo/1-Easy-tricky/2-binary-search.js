@@ -1,4 +1,4 @@
-// Implement binary search
+// LC- 704. Binary Search
 // Binary search works only for sorted array
 
 let arr = [1, 3, 4, 6, 8, 9, 11, 12, 15, 16, 17, 18, 19];
