@@ -10,7 +10,7 @@ function findAllDuplicates(arr) {
   const resultArr = [];
 
   for (const item of arr) {
-    obj[item] = ++obj[item] || 1;
+    obj[item] = (obj[item] || 0) + 1;
     if (obj[item] > 1) resultArr.push(item);
   }
 

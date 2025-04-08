@@ -21,18 +21,6 @@
  * @param {number} target - Value to search for
  * @return {number[]} - Array with first and last indices of target, or [-1, -1] if not found
  */
-function searchRange(nums, target) {
-  const firstOccurrence = findBound(nums, target, true);
-
-  // If target doesn't exist in the array, return [-1, -1]
-  if (firstOccurrence === -1) {
-    return [-1, -1];
-  }
-
-  const lastOccurrence = findBound(nums, target, false);
-  return [firstOccurrence, lastOccurrence];
-}
-
 /**
  * Helper function to find either the first or last occurrence of target
  * @param {number[]} nums - Sorted array of integers
@@ -66,10 +54,21 @@ function findBound(nums, target, isFirst) {
 
   return result;
 }
+function searchRange(nums, target) {
+  const firstOccurrence = findBound(nums, target, true);
+
+  // If target doesn't exist in the array, return [-1, -1]
+  if (firstOccurrence === -1) {
+    return [-1, -1];
+  }
+
+  const lastOccurrence = findBound(nums, target, false);
+  return [firstOccurrence, lastOccurrence];
+}
 
 //Approach 2: Binary Search with Custom Comparison
 
-function searchRange(nums, target) {
+var searchRange = function (nums, target) {
   function findFirst() {
     let left = 0;
     let right = nums.length - 1;
@@ -78,14 +77,13 @@ function searchRange(nums, target) {
     while (left <= right) {
       const mid = Math.floor((left + right) / 2);
 
-      if (nums[mid] >= target) {
+      if (nums[mid] === target) {
+        result = mid;
+        right = mid - 1;
+      } else if (nums[mid] > target) {
         right = mid - 1;
       } else {
         left = mid + 1;
-      }
-
-      if (nums[mid] === target) {
-        result = mid;
       }
     }
 
@@ -99,15 +97,13 @@ function searchRange(nums, target) {
 
     while (left <= right) {
       const mid = Math.floor((left + right) / 2);
-
-      if (nums[mid] <= target) {
+      if (nums[mid] === target) {
+        result = mid;
+        left = mid + 1;
+      } else if (nums[mid] < target) {
         left = mid + 1;
       } else {
         right = mid - 1;
-      }
-
-      if (nums[mid] === target) {
-        result = mid;
       }
     }
 
@@ -118,4 +114,4 @@ function searchRange(nums, target) {
   const last = findLast();
 
   return [first, last];
-}
+};

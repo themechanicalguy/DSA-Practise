@@ -9,8 +9,6 @@ function binarSearch(arr, k) {
   let end = arr.length - 1;
   while (start <= end) {
     let mid = Math.floor(start + (end - start) / 2);
-    // console.log("start--> ", start, "end->>", end);
-    // console.log(mid, "--> element ", arr[mid]);
     if (arr[mid] === k) {
       return mid;
     } else if (arr[mid] < k) {
