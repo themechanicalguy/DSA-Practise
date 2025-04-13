@@ -1,1 +1,0 @@
-function solve(dividend, divisor) {}

@@ -15,27 +15,26 @@
  * @param {number[]} nums - Sorted array of integers where every element appears twice except one
  * @return {number} - The single element
  */
-function singleNonDuplicate(nums) {
-  let left = 0;
-  let right = nums.length - 1;
-
-  while (left < right) {
-    // Find the middle index
-    let mid = Math.floor((left + right) / 2);
-
-    // Ensure mid is even to check pairs properly
-    if (mid % 2 === 1) {
-      mid--;
-    }
-
-    // If the pair is intact, the single element is on the right
-    if (nums[mid] === nums[mid + 1]) {
-      left = mid + 2;
+function oddOccurence(arr) {
+  let start = 0;
+  let end = arr.length - 1;
+  while (start <= end) {
+    let mid = Math.floor(start + (end - start) / 2);
+    if (start === end) return start;
+    if (mid % 2 === 0) {
+      if (arr[mid] === arr[mid + 1]) {
+        start = mid + 2;
+      } else {
+        end = mid;
+      }
     } else {
-      // Otherwise, it's on the left (including current mid)
-      right = mid;
+      if (arr[mid] === arr[mid - 1]) {
+        start = mid + 1;
+      } else {
+        end = mid - 1;
+      }
     }
   }
-
-  return nums[left];
+  return -1;
 }
+console.log(oddOccurence([3, 3, 1, 1, 2, 2, 3, 3, 4, 4, 8, 5, 5, 9, 9]));
