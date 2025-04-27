@@ -12,7 +12,6 @@
 //Therefore, the output is 15
 
 //Approach 1 : Brute Force
-
 function sumOfDivisors(n) {
   let totalSum = 0;
 
@@ -36,23 +35,7 @@ function sumOfDivisors(n) {
 // Example usage
 console.log(sumOfDivisors(4)); // F(1) + F(2) + F(3) + F(4) = 1 + 3 + 4 + 7 = 15
 
-//Approach 2: Optimized Using Divisor Count Technique
-
-function sumOfDivisorsOptimized(n) {
-  let totalSum = 0;
-
-  // For each number i, add i to the sum of divisors of its multiples
-  for (let i = 1; i <= n; i++) {
-    totalSum += Math.floor(n / i) * i;
-  }
-
-  return totalSum;
-}
-
-// Example usage
-console.log(sumOfDivisorsOptimized(4)); // Output: 15
-
-//Approach 4: Mathematical Approach (Using Number Theory)
+//Approach 2: Mathematical Approach (Using Number Theory)
 function sumOfDivisorsMath(n) {
   let totalSum = 0;
 
