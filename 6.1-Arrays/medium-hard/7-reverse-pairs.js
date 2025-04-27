@@ -43,76 +43,75 @@ console.log(reversePairsBruteForce(nums)); // Output: 2
  * @return {number} - Number of reverse pairs
  */
 function reversePairsMergeSort(nums) {
-  // Helper function to perform merge sort and count reverse pairs
-  function mergeSort(arr, start, end) {
-    if (start >= end) return 0;
-
-    const mid = Math.floor((start + end) / 2);
-    let count = 0;
-
-    // Recursively count pairs in left and right halves
-    count += mergeSort(arr, start, mid);
-    count += mergeSort(arr, mid + 1, end);
-
-    // Count cross-subarray reverse pairs
-    count += countCrossPairs(arr, start, mid, end);
-
-    // Merge the sorted subarrays
-    merge(arr, start, mid, end);
-
-    return count;
-  }
-
-  // Counts reverse pairs between left and right subarrays
-  function countCrossPairs(arr, start, mid, end) {
-    let count = 0;
-    let rightIndex = mid + 1;
-
-    // For each element in left subarray, find elements in right subarray
-    for (let leftIndex = start; leftIndex <= mid; leftIndex++) {
-      // Use BigInt to handle large numbers safely
-      while (rightIndex <= end && arr[leftIndex] > 2 * arr[rightIndex]) {
-        rightIndex++;
-      }
-      count += rightIndex - (mid + 1);
-    }
-
-    return count;
-  }
-
-  // Merges two sorted subarrays while maintaining sorted order
-  function merge(arr, start, mid, end) {
-    const temp = [];
-    let leftIndex = start;
-    let rightIndex = mid + 1;
-
-    // Merge elements in sorted order
-    while (leftIndex <= mid && rightIndex <= end) {
-      if (arr[leftIndex] <= arr[rightIndex]) {
-        temp.push(arr[leftIndex++]);
-      } else {
-        temp.push(arr[rightIndex++]);
-      }
-    }
-
-    // Copy remaining elements from left subarray
-    while (leftIndex <= mid) {
-      temp.push(arr[leftIndex++]);
-    }
-
-    // Copy remaining elements from right subarray
-    while (rightIndex <= end) {
-      temp.push(arr[rightIndex++]);
-    }
-
-    // Copy merged elements back to original array
-    for (let i = 0; i < temp.length; i++) {
-      arr[start + i] = temp[i];
-    }
-  }
-
   // Start the merge sort process
   return mergeSort(nums, 0, nums.length - 1);
+}
+
+function mergeSort(arr, start, end) {
+  if (start >= end) return 0;
+
+  const mid = Math.floor((start + end) / 2);
+  let count = 0;
+
+  // Recursively count pairs in left and right halves
+  count += mergeSort(arr, start, mid);
+  count += mergeSort(arr, mid + 1, end);
+
+  // Count cross-subarray reverse pairs
+  count += countCrossPairs(arr, start, mid, end);
+
+  // Merge the sorted subarrays
+  merge(arr, start, mid, end);
+
+  return count;
+}
+
+// Counts reverse pairs between left and right subarrays
+function countCrossPairs(arr, start, mid, end) {
+  let count = 0;
+  let rightIndex = mid + 1;
+
+  // For each element in left subarray, find elements in right subarray
+  for (let leftIndex = start; leftIndex <= mid; leftIndex++) {
+    // Use BigInt to handle large numbers safely
+    while (rightIndex <= end && arr[leftIndex] > 2 * arr[rightIndex]) {
+      rightIndex++;
+    }
+    count += rightIndex - (mid + 1);
+  }
+
+  return count;
+}
+
+// Merges two sorted subarrays while maintaining sorted order
+function merge(arr, start, mid, end) {
+  const temp = [];
+  let leftIndex = start;
+  let rightIndex = mid + 1;
+
+  // Merge elements in sorted order
+  while (leftIndex <= mid && rightIndex <= end) {
+    if (arr[leftIndex] <= arr[rightIndex]) {
+      temp.push(arr[leftIndex++]);
+    } else {
+      temp.push(arr[rightIndex++]);
+    }
+  }
+
+  // Copy remaining elements from left subarray
+  while (leftIndex <= mid) {
+    temp.push(arr[leftIndex++]);
+  }
+
+  // Copy remaining elements from right subarray
+  while (rightIndex <= end) {
+    temp.push(arr[rightIndex++]);
+  }
+
+  // Copy merged elements back to original array
+  for (let i = 0; i < temp.length; i++) {
+    arr[start + i] = temp[i];
+  }
 }
 
 // Example usage

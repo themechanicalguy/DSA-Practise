@@ -1,50 +1,24 @@
-const merge = (arr, l, m, r) => {
-  const newArr = [];
-  let i = 0;
-  let j = 0;
-  while (i < m - l + 1 && j < r - m) {
-    if (arr[i + l] < arr[j + m + 1]) {
-      newArr.push(arr[i + l]);
-      i++;
-    } else {
-      newArr.push(arr[j + m + 1]);
-      j++;
-    }
-  }
-  while (i < m - l + 1) {
-    newArr.push(arr[i + l]);
-    i++;
-  }
-  while (j < r - m) {
-    newArr.push(arr[j + m + 1]);
-    j++;
+// Recursive function to divide array and sort
+function mergeSortRecursive(arrayToSort) {
+  // Base case: if array has 1 or fewer elements, it's already sorted
+  if (arrayToSort.length <= 1) {
+    return arrayToSort;
   }
 
-  let k = 0;
-  while (k < newArr.length) {
-    arr[k + l] = newArr[k];
-    k++;
-  }
-  return;
-};
+  // Find the middle point to split the array
+  const midPoint = Math.floor(arrayToSort.length / 2);
 
-const _mergeSort = (arr, left, right) => {
-  if (left >= right) return;
+  // Split into left and right halves
+  const leftHalf = arrayToSort.slice(0, midPoint);
+  const rightHalf = arrayToSort.slice(midPoint);
 
-  let mid = Math.floor((left + right) / 2);
-  _mergeSort(arr, left, mid);
-  _mergeSort(arr, mid + 1, right);
+  // Recursively sort both halves
+  const sortedLeft = mergeSortRecursive(leftHalf);
+  const sortedRight = mergeSortRecursive(rightHalf);
 
-  merge(arr, left, mid, right);
-};
-
-const mergeSort = (arr) => {
-  _mergeSort(arr, 0, arr.length - 1);
-  return arr;
-};
-
-console.log([4, 3, 2, 1, 9, 8, 5, 7, 6]);
-//-----------------------------------------------------------------------------------------------------
+  // Merge the sorted halves
+  return merge(sortedLeft, sortedRight);
+}
 // Function to merge two sorted arrays into one sorted array
 function merge(leftArray, rightArray) {
   let mergedArray = [];
@@ -75,28 +49,6 @@ function merge(leftArray, rightArray) {
   }
 
   return mergedArray;
-}
-
-// Recursive function to divide array and sort
-function mergeSortRecursive(arrayToSort) {
-  // Base case: if array has 1 or fewer elements, it's already sorted
-  if (arrayToSort.length <= 1) {
-    return arrayToSort;
-  }
-
-  // Find the middle point to split the array
-  const midPoint = Math.floor(arrayToSort.length / 2);
-
-  // Split into left and right halves
-  const leftHalf = arrayToSort.slice(0, midPoint);
-  const rightHalf = arrayToSort.slice(midPoint);
-
-  // Recursively sort both halves
-  const sortedLeft = mergeSortRecursive(leftHalf);
-  const sortedRight = mergeSortRecursive(rightHalf);
-
-  // Merge the sorted halves
-  return merge(sortedLeft, sortedRight);
 }
 
 // Example usage

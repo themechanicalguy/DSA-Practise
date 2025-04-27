@@ -33,63 +33,74 @@ console.log(countInversions([2, 4, 1, 3, 5])); // Output: 3
 // Space Complexity: O(1)
 
 // Approach 2: Enhanced Merge Sort
+/**
+ * Counts the number of inversions in the array using Merge Sort.
+ * An inversion is a pair (i, j) where i < j and arr[i] > arr[j].
+ * @param {number[]} arr - Input array of integers
+ * @return {number} - Number of inversions
+ */
 function countInversions(arr) {
-  // Temporary array for merge sort
-  const temp = new Array(arr.length);
-  return mergeSortAndCount(arr, temp, 0, arr.length - 1);
-}
+  // Helper function to perform merge sort and count inversions
+  function mergeSort(array, start, end) {
+    if (start >= end) return 0; // Base case: single element or empty array
 
-function mergeSortAndCount(arr, temp, left, right) {
-  let inversionCount = 0;
+    const mid = Math.floor((start + end) / 2);
+    let inversionCount = 0;
 
-  if (left < right) {
-    const mid = Math.floor((left + right) / 2);
+    // Recursively count inversions in left and right halves
+    inversionCount += mergeSort(array, start, mid);
+    inversionCount += mergeSort(array, mid + 1, end);
 
-    // Count inversions in left half
-    inversionCount += mergeSortAndCount(arr, temp, left, mid);
+    // Count inversions during the merge step
+    inversionCount += mergeAndCount(array, start, mid, end);
 
-    // Count inversions in right half
-    inversionCount += mergeSortAndCount(arr, temp, mid + 1, right);
-
-    // Count inversions during merging
-    inversionCount += mergeAndCount(arr, temp, left, mid, right);
+    return inversionCount;
   }
 
-  return inversionCount;
-}
+  // Merges two sorted subarrays and counts inversions
+  function mergeAndCount(array, start, mid, end) {
+    const leftSubarray = array.slice(start, mid + 1); // Left subarray
+    const rightSubarray = array.slice(mid + 1, end + 1); // Right subarray
+    let inversionCount = 0;
 
-function mergeAndCount(arr, temp, left, mid, right) {
-  let i = left; // Pointer for left subarray
-  let j = mid + 1; // Pointer for right subarray
-  let k = left; // Pointer for temp array
-  let inversionCount = 0;
+    let leftIndex = 0; // Index for left subarray
+    let rightIndex = 0; // Index for right subarray
+    let mergedIndex = start; // Index for merged array
 
-  while (i <= mid && j <= right) {
-    if (arr[i] <= arr[j]) {
-      temp[k++] = arr[i++];
-    } else {
-      // All remaining elements in left subarray will be greater than arr[j]
-      inversionCount += mid - i + 1;
-      temp[k++] = arr[j++];
+    // Merge the two subarrays while counting inversions
+    while (
+      leftIndex < leftSubarray.length &&
+      rightIndex < rightSubarray.length
+    ) {
+      if (leftSubarray[leftIndex] <= rightSubarray[rightIndex]) {
+        // No inversion: copy from left subarray
+        array[mergedIndex++] = leftSubarray[leftIndex++];
+      } else {
+        // Inversion: leftSubarray[leftIndex] > rightSubarray[rightIndex]
+        // All elements from leftIndex to end of leftSubarray form inversions
+        array[mergedIndex++] = rightSubarray[rightIndex++];
+        inversionCount += leftSubarray.length - leftIndex;
+      }
     }
+
+    // Copy remaining elements from left subarray, if any
+    while (leftIndex < leftSubarray.length) {
+      array[mergedIndex++] = leftSubarray[leftIndex++];
+    }
+
+    // Copy remaining elements from right subarray, if any
+    while (rightIndex < rightSubarray.length) {
+      array[mergedIndex++] = rightSubarray[rightIndex++];
+    }
+
+    return inversionCount;
   }
 
-  // Copy remaining elements
-  while (i <= mid) {
-    temp[k++] = arr[i++];
-  }
-
-  while (j <= right) {
-    temp[k++] = arr[j++];
-  }
-
-  // Copy back to original array
-  for (let x = left; x <= right; x++) {
-    arr[x] = temp[x];
-  }
-
-  return inversionCount;
+  // Create a copy of the input array to avoid modifying it
+  const arrayCopy = [...arr];
+  return mergeSort(arrayCopy, 0, arrayCopy.length - 1);
 }
 
 // Example usage
-console.log(countInversions([2, 4, 1, 3, 5])); // Output: 3
+const arr = [2, 4, 1, 3, 5];
+console.log(countInversions(arr)); // Output: 3
