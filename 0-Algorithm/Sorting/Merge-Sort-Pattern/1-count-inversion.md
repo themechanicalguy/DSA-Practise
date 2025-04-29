@@ -14,6 +14,12 @@ When merging two sorted halves, if an element in the right half is smaller than 
 ## Solution Code
 
 ```javascript
+/**
+ * Counts the number of inversions in the array using Merge Sort.
+ * An inversion is a pair (i, j) where i < j and arr[i] > arr[j].
+ * @param {number[]} arr - Input array of integers
+ * @return {number} - Number of inversions
+ */
 function countInversions(arr) {
   // Helper function to perform merge sort and count inversions
   function mergeSort(array, start, end) {
@@ -26,17 +32,16 @@ function countInversions(arr) {
     inversionCount += mergeSort(array, start, mid);
     inversionCount += mergeSort(array, mid + 1, end);
 
-    const leftSubarray = array.slice(start, mid + 1); // Left subarray
-    const rightSubarray = array.slice(mid + 1, end + 1); // Right subarray
-
     // Count inversions during the merge step
-    inversionCount += mergeAndCount(leftSubarray, rightSubarray);
+    inversionCount += mergeAndCount(array, start, mid, end);
 
     return inversionCount;
   }
 
   // Merges two sorted subarrays and counts inversions
-  function mergeAndCount(leftSubarray, rightSubarray) {
+  function mergeAndCount(array, start, mid, end) {
+    const leftSubarray = array.slice(start, mid + 1); // Left subarray
+    const rightSubarray = array.slice(mid + 1, end + 1); // Right subarray
     let inversionCount = 0;
 
     let leftIndex = 0; // Index for left subarray
@@ -105,175 +110,161 @@ Let's perform a dry run of the `countInversions` function with three different e
 
 #### Dry Run:
 
-1. Initial call: `mergeSort([2,4,1,3,5], 0, 4)`
-
-   - mid = 2
-   - Recursive calls:
-     - `mergeSort([2,4,1,3,5], 0, 2)` → left half [2,4,1]
-     - `mergeSort([2,4,1,3,5], 3, 4)` → right half [3,5]
-   - Merge and count inversions between [1,2,4] and [3,5]
-
-2. `mergeSort([2,4,1,3,5], 0, 2)` → [2,4,1]
-
-   - mid = 1
-   - Recursive calls:
-     - `mergeSort([2,4,1,3,5], 0, 1)` → [2,4]
-     - `mergeSort([2,4,1,3,5], 2, 2)` → [1]
-   - Merge [2,4] and [1]:
-     - Compare 2 and 1 → inversion (2 > 1), count += 2 (since left has 2 elements left)
-     - Array becomes [1,2,4]
-     - Total inversions: 2
-
-3. `mergeSort([2,4,1,3,5], 0, 1)` → [2,4]
-
-   - mid = 0
-   - Recursive calls:
-     - `mergeSort([2,4,1,3,5], 0, 0)` → [2]
-     - `mergeSort([2,4,1,3,5], 1, 1)` → [4]
-   - Merge [2] and [4]:
-     - No inversions
-     - Array remains [2,4]
-     - Total inversions: 0
-
-4. `mergeSort([2,4,1,3,5], 3, 4)` → [3,5]
-
-   - mid = 3
-   - Recursive calls:
-     - `mergeSort([2,4,1,3,5], 3, 3)` → [3]
-     - `mergeSort([2,4,1,3,5], 4, 4)` → [5]
-   - Merge [3] and [5]:
-     - No inversions
-     - Array remains [3,5]
-     - Total inversions: 0
-
-5. Final merge of [1,2,4] and [3,5]:
-   - Compare 1 and 3 → no inversion
-   - Compare 2 and 3 → no inversion
-   - Compare 4 and 3 → inversion (4 > 3), count += 1 (since left has 1 element left)
-   - Array becomes [1,2,3,4,5]
-   - Total inversions: 1
-
-**Total Inversions**: 2 (from merging [2,4] and [1]) + 1 (from merging [1,2,4] and [3,5]) = 3
+Let's perform a **detailed dry run** of the `countInversions` function with the input array `[2, 4, 1, 3, 5]`. We'll track the state of `arrayCopy` at every step and count inversions explicitly.
 
 ---
 
-### Example 2: [5, 4, 3, 2, 1]
+### **Initial Setup**
 
-**Expected Output: 10** (Maximum inversions for length 5)
-
-#### Dry Run:
-
-1. Initial call: `mergeSort([5,4,3,2,1], 0, 4)`
-
-   - mid = 2
-   - Recursive calls:
-     - `mergeSort([5,4,3,2,1], 0, 2)` → [5,4,3]
-     - `mergeSort([5,4,3,2,1], 3, 4)` → [2,1]
-   - Merge [3,4,5] and [1,2]
-
-2. `mergeSort([5,4,3,2,1], 0, 2)` → [5,4,3]
-
-   - mid = 1
-   - Recursive calls:
-     - `mergeSort([5,4,3,2,1], 0, 1)` → [5,4]
-     - `mergeSort([5,4,3,2,1], 2, 2)` → [3]
-   - Merge [4,5] and [3]:
-     - Compare 4 and 3 → inversion (4 > 3), count += 2 (left has 2 elements left)
-     - Array becomes [3,4,5]
-     - Total inversions: 2
-
-3. `mergeSort([5,4,3,2,1], 0, 1)` → [5,4]
-
-   - mid = 0
-   - Recursive calls:
-     - `mergeSort([5,4,3,2,1], 0, 0)` → [5]
-     - `mergeSort([5,4,3,2,1], 1, 1)` → [4]
-   - Merge [5] and [4]:
-     - Compare 5 and 4 → inversion (5 > 4), count += 1 (left has 1 element left)
-     - Array becomes [4,5]
-     - Total inversions: 1
-
-4. `mergeSort([5,4,3,2,1], 3, 4)` → [2,1]
-
-   - mid = 3
-   - Recursive calls:
-     - `mergeSort([5,4,3,2,1], 3, 3)` → [2]
-     - `mergeSort([5,4,3,2,1], 4, 4)` → [1]
-   - Merge [2] and [1]:
-     - Compare 2 and 1 → inversion (2 > 1), count += 1 (left has 1 element left)
-     - Array becomes [1,2]
-     - Total inversions: 1
-
-5. Final merge of [3,4,5] and [1,2]:
-   - Compare 3 and 1 → inversion (3 > 1), count += 3 (left has 3 elements left)
-   - Compare 3 and 2 → inversion (3 > 2), count += 3 (left has 3 elements left)
-   - Array becomes [1,2,3,4,5]
-   - Total inversions: 6
-
-**Total Inversions**: 1 (from [5,4]) + 2 (from [4,5] and [3]) + 1 (from [2,1]) + 6 (from [3,4,5] and [1,2]) = 10
+- **Input Array:** `[2, 4, 1, 3, 5]`
+- **arrayCopy:** `[2, 4, 1, 3, 5]` (copy of input)
+- Call `mergeSort(arrayCopy, 0, 4)` (since indices are `0` to `4`).
 
 ---
 
-### Example 3: [1, 2, 3, 4, 5]
+### **Step 1: mergeSort(arrayCopy, 0, 4)**
 
-**Expected Output: 0** (Already sorted, no inversions)
+- `start = 0`, `end = 4`
+- `mid = (0 + 4) // 2 = 2`
+- Recursively sort and count inversions in left (`[0, 2]`) and right (`[3, 4]`) halves.
+- Then merge and count inversions between the two halves.
 
-#### Dry Run:
+#### **Recursive Calls:**
 
-1. Initial call: `mergeSort([1,2,3,4,5], 0, 4)`
-
-   - mid = 2
-   - Recursive calls:
-     - `mergeSort([1,2,3,4,5], 0, 2)` → [1,2,3]
-     - `mergeSort([1,2,3,4,5], 3, 4)` → [4,5]
-   - Merge [1,2,3] and [4,5]
-
-2. `mergeSort([1,2,3,4,5], 0, 2)` → [1,2,3]
-
-   - mid = 1
-   - Recursive calls:
-     - `mergeSort([1,2,3,4,5], 0, 1)` → [1,2]
-     - `mergeSort([1,2,3,4,5], 2, 2)` → [3]
-   - Merge [1,2] and [3]:
-     - No inversions
-     - Array remains [1,2,3]
-     - Total inversions: 0
-
-3. `mergeSort([1,2,3,4,5], 0, 1)` → [1,2]
-
-   - mid = 0
-   - Recursive calls:
-     - `mergeSort([1,2,3,4,5], 0, 0)` → [1]
-     - `mergeSort([1,2,3,4,5], 1, 1)` → [2]
-   - Merge [1] and [2]:
-     - No inversions
-     - Array remains [1,2]
-     - Total inversions: 0
-
-4. `mergeSort([1,2,3,4,5], 3, 4)` → [4,5]
-
-   - mid = 3
-   - Recursive calls:
-     - `mergeSort([1,2,3,4,5], 3, 3)` → [4]
-     - `mergeSort([1,2,3,4,5], 4, 4)` → [5]
-   - Merge [4] and [5]:
-     - No inversions
-     - Array remains [4,5]
-     - Total inversions: 0
-
-5. Final merge of [1,2,3] and [4,5]:
-   - No inversions
-   - Array remains [1,2,3,4,5]
-   - Total inversions: 0
-
-**Total Inversions**: 0 (already sorted)
+1. `mergeSort(arrayCopy, 0, 2)` → Sort `[2, 4, 1]`
+2. `mergeSort(arrayCopy, 3, 4)` → Sort `[3, 5]`
+3. `mergeAndCount(arrayCopy, 0, 2, 4)` → Merge `[1, 2, 4]` and `[3, 5]` and count inversions.
 
 ---
 
-### Summary of Results:
+### **Step 2: mergeSort(arrayCopy, 0, 2)**
 
-1. `[2,4,1,3,5]` → 3 inversions ✅
-2. `[5,4,3,2,1]` → 10 inversions ✅
-3. `[1,2,3,4,5]` → 0 inversions ✅
+- `start = 0`, `end = 2` (subarray `[2, 4, 1]`)
+- `mid = (0 + 2) // 2 = 1`
+- Recursively sort and count inversions in left (`[0, 1]`) and right (`[2, 2]`).
 
-The function correctly counts inversions using the merge sort approach. The key insight is counting inversions during the merge step when elements from the right subarray are placed before elements in the left subarray.
+#### **Recursive Calls:**
+
+1. `mergeSort(arrayCopy, 0, 1)` → Sort `[2, 4]`
+2. `mergeSort(arrayCopy, 2, 2)` → Sort `[1]` (base case)
+3. `mergeAndCount(arrayCopy, 0, 1, 2)` → Merge `[2, 4]` and `[1]` and count inversions.
+
+---
+
+### **Step 3: mergeSort(arrayCopy, 0, 1)**
+
+- `start = 0`, `end = 1` (subarray `[2, 4]`)
+- `mid = (0 + 1) // 2 = 0`
+- Recursively sort and count inversions in left (`[0, 0]`) and right (`[1, 1]`).
+
+#### **Recursive Calls:**
+
+1. `mergeSort(arrayCopy, 0, 0)` → `[2]` (base case, returns `0`)
+2. `mergeSort(arrayCopy, 1, 1)` → `[4]` (base case, returns `0`)
+3. `mergeAndCount(arrayCopy, 0, 0, 1)` → Merge `[2]` and `[4]` and count inversions.
+
+#### **Merge Step (`mergeAndCount(arrayCopy, 0, 0, 1)`)**
+
+- `leftSubarray = [2]`, `rightSubarray = [4]`
+- Compare `2` and `4`:
+  - `2 ≤ 4` → No inversion, copy `2` → `arrayCopy = [2, 4, 1, 3, 5]`
+  - Then copy `4` → `arrayCopy` remains `[2, 4, 1, 3, 5]`
+- **Inversions added:** `0`
+- **Return:** `0`
+
+---
+
+### **Step 4: mergeSort(arrayCopy, 2, 2)**
+
+- Base case (`start == end`), returns `0`.
+
+---
+
+### **Step 5: mergeAndCount(arrayCopy, 0, 1, 2)**
+
+- Now, `leftSubarray = [2, 4]`, `rightSubarray = [1]`
+- Compare `2` and `1`:
+  - `2 > 1` → **Inversion detected!**
+    - All remaining elements in `leftSubarray` (`[2, 4]`) are > `1`.
+    - **Inversions added:** `leftSubarray.length - leftIndex = 2 - 0 = 2`
+    - Copy `1` → `arrayCopy = [1, 4, 2, 3, 5]`
+- Now, `rightSubarray` is exhausted, copy remaining `leftSubarray` (`[2, 4]`):
+  - `arrayCopy = [1, 2, 4, 3, 5]`
+- **Inversions added in this step:** `2`
+- **Return:** `2`
+
+---
+
+### **Step 6: mergeSort(arrayCopy, 3, 4)**
+
+- `start = 3`, `end = 4` (subarray `[3, 5]`)
+- `mid = (3 + 4) // 2 = 3`
+- Recursively sort and count inversions in left (`[3, 3]`) and right (`[4, 4]`).
+
+#### **Recursive Calls:**
+
+1. `mergeSort(arrayCopy, 3, 3)` → `[3]` (base case, returns `0`)
+2. `mergeSort(arrayCopy, 4, 4)` → `[5]` (base case, returns `0`)
+3. `mergeAndCount(arrayCopy, 3, 3, 4)` → Merge `[3]` and `[5]` and count inversions.
+
+#### **Merge Step (`mergeAndCount(arrayCopy, 3, 3, 4)`)**
+
+- `leftSubarray = [3]`, `rightSubarray = [5]`
+- Compare `3` and `5`:
+  - `3 ≤ 5` → No inversion, copy `3` → `arrayCopy = [1, 2, 4, 3, 5]`
+  - Then copy `5` → `arrayCopy` remains `[1, 2, 4, 3, 5]`
+- **Inversions added:** `0`
+- **Return:** `0`
+
+---
+
+### **Step 7: mergeAndCount(arrayCopy, 0, 2, 4)**
+
+- Now, `leftSubarray = [1, 2, 4]`, `rightSubarray = [3, 5]`
+- Compare `1` and `3`:
+  - `1 ≤ 3` → No inversion, copy `1` → `arrayCopy = [1, 2, 4, 3, 5]`
+- Compare `2` and `3`:
+  - `2 ≤ 3` → No inversion, copy `2` → `arrayCopy = [1, 2, 4, 3, 5]`
+- Compare `4` and `3`:
+  - `4 > 3` → **Inversion detected!**
+    - Only `4` is > `3` in `leftSubarray`.
+    - **Inversions added:** `leftSubarray.length - leftIndex = 3 - 2 = 1`
+    - Copy `3` → `arrayCopy = [1, 2, 3, 4, 5]`
+- Compare `4` and `5`:
+  - `4 ≤ 5` → No inversion, copy `4` → `arrayCopy = [1, 2, 3, 4, 5]`
+- Copy remaining `5` → `arrayCopy` remains `[1, 2, 3, 4, 5]`
+- **Inversions added in this step:** `1`
+- **Return:** `1`
+
+---
+
+### **Summing Up Inversions**
+
+- From `mergeAndCount(arrayCopy, 0, 0, 1)`: `0`
+- From `mergeAndCount(arrayCopy, 0, 1, 2)`: `2`
+- From `mergeAndCount(arrayCopy, 3, 3, 4)`: `0`
+- From `mergeAndCount(arrayCopy, 0, 2, 4)`: `1`
+- **Total Inversions:** `0 + 2 + 0 + 1 = 3`
+
+---
+
+### **Final Output**
+
+The function returns `3`, which matches the number of inversions in `[2, 4, 1, 3, 5]`:
+
+1. **(2, 1)**
+2. **(4, 1)**
+3. **(4, 3)**
+
+---
+
+### **Summary of `arrayCopy` Changes**
+
+| Step | Subarray Being Merged | `arrayCopy` State | Inversions Added |
+| ---- | --------------------- | ----------------- | ---------------- |
+| 1    | `[2]` + `[4]`         | `[2, 4, 1, 3, 5]` | 0                |
+| 2    | `[2,4]` + `[1]`       | `[1, 2, 4, 3, 5]` | 2                |
+| 3    | `[3]` + `[5]`         | `[1, 2, 4, 3, 5]` | 0                |
+| 4    | `[1,2,4]` + `[3,5]`   | `[1, 2, 3, 4, 5]` | 1                |
+
+**Final Answer:** `3` ✅
