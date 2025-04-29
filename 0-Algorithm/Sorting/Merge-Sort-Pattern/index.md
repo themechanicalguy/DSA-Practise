@@ -19,57 +19,62 @@ The key insight is that it's easier to merge two already sorted arrays than to s
 ## Solution Code
 
 ```javascript
-function mergeSort(nums) {
-  // Base case: if array has 0 or 1 element, it's already sorted
-  if (nums.length <= 1) {
-    return nums;
+// Recursive function to divide array and sort
+function mergeSort(arrayToSort) {
+  // Base case: if array has 1 or fewer elements, it's already sorted
+  if (arrayToSort.length <= 1) {
+    return arrayToSort;
   }
 
-  // Find the middle point to divide the array into two halves
-  const middle = Math.floor(nums.length / 2);
+  // Find the middle point to split the array
+  const midPoint = Math.floor(arrayToSort.length / 2);
 
-  // Split the array into left and right halves
-  const left = nums.slice(0, middle);
-  const right = nums.slice(middle);
+  // Split into left and right halves
+  const leftHalf = arrayToSort.slice(0, midPoint);
+  const rightHalf = arrayToSort.slice(midPoint);
 
   // Recursively sort both halves
-  const sortedLeft = mergeSort(left);
-  const sortedRight = mergeSort(right);
+  const sortedLeft = mergeSort(leftHalf);
+  const sortedRight = mergeSort(rightHalf);
 
   // Merge the sorted halves
   return merge(sortedLeft, sortedRight);
 }
-
-function merge(left, right) {
-  let result = [];
+// Function to merge two sorted arrays into one sorted array
+function merge(leftArray, rightArray) {
+  let mergedArray = [];
   let leftIndex = 0;
   let rightIndex = 0;
 
-  // Compare elements from left and right arrays and add the smaller one to result
-  while (leftIndex < left.length && rightIndex < right.length) {
-    if (left[leftIndex] <= right[rightIndex]) {
-      result.push(left[leftIndex]);
+  // Compare elements from both arrays and merge in sorted order
+  while (leftIndex < leftArray.length && rightIndex < rightArray.length) {
+    if (leftArray[leftIndex] <= rightArray[rightIndex]) {
+      mergedArray.push(leftArray[leftIndex]);
       leftIndex++;
     } else {
-      result.push(right[rightIndex]);
+      mergedArray.push(rightArray[rightIndex]);
       rightIndex++;
     }
   }
 
-  // Add any remaining elements from left array
-  while (leftIndex < left.length) {
-    result.push(left[leftIndex]);
+  // Add remaining elements from leftArray, if any
+  while (leftIndex < leftArray.length) {
+    mergedArray.push(leftArray[leftIndex]);
     leftIndex++;
   }
 
-  // Add any remaining elements from right array
-  while (rightIndex < right.length) {
-    result.push(right[rightIndex]);
+  // Add remaining elements from rightArray, if any
+  while (rightIndex < rightArray.length) {
+    mergedArray.push(rightArray[rightIndex]);
     rightIndex++;
   }
 
-  return result;
+  return mergedArray;
 }
+
+// Example usage
+const unsortedArray = [64, 34, 25, 12, 22, 11, 90];
+console.log("Recursive Merge Sort:", mergeSort(unsortedArray));
 
 // Example usage:
 const nums = [7, 4, 1, 5, 3];
@@ -132,103 +137,7 @@ Merge Sort is a **divide-and-conquer** algorithm that recursively splits an arra
 
 ## **1. Standard Merge Sort (Basic Implementation)**
 
-**Problem:** Sort an array in ascending order.  
-**Approach:**
-
-- Divide the array into halves.
-- Recursively sort each half.
-- Merge the two sorted halves.
-
-### **Solution (JavaScript)**
-
-```javascript
-function mergeSort(arr) {
-  if (arr.length <= 1) return arr;
-
-  const mid = Math.floor(arr.length / 2);
-  const left = mergeSort(arr.slice(0, mid));
-  const right = mergeSort(arr.slice(mid));
-
-  return merge(left, right);
-}
-
-function merge(left, right) {
-  let result = [];
-  let i = 0,
-    j = 0;
-
-  while (i < left.length && j < right.length) {
-    if (left[i] < right[j]) {
-      result.push(left[i]);
-      i++;
-    } else {
-      result.push(right[j]);
-      j++;
-    }
-  }
-
-  return [...result, ...left.slice(i), ...right.slice(j)];
-}
-
-const arr = [5, 3, 8, 4, 2];
-console.log(mergeSort(arr)); // [2, 3, 4, 5, 8]
-```
-
----
-
 ## **2. Counting Inversions (Modified Merge Sort)**
-
-**Problem:** Count the number of inversions (pairs `(i, j)` where `i < j` and `arr[i] > arr[j]`).  
-**Approach:**
-
-- Modify `merge()` to count inversions when `left[i] > right[j]`.
-
-### **Solution (JavaScript)**
-
-```javascript
-function countInversions(arr) {
-  if (arr.length <= 1) return { sorted: arr, count: 0 };
-
-  const mid = Math.floor(arr.length / 2);
-  const left = countInversions(arr.slice(0, mid));
-  const right = countInversions(arr.slice(mid));
-  const merged = mergeAndCount(left.sorted, right.sorted);
-
-  return {
-    sorted: merged.sorted,
-    count: left.count + right.count + merged.count,
-  };
-}
-
-function mergeAndCount(left, right) {
-  let result = [];
-  let i = 0,
-    j = 0,
-    count = 0;
-
-  while (i < left.length && j < right.length) {
-    if (left[i] <= right[j]) {
-      result.push(left[i]);
-      i++;
-    } else {
-      result.push(right[j]);
-      count += left.length - i; // All remaining left elements are > right[j]
-      j++;
-    }
-  }
-
-  return {
-    sorted: [...result, ...left.slice(i), ...right.slice(j)],
-    count,
-  };
-}
-
-const arr = [3, 1, 2, 4];
-const { count } = countInversions(arr);
-console.log(count); // 2 (Pairs: (3,1), (3,2))
-```
-
----
 
 ## **3. Merge k Sorted Arrays (Divide & Conquer)**
 
@@ -281,125 +190,7 @@ console.log(mergeKSortedArrays(arrays)); // [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 ## **4. Count Smaller Elements After Self (LeetCode 315)**
 
-**Problem:** For each element in `nums`, count how many elements to its right are smaller.  
-**Approach:**
-
-- Use Merge Sort while tracking original indices.
-- Count smaller elements during merging.
-
-### **Solution (JavaScript)**
-
-```javascript
-function countSmaller(nums) {
-  const counts = new Array(nums.length).fill(0);
-  const indexedNums = nums.map((num, index) => ({ num, index }));
-
-  mergeSortWithCount(indexedNums, counts);
-
-  return counts;
-}
-
-function mergeSortWithCount(arr, counts) {
-  if (arr.length <= 1) return arr;
-
-  const mid = Math.floor(arr.length / 2);
-  const left = mergeSortWithCount(arr.slice(0, mid), counts);
-  const right = mergeSortWithCount(arr.slice(mid), counts);
-
-  return mergeWithCount(left, right, counts);
-}
-
-function mergeWithCount(left, right, counts) {
-  let result = [];
-  let i = 0,
-    j = 0;
-  let rightCount = 0; // Tracks how many elements in right are smaller than left[i]
-
-  while (i < left.length && j < right.length) {
-    if (left[i].num > right[j].num) {
-      result.push(right[j]);
-      j++;
-      rightCount++;
-    } else {
-      counts[left[i].index] += rightCount;
-      result.push(left[i]);
-      i++;
-    }
-  }
-
-  while (i < left.length) {
-    counts[left[i].index] += rightCount;
-    result.push(left[i]);
-    i++;
-  }
-
-  while (j < right.length) {
-    result.push(right[j]);
-    j++;
-  }
-
-  return result;
-}
-
-const nums = [5, 2, 6, 1];
-console.log(countSmaller(nums)); // [2, 1, 1, 0]
-```
-
----
-
 ## **5. Reverse Pairs (LeetCode 493)**
-
-**Problem:** Count pairs `(i, j)` where `i < j` and `nums[i] > 2 * nums[j]`.  
-**Approach:**
-
-- Similar to inversion count, but with a modified condition (`nums[i] > 2 * nums[j]`).
-
-### **Solution (JavaScript)**
-
-```javascript
-function reversePairs(nums) {
-  return mergeSortAndCount(nums, 0, nums.length - 1);
-}
-
-function mergeSortAndCount(nums, left, right) {
-  if (left >= right) return 0;
-
-  const mid = Math.floor((left + right) / 2);
-  let count =
-    mergeSortAndCount(nums, left, mid) +
-    mergeSortAndCount(nums, mid + 1, right);
-
-  // Count reverse pairs
-  let j = mid + 1;
-  for (let i = left; i <= mid; i++) {
-    while (j <= right && nums[i] > 2 * nums[j]) j++;
-    count += j - (mid + 1);
-  }
-
-  // Merge
-  const temp = [];
-  let i = left,
-    k = mid + 1;
-  while (i <= mid && k <= right) {
-    if (nums[i] <= nums[k]) {
-      temp.push(nums[i++]);
-    } else {
-      temp.push(nums[k++]);
-    }
-  }
-  while (i <= mid) temp.push(nums[i++]);
-  while (k <= right) temp.push(nums[k++]);
-
-  for (let i = left; i <= right; i++) {
-    nums[i] = temp[i - left];
-  }
-
-  return count;
-}
-
-const nums = [1, 3, 2, 3, 1];
-console.log(reversePairs(nums)); // 2
-```
 
 ---
 

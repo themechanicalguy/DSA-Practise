@@ -26,16 +26,17 @@ function countInversions(arr) {
     inversionCount += mergeSort(array, start, mid);
     inversionCount += mergeSort(array, mid + 1, end);
 
+    const leftSubarray = array.slice(start, mid + 1); // Left subarray
+    const rightSubarray = array.slice(mid + 1, end + 1); // Right subarray
+
     // Count inversions during the merge step
-    inversionCount += mergeAndCount(array, start, mid, end);
+    inversionCount += mergeAndCount(leftSubarray, rightSubarray);
 
     return inversionCount;
   }
 
   // Merges two sorted subarrays and counts inversions
-  function mergeAndCount(array, start, mid, end) {
-    const leftSubarray = array.slice(start, mid + 1); // Left subarray
-    const rightSubarray = array.slice(mid + 1, end + 1); // Right subarray
+  function mergeAndCount(leftSubarray, rightSubarray) {
     let inversionCount = 0;
 
     let leftIndex = 0; // Index for left subarray
