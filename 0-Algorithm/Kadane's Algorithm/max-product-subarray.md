@@ -84,22 +84,22 @@ function maxProductDP(nums) {
 - **i=1 (3)**:
 
   - prevMax = 2
-  - localMax = max(3, 3*2, 3*2) = max(3, 6, 6) = 6
-  - localMin = min(3, 3*2, 3*2) = min(3, 6, 6) = 3
+  - localMax = max(3, `3*2`, `3*2`) = max(3, 6, 6) = 6
+  - localMin = min(3, `3*2`, `3*2`) = min(3, 6, 6) = 3
   - globalMax = max(2, 6) = 6
 
 - **i=2 (-2)**:
 
   - prevMax = 6
-  - localMax = max(-2, -2*6, -2*3) = max(-2, -12, -6) = -2
-  - localMin = min(-2, -2*6, -2*3) = min(-2, -12, -6) = -12
+  - localMax = max(-2, `-2*6`, `-2*3`) = max(-2, -12, -6) = -2
+  - localMin = min(-2, `-2*6`, `-2*3`) = min(-2, -12, -6) = -12
   - globalMax = max(6, -2) = 6
 
 - **i=3 (4)**:
 
   - prevMax = -2
-  - localMax = max(4, 4*-2, 4*-12) = max(4, -8, -48) = 4
-  - localMin = min(4, 4*-2, 4*-12) = min(4, -8, -48) = -48
+  - localMax = max(4, `4*-2`, `4*-12`) = max(4, -8, -48) = 4
+  - localMin = min(4, `4*-2`, `4*-12`) = min(4, -8, -48) = -48
   - globalMax = max(6, 4) = 6
 
 - **Output**: 6
