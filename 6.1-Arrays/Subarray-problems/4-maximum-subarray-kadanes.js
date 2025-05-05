@@ -20,63 +20,49 @@ function maxSubarraySumBruteForce(nums) {
 
 // Example usage:
 console.log(maxSubarraySumBruteForce([2, 3, -8, 7, -1, 2, 3])); // Output: 11
+// Find the max sum of subArray of an Array which might have negative numbers.
+// Examples
+/** 
+have a empty array. [], output: null
+have only one value. [-12]  or [0], output : 0
+[3,-2,-2,2,-1,3,4,-5,4], output: 8
+[7,-4], output 7;
+[-4,7], output 7;
+*/
 
-//Kadane’s Algorithm (O(n)) - Optimized Approach
-// Kadane's algorithm is the most efficient way to solve this problem.
-// It tracks the maximum sum ending at the current index and updates the global maximum sum.
+const maxSubArray = (arr) => {
+  // if Not an array or Empty Array, return null
+  if (!(Array.isArray(arr) && arr.length)) return null;
+  // variable for global and local Variable calculation.
+  let gMax = arr[0];
+  let lMax = arr[0];
 
-function maxSubarraySumKadane(nums) {
-  let maxSoFar = nums[0],
-    maxEndingHere = nums[0];
-
-  for (let i = 1; i < nums.length; i++) {
-    maxEndingHere = Math.max(nums[i], maxEndingHere + nums[i]);
-    maxSoFar = Math.max(maxSoFar, maxEndingHere);
+  // loop array
+  for (let i = 1; i < arr.length; i++) {
+    // if currentElement(arr[i]) is larger than sum of previousElement's(lMax+arr[i]) + currentElement(arr[i]) then make localVariable as currentElement(arr[i])
+    lMax = Math.max(arr[i], lMax + arr[i]);
+    // if lMax is larger than gMax then assign lMax to gMax
+    gMax = Math.max(lMax, gMax);
   }
+  return gMax;
+};
 
-  return maxSoFar;
-}
-
-// Example usage:
-console.log(maxSubarraySumKadane([2, 3, -8, 7, -1, 2, 3])); // Output: 11
-
-//Divide and Conquer Approach (O(n log n))
-//This approach recursively finds the maximum subarray sum by dividing the array into two halves.
-function maxCrossingSum(nums, left, mid, right) {
-  let leftSum = -Infinity,
-    sum = 0;
-
-  for (let i = mid; i >= left; i--) {
-    sum += nums[i];
-    leftSum = Math.max(leftSum, sum);
+// soln saurav
+const maxsubArraySum = (arr) => {
+  // assigning first element as max value
+  let maxSum = arr[0];
+  let currSum = 0;
+  for (let i of arr) {
+    currSum = currSum + arr[i];
+    // assigning greater sum to maxSum
+    maxSum = Math.max(maxSum, currSum);
+    // if sum is less than zero neglect the currSum
+    if (currSum < 0) {
+      // currSum is -ive, then initialize it with zero
+      currSum = 0;
+    }
   }
+  return maxSum;
+};
 
-  let rightSum = -Infinity;
-  sum = 0;
-
-  for (let i = mid + 1; i <= right; i++) {
-    sum += nums[i];
-    rightSum = Math.max(rightSum, sum);
-  }
-
-  return leftSum + rightSum;
-}
-
-function maxSubarraySumDivideAndConquer(nums, left, right) {
-  if (left === right) return nums[left];
-
-  let mid = Math.floor((left + right) / 2);
-
-  let leftMax = maxSubarraySumDivideAndConquer(nums, left, mid);
-  let rightMax = maxSubarraySumDivideAndConquer(nums, mid + 1, right);
-  let crossMax = maxCrossingSum(nums, left, mid, right);
-
-  return Math.max(leftMax, rightMax, crossMax);
-}
-
-function findMaxSubarraySum(nums) {
-  return maxSubarraySumDivideAndConquer(nums, 0, nums.length - 1);
-}
-
-// Example usage:
-console.log(findMaxSubarraySum([2, 3, -8, 7, -1, 2, 3])); // Output: 11
+console.log(maxSubArray([3, -2, -2, 2, -1, 3, 4, -5, 4]));

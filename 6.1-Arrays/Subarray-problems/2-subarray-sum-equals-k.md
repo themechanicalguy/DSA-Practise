@@ -1,6 +1,6 @@
-# Counting Subarrays with Sum Equal to K
+# LC-560 Subarrays Sum Equals K
 
-This problem requires us to find the number of contiguous subarrays that sum up to a given target value k. I'll present multiple approaches with increasing efficiency, explain each one, and provide a dry run of the optimal approach.
+This problem requires us to find the number of contiguous subarrays that sum up to a given target value k.
 
 ## Approach 1: Brute Force (Nested Loops)
 
