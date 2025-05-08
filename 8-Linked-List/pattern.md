@@ -6,7 +6,7 @@ Linked list problems often follow certain patterns that can help you identify an
 
 - Uses two pointers moving at different speeds (e.g., one moves one step, the other two steps) to detect properties like cycles, midpoints, or specific nodes.
 
-# Approach:
+### Approach:
 
 - Use two pointers: slow (moves one step) and fast (moves two steps).
 - When fast reaches the end, slow will be at the middle.
