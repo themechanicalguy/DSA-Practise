@@ -13,193 +13,273 @@ This allows traversal in both directions (forward and backward), unlike a singly
 ```javascript
 class Node {
   constructor(val) {
-    this.val = val;
-    this.next = null;
-    this.prev = null;
+    this.val = val; // Value stored in the node
+    this.next = null; // Pointer to the next node
+    this.prev = null; // Pointer to the previous node
   }
 }
 
 class DoublyLinkedList {
   constructor() {
-    this.head = null;
-    this.tail = null;
-    this.length = 0;
+    this.head = null; // First node in the list
+    this.tail = null; // Last node in the list
+    this.length = 0; // Number of nodes in the list
   }
 
-  // Add a node to the end
+  /**
+   * Adds a new node with the given value to the end of the list
+   * @param {*} val - The value to add
+   * @returns {DoublyLinkedList} The modified list
+   */
   push(val) {
+    // Create a new node with the given value
     const newNode = new Node(val);
+
+    // If list is empty, set both head and tail to the new node
     if (!this.head) {
       this.head = newNode;
       this.tail = newNode;
     } else {
-      this.tail.next = newNode;
-      newNode.prev = this.tail;
-      this.tail = newNode;
+      // Otherwise, add the new node after the current tail
+      this.tail.next = newNode; // Current tail points to new node
+      newNode.prev = this.tail; // New node points back to current tail
+      this.tail = newNode; // Update tail to be the new node
     }
+
+    // Increment length and return the list
     this.length++;
     return this;
   }
 
-  // Remove a node from the end
+  /**
+   * Removes and returns the last node from the list
+   * @returns {Node|undefined} The removed node or undefined if list is empty
+   */
   pop() {
+    // If list is empty, return undefined
     if (!this.head) return undefined;
+
+    // Store the current tail node to return later
     const poppedNode = this.tail;
+
+    // If there's only one node, reset the list
     if (this.length === 1) {
       this.head = null;
       this.tail = null;
     } else {
+      // Update tail to be the previous node
       this.tail = poppedNode.prev;
+      // Remove the forward link from the new tail
       this.tail.next = null;
+      // Remove the backward link from the popped node
       poppedNode.prev = null;
     }
+
+    // Decrement length and return the removed node
     this.length--;
     return poppedNode;
   }
 
-  // Remove a node from the beginning
+  /**
+   * Removes and returns the first node from the list
+   * @returns {Node|undefined} The removed node or undefined if list is empty
+   */
   shift() {
+    // If list is empty, return undefined
     if (!this.head) return undefined;
+
+    // Store the current head node to return later
     const oldHead = this.head;
+
+    // If there's only one node, reset the list
     if (this.length === 1) {
       this.head = null;
       this.tail = null;
     } else {
+      // Update head to be the next node
       this.head = oldHead.next;
+      // Remove the backward link from the new head
       this.head.prev = null;
+      // Remove the forward link from the old head
       oldHead.next = null;
     }
+
+    // Decrement length and return the removed node
     this.length--;
     return oldHead;
   }
 
-  // Add a node to the beginning
+  /**
+   * Adds a new node with the given value to the beginning of the list
+   * @param {*} val - The value to add
+   * @returns {DoublyLinkedList} The modified list
+   */
   unshift(val) {
+    // Create a new node with the given value
     const newNode = new Node(val);
+
+    // If list is empty, set both head and tail to the new node
     if (!this.head) {
       this.head = newNode;
       this.tail = newNode;
     } else {
-      this.head.prev = newNode;
+      // Set the new node's next to current head
       newNode.next = this.head;
+      // Set current head's prev to new node
+      this.head.prev = newNode;
+      // Update head to be the new node
       this.head = newNode;
     }
+
+    // Increment length and return the list
     this.length++;
     return this;
   }
 
-  // Get a node at a specific index
+  /**
+   * Retrieves the node at the specified index
+   * @param {number} index - The index of the node to retrieve
+   * @returns {Node|null} The node at the index or null if index is invalid
+   */
   get(index) {
+    // If index is out of bounds, return null
     if (index < 0 || index >= this.length) return null;
-    let current, count;
+
+    let current;
+
+    // Optimize by deciding which end to start from
     if (index <= this.length / 2) {
-      // Start from head
-      count = 0;
+      // Start from head if index is in first half
       current = this.head;
-      while (count !== index) {
+      for (let i = 0; i < index; i++) {
         current = current.next;
-        count++;
       }
     } else {
-      // Start from tail
-      count = this.length - 1;
+      // Start from tail if index is in second half
       current = this.tail;
-      while (count !== index) {
+      for (let i = this.length - 1; i > index; i--) {
         current = current.prev;
-        count--;
       }
     }
+
     return current;
   }
 
-  // Set the value of a node at a specific index
+  /**
+   * Updates the value of the node at the specified index
+   * @param {number} index - The index of the node to update
+   * @param {*} val - The new value
+   * @returns {boolean} True if update was successful, false otherwise
+   */
   set(index, val) {
-    const foundNode = this.get(index);
-    if (foundNode) {
-      foundNode.val = val;
-      return true;
-    }
-    return false;
+    // Get the node at the specified index
+    const node = this.get(index);
+
+    // If node doesn't exist, return false
+    if (!node) return false;
+
+    // Update the node's value and return true
+    node.val = val;
+    return true;
   }
 
-  // Insert a node at a specific position
-  insertAt(pos, val) {
-    if (pos < 0 || pos > this.length) return false;
-    if (pos === 0) return !!this.unshift(val);
-    if (pos === this.length) return !!this.push(val);
+  /**
+   * Inserts a new node with the given value at the specified index
+   * @param {number} index - The position to insert at
+   * @param {*} val - The value to insert
+   * @returns {boolean} True if insertion was successful, false otherwise
+   */
+  insert(index, val) {
+    // If index is out of bounds, return false
+    if (index < 0 || index > this.length) return false;
 
+    // If inserting at beginning, use unshift
+    if (index === 0) return !!this.unshift(val);
+
+    // If inserting at end, use push
+    if (index === this.length) return !!this.push(val);
+
+    // Create new node
     const newNode = new Node(val);
-    const beforeNode = this.get(pos - 1);
+
+    // Get the node before the insertion point
+    const beforeNode = this.get(index - 1);
+    // Get the node after the insertion point
     const afterNode = beforeNode.next;
 
-    beforeNode.next = newNode;
-    newNode.prev = beforeNode;
-    newNode.next = afterNode;
-    afterNode.prev = newNode;
+    // Update links to insert new node
+    beforeNode.next = newNode; // Node before points to new node
+    newNode.prev = beforeNode; // New node points back to before node
+    newNode.next = afterNode; // New node points to after node
+    afterNode.prev = newNode; // After node points back to new node
 
+    // Increment length and return true
     this.length++;
     return true;
   }
 
-  // Remove a node at a specific position
-  removeAt(pos) {
-    if (pos < 0 || pos >= this.length) return undefined;
-    if (pos === 0) return this.shift();
-    if (pos === this.length - 1) return this.pop();
+  /**
+   * Removes and returns the node at the specified index
+   * @param {number} index - The position to remove from
+   * @returns {Node|undefined} The removed node or undefined if index is invalid
+   */
+  remove(index) {
+    // If index is out of bounds, return undefined
+    if (index < 0 || index >= this.length) return undefined;
 
-    const removedNode = this.get(pos);
+    // If removing first node, use shift
+    if (index === 0) return this.shift();
+
+    // If removing last node, use pop
+    if (index === this.length - 1) return this.pop();
+
+    // Get the node to remove
+    const removedNode = this.get(index);
+    // Get the node before the removed node
     const beforeNode = removedNode.prev;
+    // Get the node after the removed node
     const afterNode = removedNode.next;
 
-    beforeNode.next = afterNode;
-    afterNode.prev = beforeNode;
+    // Update links to skip the removed node
+    beforeNode.next = afterNode; // Before node points to after node
+    afterNode.prev = beforeNode; // After node points back to before node
+
+    // Clean up the removed node's links
     removedNode.next = null;
     removedNode.prev = null;
 
+    // Decrement length and return the removed node
     this.length--;
     return removedNode;
   }
 
-  // Remove a node with specific value
-  remove(val) {
-    let current = this.head;
-    while (current) {
-      if (current.val === val) {
-        if (current === this.head) return this.shift();
-        if (current === this.tail) return this.pop();
-
-        const beforeNode = current.prev;
-        const afterNode = current.next;
-
-        beforeNode.next = afterNode;
-        afterNode.prev = beforeNode;
-        current.next = null;
-        current.prev = null;
-
-        this.length--;
-        return current;
-      }
-      current = current.next;
-    }
-    return undefined;
-  }
-
-  // Reverse the list
+  /**
+   * Reverses the list in place
+   * @returns {DoublyLinkedList} The reversed list
+   */
   reverse() {
+    // Swap head and tail
     let current = this.head;
     this.head = this.tail;
     this.tail = current;
 
-    let next = null;
     let prev = null;
+    let next;
 
+    // Traverse through the list
     while (current) {
+      // Store next node before changing links
       next = current.next;
-      current.next = prev;
-      current.prev = next;
+
+      // Reverse the links
+      current.next = prev; // Reverse next pointer
+      current.prev = next; // Reverse prev pointer
+
+      // Move to next node
       prev = current;
       current = next;
     }
+
     return this;
   }
 }
@@ -216,7 +296,7 @@ list.push(20);
 list.push(30);
 ```
 
-Dry run:
+Dry Run:
 
 - Initial: head=null, tail=null, length=0
 - push(10): head=10, tail=10, length=1
@@ -226,120 +306,130 @@ Dry run:
 ### 2. pop()
 
 ```javascript
-list.pop(); // returns node with 30
+list.pop(); // Returns node with 30
 ```
 
-Dry run:
+Dry Run:
 
 - Before: head=10, tail=30, length=3
-- After: tail=20, 20.next=null, length=2
-- Returned node: 30 (with prev=20, next=null)
+- poppedNode = 30
+- Update tail to 20 (30.prev)
+- Set 20.next = null
+- Set 30.prev = null
+- length decreases to 2
+- Returns node with 30
 
 ### 3. shift()
 
 ```javascript
-list.shift(); // returns node with 10
+list.shift(); // Returns node with 10
 ```
 
-Dry run:
+Dry Run:
 
 - Before: head=10, tail=20, length=2
-- After: head=20, 20.prev=null, length=1
-- Returned node: 10 (with next=20, prev=null)
+- oldHead = 10
+- Update head to 20 (10.next)
+- Set 20.prev = null
+- Set 10.next = null
+- length decreases to 1
+- Returns node with 10
 
 ### 4. unshift(val)
 
 ```javascript
-list.unshift(5); // list becomes 5->20
+list.unshift(5); // List: 5 <-> 20
 ```
 
-Dry run:
+Dry Run:
 
 - Before: head=20, tail=20, length=1
-- After: head=5, tail=20, 5.next=20, 20.prev=5, length=2
+- newNode = 5
+- Set 5.next = 20
+- Set 20.prev = 5
+- Update head to 5
+- length increases to 2
 
 ### 5. get(index)
 
 ```javascript
-list.get(1); // returns node with 20
+list.get(0); // Returns node with 5
+list.get(1); // Returns node with 20
 ```
 
-Dry run:
+Dry Run:
 
-- List: 5->20
-- Since index=1 > length/2 (1 > 1), start from tail
-- Start at tail (20), index=1, return 20
+- For index 0 (<= length/2):
+  - Start at head (5)
+  - Return immediately
+- For index 1 (> length/2):
+  - Start at tail (20)
+  - Return immediately
 
 ### 6. set(index, val)
 
 ```javascript
-list.set(1, 25); // changes 20 to 25, returns true
+list.set(1, 25); // Changes 20 to 25
 ```
 
-Dry run:
+Dry Run:
 
-- Uses get(1) to find node (20)
-- Changes node.val to 25
+- Get node at index 1 (20)
+- Change its val to 25
 - Returns true
 
-### 7. insertAt(pos, val)
+### 7. insert(index, val)
 
 ```javascript
-list.insertAt(1, 15); // list becomes 5->15->25
+list.insert(1, 15); // List: 5 <-> 15 <-> 25
 ```
 
-Dry run:
+Dry Run:
 
-- Before: 5->25, length=2
-- Get node before position (5)
-- Create new node (15)
-- Set 5.next=15, 15.prev=5, 15.next=25, 25.prev=15
-- length=3
+- newNode = 15
+- beforeNode = node at index 0 (5)
+- afterNode = 5.next (25)
+- Set 5.next = 15
+- Set 15.prev = 5
+- Set 15.next = 25
+- Set 25.prev = 15
+- length increases to 3
 
-### 8. removeAt(pos)
+### 8. remove(index)
 
 ```javascript
-list.removeAt(1); // removes 15, returns node with 15
+list.remove(1); // Removes 15, returns its node
 ```
 
-Dry run:
+Dry Run:
 
-- Before: 5->15->25, length=3
-- Get node at position 1 (15)
-- Set 5.next=25, 25.prev=5
-- Remove 15's next and prev pointers
-- length=2
-- Return node with 15
+- removedNode = node at index 1 (15)
+- beforeNode = 15.prev (5)
+- afterNode = 15.next (25)
+- Set 5.next = 25
+- Set 25.prev = 5
+- Clean 15's links (next=null, prev=null)
+- length decreases to 2
+- Returns node with 15
 
-### 9. remove(val)
+### 9. reverse()
 
 ```javascript
-list.remove(25); // removes 25, returns node with 25
+list.reverse(); // List: 25 <-> 5
 ```
 
-Dry run:
+Dry Run:
 
-- Before: 5->25, length=2
-- Find node with val=25 (tail)
-- Call pop() internally
-- Set tail=5, 5.next=null
-- length=1
-- Return node with 25
-
-### 10. reverse()
-
-```javascript
-list.push(10).push(20).reverse(); // list becomes 20->10->5
-```
-
-Dry run:
-
-- Start with list: 5->10->20
-- Swap head (5) and tail (20)
-- For each node:
-  - 5: next=null (was 10), prev=10 (was null)
-  - 10: next=5 (was 20), prev=20 (was 5)
-  - 20: next=10 (was null), prev=null (was 10)
-- Final order: 20->10->5
-
-This implementation provides all the basic operations for a doubly linked list with O(1) operations for head/tail insertions/deletions and O(n) for other operations.
+- Before: head=5, tail=25
+- Swap head and tail: head=25, tail=5
+- Initialize: current=5 (original head)
+- First iteration:
+  - next = 5.next (25)
+  - Reverse links: 5.next=null (prev was null), 5.prev=25
+  - prev = 5, current = 25
+- Second iteration:
+  - next = 25.next (null)
+  - Reverse links: 25.next=5, 25.prev=null
+  - prev = 25, current = null
+- Loop ends
+- List is now reversed
