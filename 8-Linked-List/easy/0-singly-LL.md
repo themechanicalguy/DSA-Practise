@@ -166,269 +166,6 @@ class SinglyLinkedList {
 }
 ```
 
-## Dry Run Examples for Each Method
-
-### 1. push(value) - Add to end
-
-**Example 1:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push(10);
-list.push(20);
-list.print(); // [10, 20]
-```
-
-- Start: Empty list
-- push(10): head = 10, tail = 10, length = 1
-- push(20): head = 10, tail = 20, length = 2
-
-**Example 2:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push("a");
-list.push("b");
-list.push("c");
-list.print(); // ['a', 'b', 'c']
-```
-
-- Start: Empty list
-- push('a'): head = 'a', tail = 'a', length = 1
-- push('b'): head = 'a', tail = 'b', length = 2
-- push('c'): head = 'a', tail = 'c', length = 3
-
-### 2. pop() - Remove from end
-
-**Example 1:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push(1);
-list.push(2);
-list.push(3);
-list.pop();
-list.print(); // [1, 2]
-```
-
-- Initial: [1, 2, 3]
-- pop():
-  - current moves from 1 → 2 → 3
-  - newTail becomes 2
-  - tail = 2, next = null
-  - length = 2
-
-**Example 2:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push("x");
-list.pop();
-list.print(); // []
-```
-
-- Initial: ['x']
-- pop():
-  - current = 'x'
-  - head and tail set to null
-  - length = 0
-
-### 3. shift() - Remove from beginning
-
-**Example 1:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push(10);
-list.push(20);
-list.shift();
-list.print(); // [20]
-```
-
-- Initial: [10, 20]
-- shift():
-  - currentHead = 10
-  - head = 20
-  - length = 1
-
-**Example 2:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push("a");
-list.shift();
-list.print(); // []
-```
-
-- Initial: ['a']
-- shift():
-  - currentHead = 'a'
-  - head = null, tail = null
-  - length = 0
-
-### 4. unshift(value) - Add to beginning
-
-**Example 1:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push(2);
-list.unshift(1);
-list.print(); // [1, 2]
-```
-
-- Initial: [2]
-- unshift(1):
-  - newNode = 1
-  - newNode.next = 2
-  - head = 1
-  - length = 2
-
-**Example 2:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.unshift("first");
-list.print(); // ['first']
-```
-
-- Initial: []
-- unshift('first'):
-  - newNode = 'first'
-  - head = 'first', tail = 'first'
-  - length = 1
-
-### 5. get(index) - Get node at index
-
-**Example 1:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push(10);
-list.push(20);
-list.push(30);
-console.log(list.get(1).value); // 20
-```
-
-- Initial: [10, 20, 30]
-- get(1):
-  - counter = 0, current = 10
-  - counter = 1, current = 20
-  - returns node with value 20
-
-**Example 2:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push("a");
-console.log(list.get(0).value); // 'a'
-console.log(list.get(1)); // null
-```
-
-- Initial: ['a']
-- get(0): returns 'a'
-- get(1): returns null (out of bounds)
-
-### 6. set(index, value) - Update node value
-
-**Example 1:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push(1);
-list.push(2);
-list.set(0, 100);
-list.print(); // [100, 2]
-```
-
-- Initial: [1, 2]
-- set(0, 100):
-  - gets node at index 0 (value = 1)
-  - updates value to 100
-
-**Example 2:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push("x");
-list.push("y");
-list.set(1, "z");
-list.print(); // ['x', 'z']
-```
-
-- Initial: ['x', 'y']
-- set(1, 'z'):
-  - gets node at index 1 (value = 'y')
-  - updates value to 'z'
-
-### 7. insertAt(index, value) - Insert at position
-
-**Example 1:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push("a");
-list.push("c");
-list.insertAt(1, "b");
-list.print(); // ['a', 'b', 'c']
-```
-
-- Initial: ['a', 'c']
-- insertAt(1, 'b'):
-  - gets node at index 0 ('a')
-  - creates new node 'b' with next = 'c'
-  - sets 'a'.next = 'b'
-  - length = 3
-
-**Example 2:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.insertAt(0, "first");
-list.print(); // ['first']
-```
-
-- Initial: []
-- insertAt(0, 'first'):
-  - uses unshift (since index = 0)
-  - creates new list with 'first'
-
-### 8. remove(index) - Remove at position
-
-**Example 1:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push(1);
-list.push(2);
-list.push(3);
-list.remove(1);
-list.print(); // [1, 3]
-```
-
-- Initial: [1, 2, 3]
-- remove(1):
-  - gets node at index 0 (1)
-  - sets 1.next to 3 (skipping 2)
-  - length = 2
-
-**Example 2:**
-
-```javascript
-const list = new SinglyLinkedList();
-list.push("x");
-list.push("y");
-list.push("z");
-list.remove(0);
-list.print(); // ['y', 'z']
-```
-
-- Initial: ['x', 'y', 'z']
-- remove(0):
-  - uses shift()
-  - head becomes 'y'
-  - length = 2
-
 # Singly Linked List Implementation without Tail
 
 ```javascript
@@ -445,7 +182,7 @@ class SinglyLinkedList {
     this.length = 0; // Track length for O(1) access
   }
 
-  // Add to end of list - O(1) time
+  // Add to end of list - O(n) time
   push(value) {
     const newNode = new Node(value); // Create new node
 
@@ -470,11 +207,11 @@ class SinglyLinkedList {
     if (!this.head) return undefined; // Empty list case
 
     let current = this.head;
-    let newTail = current;
+    let prev = current;
 
     // Traverse until current is last node
     while (current.next) {
-      newTail = current;
+      prev = current;
       current = current.next;
     }
 
@@ -482,7 +219,7 @@ class SinglyLinkedList {
     if (this.length === 0) {
       this.head = null; // List is now empty
     } else {
-      newTail.next = null; // Remove reference to popped node
+      prev.next = null; // Remove reference to popped node
     }
 
     return current.value; // Return removed value
@@ -581,22 +318,24 @@ class SinglyLinkedList {
 
   // Reverse the list - O(n) time
   reverse() {
-    let node = this.head;
-    this.head = null; // Temporarily set head to null
+    let previousNode = null;
+    let currentNode = this.head;
+    let nextNode = null;
 
-    while (node) {
-      // Save next node before we overwrite node.next
-      const nextNode = node.next;
+    while (currentNode !== null) {
+      // Store the next node before we overwrite currentNode.next
+      nextNode = currentNode.next;
 
-      // Move node to the new head position
-      node.next = this.head;
-      this.head = node;
+      // Reverse the link
+      currentNode.next = previousNode;
 
-      // Move to next node in original list
-      node = nextNode;
+      // Move pointers one position ahead
+      previousNode = currentNode;
+      currentNode = nextNode;
     }
 
-    return this; // Return reversed list
+    // At the end, previousNode will be the new head
+    return previousNode;
   }
 
   // Print list values - O(n) time
@@ -627,48 +366,6 @@ class SinglyLinkedList {
 8. **Remove**: O(n) time (worst case), O(1) space
 9. **Reverse**: O(n) time, O(1) space
 10. **Print**: O(n) time, O(n) space (for storing values)
-
-## Dry Run Examples
-
-### Example 1: Basic Operations
-
-```javascript
-const list = new SinglyLinkedList();
-list.push(10); // List: 10
-list.push(20); // List: 10 -> 20
-list.unshift(5); // List: 5 -> 10 -> 20
-list.insertAt(2, 15); // List: 5 -> 10 -> 15 -> 20
-list.print(); // Output: 5 -> 10 -> 15 -> 20
-list.pop(); // Returns 20, List: 5 -> 10 -> 15
-list.shift(); // Returns 5, List: 10 -> 15
-list.print(); // Output: 10 -> 15
-```
-
-### Example 2: Edge Cases
-
-```javascript
-const list = new SinglyLinkedList();
-list.pop(); // Returns undefined (empty list)
-list.shift(); // Returns undefined (empty list)
-list.push(100); // List: 100
-list.pop(); // Returns 100, List is now empty
-list.unshift(200); // List: 200
-list.insertAt(1, 300); // List: 200 -> 300
-list.remove(0); // Returns 200, List: 300
-list.print(); // Output: 300
-```
-
-### Example 3: Reverse Operation
-
-```javascript
-const list = new SinglyLinkedList();
-list.push(1).push(2).push(3); // List: 1 -> 2 -> 3
-list.reverse(); // List: 3 -> 2 -> 1
-list.print(); // Output: 3 -> 2 -> 1
-list.get(1); // Returns node with value 2
-list.set(1, 5); // List: 3 -> 5 -> 1
-list.print(); // Output: 3 -> 5 -> 1
-```
 
 ## Alternative Approaches
 
