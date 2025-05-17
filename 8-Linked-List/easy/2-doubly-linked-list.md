@@ -285,151 +285,246 @@ class DoublyLinkedList {
 }
 ```
 
-## Examples and Dry Runs
-
-### 1. push(val)
+# Doubly Linked List Implementation Without Tail Property
 
 ```javascript
-const list = new DoublyLinkedList();
-list.push(10);
-list.push(20);
-list.push(30);
+class Node {
+  constructor(val) {
+    this.val = val; // Value stored in the node
+    this.next = null; // Pointer to the next node
+    this.prev = null; // Pointer to the previous node
+  }
+}
+
+class DoublyLinkedList {
+  constructor() {
+    this.head = null; // First node in the list
+    this.length = 0; // Number of nodes in the list
+  }
+
+  // Add a node to the end of the list - O(n) time, O(1) space
+  push(val) {
+    const newNode = new Node(val); // Create new node
+
+    if (this.length === 0) {
+      // If list is empty
+      this.head = newNode; // Set new node as head
+    } else {
+      let current = this.head;
+      while (current.next) {
+        // Traverse to last node
+        current = current.next;
+      }
+      current.next = newNode; // Set new node as next of last node
+      newNode.prev = current; // Set last node as prev of new node
+    }
+    this.length++; // Increment length
+    return this; // Return the list
+  }
+
+  // Remove and return the last node - O(n) time, O(1) space
+  pop() {
+    if (this.length === 0) return undefined; // Empty list case
+
+    let current = this.head;
+    while (current.next) {
+      // Traverse to last node
+      current = current.next;
+    }
+
+    if (this.length === 1) {
+      // Only one node case
+      this.head = null;
+    } else {
+      current.prev.next = null; // Remove reference to last node
+    }
+
+    this.length--; // Decrement length
+    return current; // Return removed node
+  }
+
+  // Remove and return the first node - O(1) time, O(1) space
+  shift() {
+    if (this.length === 0) return undefined; // Empty list case
+
+    const oldHead = this.head; // Store current head
+    this.head = oldHead.next; // Move head to next node
+
+    if (this.head) {
+      // If new head exists
+      this.head.prev = null; // Remove its prev reference
+    }
+
+    this.length--; // Decrement length
+    return oldHead; // Return removed node
+  }
+
+  // Add a node to the beginning - O(1) time, O(1) space
+  unshift(val) {
+    const newNode = new Node(val); // Create new node
+
+    if (this.length === 0) {
+      // Empty list case
+      this.head = newNode;
+    } else {
+      newNode.next = this.head; // Point new node to current head
+      this.head.prev = newNode; // Point current head back to new node
+      this.head = newNode; // Update head to new node
+    }
+
+    this.length++; // Increment length
+    return this; // Return the list
+  }
+
+  // Get node at specific index - O(n) time, O(1) space
+  get(index) {
+    if (index < 0 || index >= this.length) return null; // Invalid index
+
+    let current = this.head;
+    for (let i = 0; i < index; i++) {
+      // Traverse to index
+      current = current.next;
+    }
+
+    return current; // Return node at index
+  }
+
+  // Set value of node at specific index - O(n) time, O(1) space
+  set(index, val) {
+    const node = this.get(index); // Get node at index
+    if (!node) return false; // If node doesn't exist
+
+    node.val = val; // Update node's value
+    return true; // Return success
+  }
+
+  // Insert node at specific index - O(n) time, O(1) space
+  insertAt(index, val) {
+    if (index < 0 || index > this.length) return false; // Invalid index
+    if (index === 0) return !!this.unshift(val); // Insert at start
+    if (index === this.length) return !!this.push(val); // Insert at end
+
+    const newNode = new Node(val); // Create new node
+    const beforeNode = this.get(index - 1); // Get node before insertion point
+    const afterNode = beforeNode.next; // Get node after insertion point
+
+    // Update links for new node
+    newNode.prev = beforeNode;
+    newNode.next = afterNode;
+
+    // Update links of surrounding nodes
+    beforeNode.next = newNode;
+    afterNode.prev = newNode;
+
+    this.length++; // Increment length
+    return true; // Return success
+  }
+
+  // Remove node at specific index - O(n) time, O(1) space
+  remove(index) {
+    if (index < 0 || index >= this.length) return undefined; // Invalid index
+    if (index === 0) return this.shift(); // Remove from start
+    if (index === this.length - 1) return this.pop(); // Remove from end
+
+    const removedNode = this.get(index); // Get node to remove
+
+    // Update links of surrounding nodes to bypass removed node
+    removedNode.prev.next = removedNode.next;
+    removedNode.next.prev = removedNode.prev;
+
+    this.length--; // Decrement length
+    return removedNode; // Return removed node
+  }
+
+  // Print the list values - O(n) time, O(1) space
+  print() {
+    let current = this.head;
+    const values = [];
+    while (current) {
+      values.push(current.val);
+      current = current.next;
+    }
+    console.log(values.join(" <-> "));
+  }
+
+  // Reverse the list - O(n) time, O(1) space
+  reverse() {
+    let current = this.head;
+    let temp = null;
+
+    while (current) {
+      // Swap next and prev pointers
+      temp = current.prev;
+      current.prev = current.next;
+      current.next = temp;
+
+      // Move to next node (which is now prev due to swap)
+      current = current.prev;
+    }
+
+    // Update head to point to new first node
+    if (temp) {
+      this.head = temp.prev;
+    }
+
+    return this;
+  }
+}
 ```
 
-Dry Run:
+## Time and Space Complexity Analysis
 
-- Initial: head=null, tail=null, length=0
-- push(10): head=10, tail=10, length=1
-- push(20): head=10, tail=20, 10.next=20, 20.prev=10, length=2
-- push(30): head=10, tail=30, 20.next=30, 30.prev=20, length=3
+1. **push(val)**: O(n) time (must traverse entire list), O(1) space
+2. **pop()**: O(n) time (must traverse entire list), O(1) space
+3. **shift()**: O(1) time, O(1) space
+4. **unshift(val)**: O(1) time, O(1) space
+5. **get(index)**: O(n) time (worst case), O(1) space
+6. **set(index, val)**: O(n) time (due to get), O(1) space
+7. **insertAt(index, val)**: O(n) time (worst case), O(1) space
+8. **remove(index)**: O(n) time (worst case), O(1) space
+9. **print()**: O(n) time, O(n) space (for storing values)
+10. **reverse()**: O(n) time, O(1) space
 
-### 2. pop()
+## Dry Run Examples
+
+### Example 1: Basic Operations
 
 ```javascript
-list.pop(); // Returns node with 30
+const dll = new DoublyLinkedList();
+dll.push(10); // List: 10
+dll.push(20); // List: 10 <-> 20
+dll.push(30); // List: 10 <-> 20 <-> 30
+dll.unshift(5); // List: 5 <-> 10 <-> 20 <-> 30
+dll.pop(); // Removes 30, List: 5 <-> 10 <-> 20
+dll.shift(); // Removes 5, List: 10 <-> 20
+dll.print(); // Output: 10 <-> 20
 ```
 
-Dry Run:
-
-- Before: head=10, tail=30, length=3
-- poppedNode = 30
-- Update tail to 20 (30.prev)
-- Set 20.next = null
-- Set 30.prev = null
-- length decreases to 2
-- Returns node with 30
-
-### 3. shift()
+### Example 2: Edge Cases
 
 ```javascript
-list.shift(); // Returns node with 10
+const dll = new DoublyLinkedList();
+dll.pop(); // Returns undefined (empty list)
+dll.push(100); // List: 100
+dll.pop(); // Removes 100, List is empty
+dll.push(200); // List: 200
+dll.shift(); // Removes 200, List is empty
+dll.insertAt(0, 50); // List: 50
+dll.remove(0); // Removes 50, List is empty
+dll.print(); // Output: (empty)
 ```
 
-Dry Run:
-
-- Before: head=10, tail=20, length=2
-- oldHead = 10
-- Update head to 20 (10.next)
-- Set 20.prev = null
-- Set 10.next = null
-- length decreases to 1
-- Returns node with 10
-
-### 4. unshift(val)
+### Example 3: Complex Operations
 
 ```javascript
-list.unshift(5); // List: 5 <-> 20
+const dll = new DoublyLinkedList();
+dll.push(1).push(2).push(3); // List: 1 <-> 2 <-> 3
+dll.insertAt(1, 1.5); // List: 1 <-> 1.5 <-> 2 <-> 3
+dll.set(2, 99); // List: 1 <-> 1.5 <-> 99 <-> 3
+dll.remove(1); // Removes 1.5, List: 1 <-> 99 <-> 3
+dll.reverse(); // List: 3 <-> 99 <-> 1
+dll.get(1).val; // Returns 99
+dll.print(); // Output: 3 <-> 99 <-> 1
 ```
 
-Dry Run:
-
-- Before: head=20, tail=20, length=1
-- newNode = 5
-- Set 5.next = 20
-- Set 20.prev = 5
-- Update head to 5
-- length increases to 2
-
-### 5. get(index)
-
-```javascript
-list.get(0); // Returns node with 5
-list.get(1); // Returns node with 20
-```
-
-Dry Run:
-
-- For index 0 (<= length/2):
-  - Start at head (5)
-  - Return immediately
-- For index 1 (> length/2):
-  - Start at tail (20)
-  - Return immediately
-
-### 6. set(index, val)
-
-```javascript
-list.set(1, 25); // Changes 20 to 25
-```
-
-Dry Run:
-
-- Get node at index 1 (20)
-- Change its val to 25
-- Returns true
-
-### 7. insert(index, val)
-
-```javascript
-list.insert(1, 15); // List: 5 <-> 15 <-> 25
-```
-
-Dry Run:
-
-- newNode = 15
-- beforeNode = node at index 0 (5)
-- afterNode = 5.next (25)
-- Set 5.next = 15
-- Set 15.prev = 5
-- Set 15.next = 25
-- Set 25.prev = 15
-- length increases to 3
-
-### 8. remove(index)
-
-```javascript
-list.remove(1); // Removes 15, returns its node
-```
-
-Dry Run:
-
-- removedNode = node at index 1 (15)
-- beforeNode = 15.prev (5)
-- afterNode = 15.next (25)
-- Set 5.next = 25
-- Set 25.prev = 5
-- Clean 15's links (next=null, prev=null)
-- length decreases to 2
-- Returns node with 15
-
-### 9. reverse()
-
-```javascript
-list.reverse(); // List: 25 <-> 5
-```
-
-Dry Run:
-
-- Before: head=5, tail=25
-- Swap head and tail: head=25, tail=5
-- Initialize: current=5 (original head)
-- First iteration:
-  - next = 5.next (25)
-  - Reverse links: 5.next=null (prev was null), 5.prev=25
-  - prev = 5, current = 25
-- Second iteration:
-  - next = 25.next (null)
-  - Reverse links: 25.next=5, 25.prev=null
-  - prev = 25, current = null
-- Loop ends
-- List is now reversed
+This implementation maintains all the functionality of a doubly linked list without using a tail property, though some operations (like push and pop) become O(n) instead of O(1) since we need to traverse the entire list to reach the end.
