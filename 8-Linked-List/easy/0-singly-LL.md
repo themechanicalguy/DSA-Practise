@@ -429,4 +429,275 @@ list.print(); // ['y', 'z']
   - head becomes 'y'
   - length = 2
 
-This implementation provides a complete set of operations for a singly linked list with clear examples demonstrating each operation. The comments explain the logic, and the dry runs show how each method affects the list structure.
+# Singly Linked List Implementation without Tail
+
+```javascript
+class Node {
+  constructor(value) {
+    this.value = value; // Store the value of the node
+    this.next = null; // Pointer to the next node (initially null)
+  }
+}
+
+class SinglyLinkedList {
+  constructor() {
+    this.head = null; // Head pointer (initially null for empty list)
+    this.length = 0; // Track length for O(1) access
+  }
+
+  // Add to end of list - O(1) time
+  push(value) {
+    const newNode = new Node(value); // Create new node
+
+    if (!this.head) {
+      // If list is empty, set new node as head
+      this.head = newNode;
+    } else {
+      // Otherwise traverse to end and add new node
+      let current = this.head;
+      while (current.next) {
+        current = current.next;
+      }
+      current.next = newNode;
+    }
+
+    this.length++; // Increment length
+    return this; // Return list for chaining
+  }
+
+  // Remove from end of list - O(n) time
+  pop() {
+    if (!this.head) return undefined; // Empty list case
+
+    let current = this.head;
+    let newTail = current;
+
+    // Traverse until current is last node
+    while (current.next) {
+      newTail = current;
+      current = current.next;
+    }
+
+    this.length--;
+    if (this.length === 0) {
+      this.head = null; // List is now empty
+    } else {
+      newTail.next = null; // Remove reference to popped node
+    }
+
+    return current.value; // Return removed value
+  }
+
+  // Remove from beginning - O(1) time
+  shift() {
+    if (!this.head) return undefined; // Empty list case
+
+    const currentHead = this.head;
+    this.head = currentHead.next; // Move head to next node
+    this.length--;
+
+    if (this.length === 0) {
+      this.head = null; // Clean up if list is now empty
+    }
+
+    return currentHead.value; // Return removed value
+  }
+
+  // Add to beginning - O(1) time
+  unshift(value) {
+    const newNode = new Node(value); // Create new node
+
+    if (!this.head) {
+      this.head = newNode; // If empty, set as head
+    } else {
+      newNode.next = this.head; // New node points to current head
+      this.head = newNode; // Update head to new node
+    }
+
+    this.length++;
+    return this; // Return list for chaining
+  }
+
+  // Get node at index - O(n) time
+  get(index) {
+    if (index < 0 || index >= this.length) return null; // Invalid index
+
+    let counter = 0;
+    let current = this.head;
+
+    // Traverse until reaching the index
+    while (counter !== index) {
+      current = current.next;
+      counter++;
+    }
+
+    return current; // Return node at index
+  }
+
+  // Set value at index - O(n) time
+  set(index, value) {
+    const foundNode = this.get(index); // Reuse get method
+
+    if (foundNode) {
+      foundNode.value = value; // Update value if node exists
+      return true;
+    }
+
+    return false; // Return false if index invalid
+  }
+
+  // Insert at index - O(n) time
+  insertAt(index, value) {
+    if (index < 0 || index > this.length) return false; // Invalid index
+    if (index === 0) return !!this.unshift(value); // Insert at head
+    if (index === this.length) return !!this.push(value); // Insert at tail
+
+    const newNode = new Node(value); // Create new node
+    const prevNode = this.get(index - 1); // Get previous node
+
+    // Insert new node between prev and prev.next
+    newNode.next = prevNode.next;
+    prevNode.next = newNode;
+
+    this.length++;
+    return true;
+  }
+
+  // Remove at index - O(n) time
+  remove(index) {
+    if (index < 0 || index >= this.length) return undefined; // Invalid index
+    if (index === 0) return this.shift(); // Remove from head
+    if (index === this.length - 1) return this.pop(); // Remove from tail
+
+    const prevNode = this.get(index - 1); // Get previous node
+    const removedNode = prevNode.next; // Node to be removed
+
+    // Bypass the removed node
+    prevNode.next = removedNode.next;
+    this.length--;
+
+    return removedNode.value; // Return removed value
+  }
+
+  // Reverse the list - O(n) time
+  reverse() {
+    let node = this.head;
+    this.head = null; // Temporarily set head to null
+
+    while (node) {
+      // Save next node before we overwrite node.next
+      const nextNode = node.next;
+
+      // Move node to the new head position
+      node.next = this.head;
+      this.head = node;
+
+      // Move to next node in original list
+      node = nextNode;
+    }
+
+    return this; // Return reversed list
+  }
+
+  // Print list values - O(n) time
+  print() {
+    const values = [];
+    let current = this.head;
+
+    while (current) {
+      values.push(current.value);
+      current = current.next;
+    }
+
+    console.log(values.join(" -> "));
+    return this; // Return list for chaining
+  }
+}
+```
+
+## Time and Space Complexity Analysis
+
+1. **Push**: O(n) time (must traverse to end), O(1) space
+2. **Pop**: O(n) time (must traverse to end), O(1) space
+3. **Shift**: O(1) time, O(1) space
+4. **Unshift**: O(1) time, O(1) space
+5. **Get**: O(n) time (worst case), O(1) space
+6. **Set**: O(n) time (due to get), O(1) space
+7. **InsertAt**: O(n) time (worst case), O(1) space
+8. **Remove**: O(n) time (worst case), O(1) space
+9. **Reverse**: O(n) time, O(1) space
+10. **Print**: O(n) time, O(n) space (for storing values)
+
+## Dry Run Examples
+
+### Example 1: Basic Operations
+
+```javascript
+const list = new SinglyLinkedList();
+list.push(10); // List: 10
+list.push(20); // List: 10 -> 20
+list.unshift(5); // List: 5 -> 10 -> 20
+list.insertAt(2, 15); // List: 5 -> 10 -> 15 -> 20
+list.print(); // Output: 5 -> 10 -> 15 -> 20
+list.pop(); // Returns 20, List: 5 -> 10 -> 15
+list.shift(); // Returns 5, List: 10 -> 15
+list.print(); // Output: 10 -> 15
+```
+
+### Example 2: Edge Cases
+
+```javascript
+const list = new SinglyLinkedList();
+list.pop(); // Returns undefined (empty list)
+list.shift(); // Returns undefined (empty list)
+list.push(100); // List: 100
+list.pop(); // Returns 100, List is now empty
+list.unshift(200); // List: 200
+list.insertAt(1, 300); // List: 200 -> 300
+list.remove(0); // Returns 200, List: 300
+list.print(); // Output: 300
+```
+
+### Example 3: Reverse Operation
+
+```javascript
+const list = new SinglyLinkedList();
+list.push(1).push(2).push(3); // List: 1 -> 2 -> 3
+list.reverse(); // List: 3 -> 2 -> 1
+list.print(); // Output: 3 -> 2 -> 1
+list.get(1); // Returns node with value 2
+list.set(1, 5); // List: 3 -> 5 -> 1
+list.print(); // Output: 3 -> 5 -> 1
+```
+
+## Alternative Approaches
+
+1. **Tail Pointer Optimization**: We could add a `tail` property to make push operations O(1):
+
+```javascript
+class SinglyLinkedList {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+
+  push(value) {
+    const newNode = new Node(value);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    this.length++;
+    return this;
+  }
+  // ... other methods would need to maintain tail pointer
+}
+```
+
+Trade-off: Slightly more complex code to maintain tail pointer, but O(1) push.
+
+2. **Recursive Methods**: Some methods could be implemented recursively (like reverse), but this would typically use O(n) space for the call stack.
