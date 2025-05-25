@@ -10,7 +10,7 @@ Bubble Sort is a simple sorting algorithm that repeatedly steps through the list
 - After each pass, the largest unsorted element is placed in its correct position
 - The algorithm gets its name because elements gradually "bubble" to their correct position
 
-## Approaches in JavaScript
+![Sample Image](BubbleSort.gif)
 
 ### 1. Standard Bubble Sort
 
@@ -193,5 +193,3 @@ Array: [4, 4, 4, 4]
 Final sorted array: [4, 4, 4, 4]
 
 The optimized version performs best on already sorted or nearly sorted arrays, terminating early when no swaps are detected. This makes it more efficient than the basic version in these cases.
-
-![Sample Image](BubbleSort.gif)
