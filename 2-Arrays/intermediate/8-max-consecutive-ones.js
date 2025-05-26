@@ -1,5 +1,26 @@
 //LC-485. Max Consecutive Ones
 
+//brute force
+function findMaxConsecutiveOnes(nums) {
+  let maxCount = 0;
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] === 1) {
+      let currentCount = 0;
+      for (let j = i; j < nums.length; j++) {
+        if (nums[j] === 1) {
+          currentCount++;
+        } else {
+          break;
+        }
+      }
+      if (currentCount > maxCount) {
+        maxCount = currentCount;
+      }
+    }
+  }
+  return maxCount;
+}
+
 //Approach 1: Iterative Count (Optimal)
 function findMaxConsecutiveOnes(nums) {
   let maxCount = 0,

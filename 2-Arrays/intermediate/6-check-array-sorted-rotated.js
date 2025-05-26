@@ -42,6 +42,7 @@ function isRotatedSorted(arr) {
   let countBreaks = 0;
 
   for (let i = 0; i < n; i++) {
+    // (i + 1) % n is done to check if rotated part is sorted as well
     if (arr[i] > arr[(i + 1) % n]) {
       countBreaks++;
     }
