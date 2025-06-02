@@ -1,6 +1,7 @@
 # N-Queens Problem: Solutions and Analysis
 
-The N-Queens problem is a classic backtracking problem where we need to place N queens on an N×N chessboard such that no two queens threaten each other. Let's explore multiple approaches to solve this problem in JavaScript.
+The N-Queens problem is a classic backtracking problem where we need to place N queens on an N×N chessboard such that no two queens threaten each other.
+Let's explore multiple approaches to solve this problem in JavaScript.
 
 ## Intuition
 
@@ -12,7 +13,7 @@ The key insight is that queens attack in rows, columns, and diagonals. Therefore
 
 We can approach this problem systematically by trying to place queens one row at a time and backtracking when we hit a conflict.
 
-## Approach 1: Backtracking with Sets for Conflict Tracking
+## Approach 1: Backtracking with Sets for Conflict Tracking (Optimized)
 
 **Intuition:**
 
@@ -33,6 +34,7 @@ function solveNQueens(n) {
   const posDiags = new Set(); // Tracks occupied positive diagonals (row + col)
   const negDiags = new Set(); // Tracks occupied negative diagonals (row - col)
   const result = []; // Stores all valid board configurations
+  // Initialize an NxN board filled with '.' (empty spaces)
   const board = Array.from({ length: n }, () => Array(n).fill("."));
 
   /**
@@ -42,6 +44,8 @@ function solveNQueens(n) {
    * @returns {boolean} - True if safe, false otherwise
    */
   function isSafe(row, col) {
+    // Check if column or diagonals are already occupied
+    // Positive diagonal: row + col, Negative diagonal: row - col
     return (
       !cols.has(col) && !posDiags.has(row + col) && !negDiags.has(row - col)
     );
@@ -52,14 +56,19 @@ function solveNQueens(n) {
    * @param {number} row - Current row to place a queen
    */
   function backtrack(row) {
+    // Base case: If all queens are placed (row equals n), add the solution
     if (row === n) {
+      // Map each row to a string by joining its elements, and push to result
       result.push(board.map((r) => r.join("")));
       return;
     }
+    // Try placing a queen in each column of the current row
     for (let col = 0; col < n; col++) {
+      // Check if the current position is safe
       if (isSafe(row, col)) {
         // Place queen
         board[row][col] = "Q";
+        // Mark the column and diagonals as occupied
         cols.add(col);
         posDiags.add(row + col);
         negDiags.add(row - col);
@@ -67,7 +76,7 @@ function solveNQueens(n) {
         // Recurse to next row
         backtrack(row + 1);
 
-        // Backtrack: remove queen and clear sets
+        // Backtrack: Remove the queen and clear the column/diagonals
         board[row][col] = ".";
         cols.delete(col);
         posDiags.delete(row + col);
@@ -86,6 +95,8 @@ function solveNQueens(n) {
 - **Time Complexity**: `O(N!)`, where N is the board size. For each row, we try up to N columns, but pruning (due to conflicts) reduces the number of valid placements. The worst-case is exploring all permutations, bounded by N!.
 
 - **Space Complexity**: `O(N²)`for the board and O(N) for the recursion stack and sets. The result array stores solutions, each of size N², but this is output space, not auxiliary space.
+
+---
 
 ## Approach 2: Basic Backtracking
 
@@ -153,137 +164,4 @@ function solveNQueens(n) {
 - **Time Complexity**: O(N!) - In the worst case, we explore all possible permutations of queen placements.
 - **Space Complexity**: O(N²) - For the board storage, plus O(N) for recursion stack.
 
-## Approach 2: Optimized Backtracking with Column and Diagonal Tracking
-
-We can optimize the `isSafe` check by using sets to track occupied columns and diagonals.
-
-```javascript
-function solveNQueensOptimized(n) {
-  const solutions = [];
-  const board = Array.from({ length: n }, () => Array(n).fill("."));
-  const occupiedCols = new Set();
-  const occupiedDiag1 = new Set(); // For diagonals (row - col)
-  const occupiedDiag2 = new Set(); // For anti-diagonals (row + col)
-
-  function backtrack(row) {
-    if (row === n) {
-      solutions.push(board.map((r) => r.join("")));
-      return;
-    }
-
-    for (let col = 0; col < n; col++) {
-      const diag1 = row - col;
-      const diag2 = row + col;
-
-      if (
-        !occupiedCols.has(col) &&
-        !occupiedDiag1.has(diag1) &&
-        !occupiedDiag2.has(diag2)
-      ) {
-        // Place queen
-        board[row][col] = "Q";
-        occupiedCols.add(col);
-        occupiedDiag1.add(diag1);
-        occupiedDiag2.add(diag2);
-
-        // Recurse
-        backtrack(row + 1);
-
-        // Backtrack
-        board[row][col] = ".";
-        occupiedCols.delete(col);
-        occupiedDiag1.delete(diag1);
-        occupiedDiag2.delete(diag2);
-      }
-    }
-  }
-
-  backtrack(0);
-  return solutions;
-}
-```
-
-### Complexity Analysis
-
-- **Time Complexity**: O(N!) - Still factorial, but with more efficient conflict checking.
-- **Space Complexity**: O(N) - We've replaced the O(N²) board with sets that take O(N) space.
-
-## Approach 3: Bitmask Backtracking (Most Optimized)
-
-For even better performance, we can use bitmasks to represent occupied columns and diagonals.
-
-```javascript
-function solveNQueensBitmask(n) {
-  const solutions = [];
-
-  function backtrack(row, cols, diag1, diag2, board) {
-    if (row === n) {
-      solutions.push([...board]);
-      return;
-    }
-
-    for (let col = 0; col < n; col++) {
-      const currDiag1 = row - col + n; // To avoid negative numbers
-      const currDiag2 = row + col;
-
-      // Check if column and diagonals are available
-      if (
-        !(cols & (1 << col)) &&
-        !(diag1 & (1 << currDiag1)) &&
-        !(diag2 & (1 << currDiag2))
-      ) {
-        // Place queen
-        const newRow = ".".repeat(col) + "Q" + ".".repeat(n - col - 1);
-        board.push(newRow);
-
-        // Recurse with updated bitmasks
-        backtrack(
-          row + 1,
-          cols | (1 << col),
-          diag1 | (1 << currDiag1),
-          diag2 | (1 << currDiag2),
-          board
-        );
-
-        // Backtrack
-        board.pop();
-      }
-    }
-  }
-
-  backtrack(0, 0, 0, 0, []);
-  return solutions;
-}
-```
-
-### Complexity Analysis
-
-- **Time Complexity**: O(N!) - Still factorial, but with constant-time conflict checking.
-- **Space Complexity**: O(N) - Only uses space for the recursion stack and solution storage.
-
-## Dry Run with Examples
-
-### Example 1: n = 4 (Standard Case)
-
-1. Place Q at (0,0)
-
-   - Conflicts when placing in row 1 (col 0 and diagonals invalid)
-   - Try (1,2), then (2) fails, backtrack
-   - Eventually find solution: [".Q..","...Q","Q...","..Q."]
-
-2. Similar process finds the second solution: ["..Q.","Q...","...Q",".Q.."]
-
-### Example 2: n = 1 (Edge Case)
-
-- Only one possible placement: [["Q"]]
-
-### Example 3: n = 2 (No Solution Case)
-
-- No possible way to place 2 queens on 2x2 board without conflict
-- Returns empty array []
-
-## Conclusion
-
-The N-Queens problem beautifully demonstrates backtracking. While all approaches have factorial time complexity in the worst case, the optimized versions significantly reduce the constant factors and auxiliary space usage. The bitmask approach is particularly efficient for larger N values due to its constant-time conflict checking.
-
-For practical purposes, the optimized backtracking with sets (Approach 2) provides a good balance between code readability and performance for typical problem sizes (N ≤ 20).
+---

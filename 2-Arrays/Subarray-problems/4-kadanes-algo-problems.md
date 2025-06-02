@@ -81,77 +81,29 @@ Kadane's pattern is useful for various problems involving contiguous subsequence
 
 ### 2. Maximum Product Subarray
 
-The product version is more complex because:
-
-- Multiplying two negative numbers yields a positive number.
-- A large negative product can become the maximum if multiplied by another negative number.
-- Zero resets the product.
-
-#### Intuition:
-
-At each step, track both:
-
-- **max_product:** Maximum product ending at the current position.
-- **min_product:** Minimum product ending at the current position (since it might become the new max_product if multiplied by a negative number).
-- The product subarray can be extended or reset at each step, similar to Kadane's, but with additional checks for minima.
-
 ```javascript
-/**
- * Finds the maximum product of any contiguous subarray using dynamic programming.
- * @param {number[]} nums - The input array of integers.
- * @return {number} - The maximum product.
- */
-function maxProduct(nums) {
-  // Edge case: if the array is empty, return 0 (though problem says nums.length >= 1)
+function maxProductSubarray(nums) {
   if (nums.length === 0) return 0;
 
-  // Initialize variables to keep track of:
-  // - maxProduct: maximum product up to the current element
-  // - minProduct: minimum product up to the current element (to handle negative numbers)
-  // - result: the overall maximum product found so far
-  let maxProduct = nums[0];
-  let minProduct = nums[0];
-  let result = nums[0];
+  let maxCurrent = nums[0];
+  let minCurrent = nums[0];
+  let maxGlobal = nums[0];
 
-  // Iterate through the array starting from the second element
   for (let i = 1; i < nums.length; i++) {
-    const num = nums[i];
+    // Store previous maxCurrent as it will be overwritten
+    const temp = maxCurrent;
 
-    // Calculate the new maxProduct and minProduct:
-    // - The new maxProduct is the maximum among:
-    //   a) The current number itself (starting a new subarray)
-    //   b) The product of maxProduct and current number (extending the positive product)
-    //   c) The product of minProduct and current number (extending the negative product, which might flip to positive)
-    const tempMax = Math.max(num, maxProduct * num, minProduct * num);
+    // Update maxCurrent and minCurrent
+    maxCurrent = Math.max(nums[i], maxCurrent * nums[i], minCurrent * nums[i]);
+    minCurrent = Math.min(nums[i], temp * nums[i], minCurrent * nums[i]);
 
-    // Similarly, the new minProduct is the minimum among:
-    //   a) The current number itself (starting a new subarray)
-    //   b) The product of maxProduct and current number (extending the positive product, which might become negative)
-    //   c) The product of minProduct and current number (extending the negative product)
-    minProduct = Math.min(num, maxProduct * num, minProduct * num);
-
-    // Update maxProduct to the newly computed tempMax
-    maxProduct = tempMax;
-
-    // Update the overall result to be the maximum between the current result and the new maxProduct
-    result = Math.max(result, maxProduct);
+    // Update global maximum
+    maxGlobal = Math.max(maxGlobal, maxCurrent);
   }
 
-  // Return the maximum product found
-  return result;
+  return maxGlobal;
 }
 ```
-
-#### Key Differences from Kadane's:
-
-**Tracking Both max and min:**
-
-- In Kadane's, we only track max_sum because summing doesn’t change the sign.
-- In the product version, we track min_product because a negative min_product can become the new max_product when multiplied by another negative number.
-
-**Handling Zero:**
-
--If num = 0, both max_product and min_product reset to 0, and the next iteration starts fresh.
 
 ### 3. LC-978 Longest Turbulent Subarray
 

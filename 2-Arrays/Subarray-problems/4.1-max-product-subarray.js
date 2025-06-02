@@ -34,40 +34,49 @@ const nums = [2, 3, -2, 4];
 console.log(maxProductBruteForce(nums)); // Output: 6
 
 //Approach 2. Dynamic Programming
+
 /**
- * Finds the maximum product of any subarray using dynamic programming
- * @param {number[]} nums - The input array
- * @return {number} - The maximum product found
+ * Finds the maximum product of any contiguous subarray using dynamic programming.
+ * @param {number[]} nums - The input array of integers.
+ * @return {number} - The maximum product.
  */
 function maxProduct(nums) {
+  // Edge case: if the array is empty, return 0 (though problem says nums.length >= 1)
   if (nums.length === 0) return 0;
 
-  let maxProductSoFar = nums[0];
-  let minProductSoFar = nums[0];
-  let result = maxProductSoFar;
+  // Initialize variables to keep track of:
+  // - maxProduct: maximum product up to the current element
+  // - minProduct: minimum product up to the current element (to handle negative numbers)
+  // - result: the overall maximum product found so far
+  let maxProduct = nums[0];
+  let minProduct = nums[0];
+  let result = nums[0];
 
+  // Iterate through the array starting from the second element
   for (let i = 1; i < nums.length; i++) {
-    const currentNum = nums[i];
+    const num = nums[i];
 
-    // Calculate new max and min considering current number
-    const tempMax = Math.max(
-      currentNum,
-      currentNum * maxProductSoFar,
-      currentNum * minProductSoFar
-    );
+    // Calculate the new maxProduct and minProduct:
+    // - The new maxProduct is the maximum among:
+    //   a) The current number itself (starting a new subarray)
+    //   b) The product of maxProduct and current number (extending the positive product)
+    //   c) The product of minProduct and current number (extending the negative product, which might flip to positive)
+    const tempMax = Math.max(num, maxProduct * num, minProduct * num);
 
-    minProductSoFar = Math.min(
-      currentNum,
-      currentNum * maxProductSoFar,
-      currentNum * minProductSoFar
-    );
+    // Similarly, the new minProduct is the minimum among:
+    //   a) The current number itself (starting a new subarray)
+    //   b) The product of maxProduct and current number (extending the positive product, which might become negative)
+    //   c) The product of minProduct and current number (extending the negative product)
+    minProduct = Math.min(num, maxProduct * num, minProduct * num);
 
-    maxProductSoFar = tempMax;
+    // Update maxProduct to the newly computed tempMax
+    maxProduct = tempMax;
 
-    // Update the overall result
-    result = Math.max(result, maxProductSoFar);
+    // Update the overall result to be the maximum between the current result and the new maxProduct
+    result = Math.max(result, maxProduct);
   }
 
+  // Return the maximum product found
   return result;
 }
 

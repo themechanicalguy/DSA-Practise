@@ -2,9 +2,25 @@ https://www.geeksforgeeks.org/problems/longest-sub-array-with-sum-k0809/1
 
 # Longest Subarray with Sum K
 
+Given an array arr[] containing integers and an integer k, your task is to find the length of the longest subarray where the sum of its elements is equal to the given value k. If there is no subarray with sum equal to k, return 0.
+
+Examples:
+
+Input: arr[] = `[10, 5, 2, 7, 1, -10]`, k = `15`
+Output: 6
+Explanation: Subarrays with sum = `15` are `[5, 2, 7, 1], [10, 5]` and `[10, 5, 2, 7, 1, -10]`.
+The length of the longest subarray with a sum of 15 is 6.
+
+## Problem Understanding
+
+- We need to find the longest contiguous subarray in an array of integers where the sum of the elements equals a given integer k.
+- If no such subarray exists, we return 0.
+- The array may contain positive, negative, or zero values, which makes the problem interesting and requires careful handling of edge cases.
+
 ## Approach 1: Brute Force (Nested Loops)
 
-- This approach checks every possible subarray by iterating over all starting and ending indices and computing the sum.
+- Check every possible subarray by iterating over all start and end indices, compute their sum, and track the maximum length when the sum equals k.
+- This is straightforward but inefficient for large arrays.
 
 ```javascript
 function longestSubarrayWithSumBruteForce(arr, k) {
@@ -37,15 +53,115 @@ const k = 15;
 console.log(longestSubarrayWithSumBruteForce(arr, k)); // Output: 6
 ```
 
-**Explanation:**
+**Time Complexity:** O(n²), where n is the length of the array, as we use nested loops to check all subarrays.
 
-- Time Complexity: O(n²), where n is the length of the array, as we use nested loops to check all subarrays.
+**Space Complexity:** O(1), as we only use a few variables Drawbacks: Inefficient for large arrays due to quadratic time complexity.
 
-- Space Complexity: O(1), as we only use a few variables Drawbacks: Inefficient for large arrays due to quadratic time complexity.
+---
 
-### **Approach 2: Sliding Window (Works for Positive Numbers Only)**
+### **Approach 2: Prefix Sum (Works for All Cases, Including Negatives)**
 
-The sliding window approach is efficient for finding subarrays with a given sum when the array contains only **positive numbers**. However, in the given example, there’s a negative number (`-10`), so this approach **won’t work** for this case. Still, I’ll include it for completeness.
+- For arrays with negative numbers, we use the prefix sum technique.
+- The sum of a subarray from index `i` to `j` is `prefixSum[j] - prefixSum[i-1]`.
+- If this equals k, then `prefixSum[j] - prefixSum[i-1] = k`, or `prefixSum[i-1] = prefixSum[j] - k`.
+- By storing prefix sums in a hash map, we can efficiently find if a previous prefix sum matches `prefixSum[j] - k`, indicating a subarray with sum `k`. The length of the subarray is `j - i`.
+- The **prefix sum** approach works for all cases (positive, negative, and zero values). It uses a hashmap to store the earliest occurrence of each prefix sum.
+
+**Prefix Sum Algorithm:**
+
+1. Initialize `prefixSum = 0`, `maxLen = 0`, and a hashmap `prefixMap` with `{0: -1}` (sum `0` occurs at index `-1` before the array starts).
+2. Iterate over the array:
+   - Compute `prefixSum += arr[i]`.
+   - If `(prefixSum - k)` exists in `prefixMap`, update `maxLen` if the current subarray is longer.
+   - If `prefixSum` is not in `prefixMap`, store it with its index.
+3. Return `maxLen`.
+
+**Prefix Sum - Optimal for All Cases:**
+
+```javascript
+function longestSubarrayPrefixSum(arr, k) {
+  const prefixSumMap = new Map(); // Stores prefix sum and its earliest index
+  let prefixSum = 0; // Running prefix sum
+  let maxLength = 0; // Tracks the maximum length of subarray with sum k
+
+  // Initialize map with prefix sum 0 at index -1 (before array starts)
+  prefixSumMap.set(0, -1);
+
+  // Iterate through the array
+  for (let i = 0; i < arr.length; i++) {
+    prefixSum += arr[i]; // Update prefix sum
+
+    // If prefixSum - k exists in map, a subarray with sum k is found
+    if (prefixSumMap.has(prefixSum - k)) {
+      const startIndex = prefixSumMap.get(prefixSum - k);
+      maxLength = Math.max(maxLength, i - startIndex); // Update max length
+    }
+
+    // Store prefix sum only if not seen or if this index is earlier
+    if (!prefixSumMap.has(prefixSum)) {
+      prefixSumMap.set(prefixSum, i);
+    }
+  }
+
+  return maxLength;
+}
+
+// Test Case
+const arr = [10, 5, 2, 7, 1, -10];
+const k = 15;
+console.log(longestSubarrayWithSumK(arr, k)); // Output: 6 (Correct)
+```
+
+### **Explanation of Prefix Sum Approach:**
+
+1. **Initialization:**
+
+   - `prefixSum = 0`, `maxLen = 0`.
+   - `prefixMap = {0: -1}` (sum `0` occurs before the array starts).
+
+2. **Iteration:**
+
+   - At `i=0`, `prefixSum = 10`.
+     - `prefixSum - k = -5` (not in map).
+     - Store `{10: 0}`.
+   - At `i=1`, `prefixSum = 15`.
+     - `prefixSum - k = 0` (exists in map at `-1`).
+     - Length `= 1 - (-1) = 2` → `maxLen = 2`.
+   - At `i=2`, `prefixSum = 17`.
+     - `prefixSum - k = 2` (not in map).
+     - Store `{17: 2}`.
+   - At `i=3`, `prefixSum = 24`.
+     - `prefixSum - k = 9` (not in map).
+     - Store `{24: 3}`.
+   - At `i=4`, `prefixSum = 25`.
+     - `prefixSum - k = 10` (exists at `0`).
+     - Length `= 4 - 0 = 4` → `maxLen = 4`.
+   - At `i=5`, `prefixSum = 15`.
+     - `prefixSum - k = 0` (exists at `-1`).
+     - Length `= 5 - (-1) = 6` → `maxLen = 6`.
+
+3. **Final Result:**  
+   The longest subarray with sum `15` is `[10, 5, 2, 7, 1, -10]` with length `6`.
+
+### **Time & Space Complexity:**
+
+- **Time Complexity:** `O(n)` (single pass over the array).
+- **Space Complexity:** `O(n)` (due to the hashmap).
+
+### **Conclusion:**
+
+- **Sliding Window** works only for **positive numbers** (`O(n)` time, `O(1)` space).
+- **Prefix Sum** works for **all cases** (`O(n)` time, `O(n)` space).
+
+For the given problem (which includes negative numbers), the **prefix sum** approach is the correct solution. 🚀
+
+---
+
+### **Approach 3: Sliding Window - Variable Sized (Works for Positive Numbers Only)**
+
+- If the array contains only non-negative integers, we can use a sliding window to maintain a subarray with a sum close to k.
+- We expand the window by adding elements and shrink it when the sum exceeds k.
+- However, this approach fails when negative numbers are present, as the sum can decrease, breaking the monotonic property. So this approach **won’t work** for this case. Still, I’ll include it for completeness.
 
 #### **Sliding Window Algorithm:**
 
@@ -59,32 +175,38 @@ The sliding window approach is efficient for finding subarrays with a given sum 
 #### **Javascript Code (Sliding Window - Positive Numbers Only):**
 
 ```javascript
-function longestSubarrayWithSumK(arr, k) {
-  let left = 0;
-  let currentSum = 0;
-  let maxLen = 0;
+function longestSubarraySlidingWindow(arr, k) {
+  let maxLength = 0; // Tracks the maximum length of subarray with sum k
+  let currentSum = 0; // Current sum of the sliding window
+  let start = 0; // Start of the sliding window
 
-  for (let right = 0; right < arr.length; right++) {
-    currentSum += arr[right];
+  // Iterate over the array
+  for (let end = 0; end < arr.length; end++) {
+    currentSum += arr[end]; // Expand window by adding element
 
-    while (currentSum > k && left <= right) {
-      currentSum -= arr[left];
-      left++;
+    // Shrink window while sum exceeds k
+    while (currentSum > k && start <= end) {
+      currentSum -= arr[start];
+      start++;
     }
 
+    // Check if current window sum equals k
     if (currentSum === k) {
-      maxLen = Math.max(maxLen, right - left + 1);
+      maxLength = Math.max(maxLength, end - start + 1); // Update max length
     }
   }
 
-  return maxLen;
+  return maxLength;
 }
-
 // Test Case
 const arr = [10, 5, 2, 7, 1, -10];
 const k = 15;
 console.log(longestSubarrayWithSumK(arr, k)); // Output: 4 (But expected 6, so this fails due to -10)
 ```
+
+**Time Complexity:** O(n), where n is the array length. Each element is added and removed at most once (the start pointer moves forward only).
+
+**Space Complexity:** O(1), as we use only a few variables (maxLength, currentSum, start).
 
 **Issue:** This fails for arrays with negative numbers because shrinking the window (`left++`) might skip valid subarrays.
 
@@ -188,89 +310,4 @@ The **sliding window approach fails for negative numbers** because:
 1. It cannot "undo" shrinking when a negative number later compensates for an earlier positive number.
 2. It **misses valid subarrays** that require including negative numbers to balance the sum.
 
-### **Approach 3: Prefix Sum (Works for All Cases, Including Negatives)**
-
-The **prefix sum** approach works for all cases (positive, negative, and zero values). It uses a hashmap to store the earliest occurrence of each prefix sum.
-
-#### **Prefix Sum Algorithm:**
-
-1. Initialize `prefixSum = 0`, `maxLen = 0`, and a hashmap `prefixMap` with `{0: -1}` (sum `0` occurs at index `-1` before the array starts).
-2. Iterate over the array:
-   - Compute `prefixSum += arr[i]`.
-   - If `(prefixSum - k)` exists in `prefixMap`, update `maxLen` if the current subarray is longer.
-   - If `prefixSum` is not in `prefixMap`, store it with its index.
-3. Return `maxLen`.
-
-#### **Javascript Code (Prefix Sum - Optimal for All Cases):**
-
-```javascript
-function longestSubarrayWithSumK(arr, k) {
-  let prefixSum = 0;
-  let maxLen = 0;
-  const prefixMap = new Map();
-  prefixMap.set(0, -1); // Initialize for sum 0 at index -1
-
-  for (let i = 0; i < arr.length; i++) {
-    prefixSum += arr[i];
-
-    if (prefixMap.has(prefixSum - k)) {
-      const len = i - prefixMap.get(prefixSum - k);
-      maxLen = Math.max(maxLen, len);
-    }
-
-    if (!prefixMap.has(prefixSum)) {
-      prefixMap.set(prefixSum, i);
-    }
-  }
-
-  return maxLen;
-}
-
-// Test Case
-const arr = [10, 5, 2, 7, 1, -10];
-const k = 15;
-console.log(longestSubarrayWithSumK(arr, k)); // Output: 6 (Correct)
-```
-
-### **Explanation of Prefix Sum Approach:**
-
-1. **Initialization:**
-
-   - `prefixSum = 0`, `maxLen = 0`.
-   - `prefixMap = {0: -1}` (sum `0` occurs before the array starts).
-
-2. **Iteration:**
-
-   - At `i=0`, `prefixSum = 10`.
-     - `prefixSum - k = -5` (not in map).
-     - Store `{10: 0}`.
-   - At `i=1`, `prefixSum = 15`.
-     - `prefixSum - k = 0` (exists in map at `-1`).
-     - Length `= 1 - (-1) = 2` → `maxLen = 2`.
-   - At `i=2`, `prefixSum = 17`.
-     - `prefixSum - k = 2` (not in map).
-     - Store `{17: 2}`.
-   - At `i=3`, `prefixSum = 24`.
-     - `prefixSum - k = 9` (not in map).
-     - Store `{24: 3}`.
-   - At `i=4`, `prefixSum = 25`.
-     - `prefixSum - k = 10` (exists at `0`).
-     - Length `= 4 - 0 = 4` → `maxLen = 4`.
-   - At `i=5`, `prefixSum = 15`.
-     - `prefixSum - k = 0` (exists at `-1`).
-     - Length `= 5 - (-1) = 6` → `maxLen = 6`.
-
-3. **Final Result:**  
-   The longest subarray with sum `15` is `[10, 5, 2, 7, 1, -10]` with length `6`.
-
-### **Time & Space Complexity:**
-
-- **Time Complexity:** `O(n)` (single pass over the array).
-- **Space Complexity:** `O(n)` (due to the hashmap).
-
-### **Conclusion:**
-
-- **Sliding Window** works only for **positive numbers** (`O(n)` time, `O(1)` space).
-- **Prefix Sum** works for **all cases** (`O(n)` time, `O(n)` space).
-
-For the given problem (which includes negative numbers), the **prefix sum** approach is the correct solution. 🚀
+---

@@ -1,12 +1,27 @@
 # Solving Subarray Problems: Patterns and Approaches
 
-Subarray problems are common in coding interviews and competitive programming. These problems typically ask you to find, count, or manipulate contiguous segments of an array that meet certain conditions. Here's a structured approach to solving them:
+Subarray problems are common in coding interviews and competitive programming.
+These problems typically ask you to find, count, or manipulate contiguous segments of an array that meet certain conditions.
+Here's a structured approach to solving them:
 
 ## Common Patterns for Subarray Problems
 
 ### 1. Sliding Window Technique
 
-**When to use**: When you need to find a subarray with a specific property (sum, length, etc.) and the array has non-negative numbers.
+#### When to use:
+
+- When you need to find a subarray with a specific property (`sum, length` etc.) and the **array has non-negative numbers**.
+- Find a subarray or substring that satisfies a specific condition (e.g.,` maximum sum, minimum length, specific sum`).
+- Process a contiguous range of elements in an array or string.
+- Optimize solutions that would otherwise require nested loops (e.g., checking every possible subarray).
+- Solve problems involving constraints like maximum/minimum window size, sum, or frequency of elements.
+
+#### Common problem types:
+
+- Maximum/minimum sum of a subarray of size k.
+- Longest/shortest substring with certain properties (e.g., at most k distinct characters).
+- Finding a subarray with a specific sum.
+- Problems involving running sums, averages, or counts over a range.
 
 **Intuition**: Maintain a window that slides through the array while adjusting its size based on certain conditions.
 
@@ -63,6 +78,96 @@ function subarraySum(nums, k) {
 
 console.log(subarraySum([1, 1, 1], 2)); // Output: 2 (subarrays [1,1] and [1,1])
 ```
+
+# Prefix Sum vs. Sliding Window: When to Use Each Pattern
+
+Both prefix sum and sliding window are powerful techniques for solving array-related problems, but they serve different purposes and are optimal in different scenarios. Here's a detailed comparison to help you decide which pattern to use:
+
+## Key Differences
+
+| Feature              | Prefix Sum                      | Sliding Window                                  |
+| -------------------- | ------------------------------- | ----------------------------------------------- |
+| **Primary Use Case** | Range sum queries               | Finding subarrays/substrings meeting conditions |
+| **Time Complexity**  | O(n) preprocess, O(1) per query | Typically O(n)                                  |
+| **Space Complexity** | O(n) for storage                | O(1) to O(n) depending on variant               |
+| **Best For**         | Multiple random range queries   | Single pass problems with constraints           |
+
+## When to Use Prefix Sum
+
+### Optimal Scenarios:
+
+1. **Multiple range sum queries** - When you need to answer many sum queries on different ranges
+
+   - Example: "Find the sum between indices i and j for 100 different (i,j) pairs"
+
+2. **Problems that can be transformed into sum/count problems**
+
+   - Example: "Find number of subarrays with sum equal to k" (LeetCode 560)
+
+3. **When you need to calculate cumulative values**
+
+   - Example: "Find the pivot index where left sum equals right sum" (LeetCode 724)
+
+4. **Matrix range queries** (using 2D prefix sum)
+   - Example: "Calculate sum of any submatrix efficiently"
+
+## When to Use Sliding Window
+
+### Optimal Scenarios:
+
+1. **Subarrays/substrings with constraints**
+
+   - Example: "Find the longest subarray with sum ≤ k" or "Find the minimum window substring"
+
+2. **Fixed-size window problems**
+
+   - Example: "Find the maximum average of any contiguous subarray of length k"
+
+3. **When you can maintain a window that grows/shrinks based on conditions**
+
+   - Example: "Find the longest substring without repeating characters" (LeetCode 3)
+
+4. **When the problem involves a running computation on a window**
+   - Example: "Find all anagrams in a string" (LeetCode 438)
+
+## Decision Flowchart
+
+1. **Does the problem involve multiple range sum queries on a static array?**
+
+   - Yes → Prefix Sum
+   - No → Next question
+
+2. **Is the problem about finding a contiguous subarray/substring that meets certain conditions?**
+
+   - Yes → Sliding Window
+   - No → Next question
+
+3. **Can the problem be transformed into a sum/count problem?**
+   - Yes → Prefix Sum
+   - No → Consider other patterns
+
+**Sliding Window Solution (Only works with positive numbers):**
+
+## Key Takeaways
+
+1. **Prefix Sum is your go-to for:**
+
+   - Multiple range sum queries
+   - Problems that can be transformed into sum/count problems
+   - When you need to answer many random range queries efficiently
+
+2. **Sliding Window is better for:**
+
+   - Contiguous subarray/substring problems
+   - Problems with window size constraints
+   - When you can maintain a running computation as the window slides
+
+3. **Remember**:
+   - Sliding window often has better space complexity (O(1) for some variants)
+   - Prefix sum provides O(1) range queries after O(n) preprocessing
+   - Sliding window only works for contiguous elements, while prefix sum can handle non-contiguous ranges
+
+By understanding these distinctions, you'll be able to quickly identify which pattern is more appropriate for a given problem, leading to more efficient and elegant solutions.
 
 ### 3. Two Pointers Technique
 
