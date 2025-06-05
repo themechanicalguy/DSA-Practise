@@ -3,7 +3,7 @@
 Given an array of distinct integers, we need to:
 
 - Find the minimum absolute difference between any two elements.
-- Identify all pairs [a, b] where a < b and their difference b - a equals this minimum difference.
+- Identify all pairs `[a, b]` where `a < b` and their difference `b - a` equals this minimum difference.
 - Return the pairs in ascending order (sorted by the first element of each pair).
 
 For example:
@@ -33,28 +33,33 @@ Output: `[[1,2], [2,3], [3,4]]`
 
 ```javascript
 function minimumAbsDifference(arr) {
-  // Sort the array in ascending order
+  // Sort the array in ascending order to easily find consecutive elements
   arr.sort((a, b) => a - b);
 
+  // Initialize the minimum difference as Infinity to ensure any difference found will be smaller
   let minDiff = Infinity;
+  // Initialize an empty array to store the resulting pairs
   const result = [];
 
-  // First pass to find the minimum absolute difference
+  // First pass: Calculate the differences between consecutive elements to find the minimum difference
   for (let i = 1; i < arr.length; i++) {
     const currentDiff = arr[i] - arr[i - 1];
+    // Update minDiff if the current difference is smaller than the known minimum
     if (currentDiff < minDiff) {
       minDiff = currentDiff;
     }
   }
 
-  // Second pass to collect all pairs with the minimum difference
+  // Second pass: Collect all pairs of consecutive elements that have the minimum difference
   for (let i = 1; i < arr.length; i++) {
     const currentDiff = arr[i] - arr[i - 1];
+    // If the current difference matches the minimum difference, add the pair to the result
     if (currentDiff === minDiff) {
       result.push([arr[i - 1], arr[i]]);
     }
   }
 
+  // Return the list of pairs with the minimum absolute difference
   return result;
 }
 ```
@@ -65,24 +70,31 @@ function minimumAbsDifference(arr) {
 
 ```javascript
 function minimumAbsDifference(arr) {
-  // Sort the array in ascending order
+  // Sort the array in ascending order to easily find consecutive elements
   arr.sort((a, b) => a - b);
 
+  // Initialize the minimum difference as Infinity to ensure any difference found will be smaller
   let minDiff = Infinity;
+  // Initialize an empty array to store the resulting pairs
   const result = [];
 
+  // Single pass: Calculate differences and collect pairs with the minimum difference
   for (let i = 1; i < arr.length; i++) {
     const currentDiff = arr[i] - arr[i - 1];
-    // If found a new minimum difference, update minDiff and reset result
+
+    // If a new minimum difference is found, update minDiff and reset the result array
     if (currentDiff < minDiff) {
       minDiff = currentDiff;
-      result.length = 0; // Clear the array
-      result.push([arr[i - 1], arr[i]]);
-    } else if (currentDiff === minDiff) {
+      result.length = 0; // Clear the result array
+      result.push([arr[i - 1], arr[i]]); // Add the current pair
+    }
+    // If the current difference equals the minimum difference, add the pair to the result
+    else if (currentDiff === minDiff) {
       result.push([arr[i - 1], arr[i]]);
     }
   }
 
+  // Return the list of pairs with the minimum absolute difference
   return result;
 }
 ```
