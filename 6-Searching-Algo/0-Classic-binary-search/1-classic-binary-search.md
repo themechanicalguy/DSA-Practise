@@ -248,3 +248,95 @@ This approach is:
 - Safe from overflow
 - Clear in intent
 - The standard implementation used in professional code
+
+## Why `while (left <= right)` vs `while (left < right)` in Binary Search
+
+The condition `while (left <= right)` is crucial for binary search to work correctly in all cases.
+Here's why `left < right` isn't sufficient:
+
+### Key Difference
+
+- **`left <= right`**: Checks if the search space contains at least one element
+- **`left < right`**: Checks if the search space contains at least two elements
+
+### Why `left <= right` is Necessary
+
+1. **Handles Single-Element Cases**:
+
+   - When `left == right`, there's exactly one element left to check
+   - With `left < right`, we'd miss checking this final element
+
+2. **Edge Case Coverage**:
+
+   - Works correctly for arrays of size 1
+   - Works when the target is at either boundary of the current search space
+
+3. **Termination Condition**:
+   - When `left` passes `right`, we've definitively determined the element isn't present
+   - With `left < right`, we might exit prematurely
+
+### Example Where `left < right` Fails
+
+**Array**: [5]  
+**Target**: 5
+
+- Initial: left = 0, right = 0
+- With `left < right`: loop doesn't execute → returns -1 (incorrect)
+- With `left <= right`: loop executes once and finds the element
+
+### Implementation Comparison
+
+**Correct Version**:
+
+```javascript
+while (left <= right) {
+  const mid = Math.floor(left + (right - left) / 2);
+  // ... rest of logic
+}
+```
+
+**Problematic Version**:
+
+```javascript
+while (left < right) {
+  // May miss the final element
+  const mid = Math.floor(left + (right - left) / 2);
+  // ... rest of logic
+  // Would need additional checks after the loop
+}
+```
+
+### When Might `left < right` Work?
+
+You could make `left < right` work if you:
+
+1. Add a post-loop check for `arr[left] === target`
+2. Adjust the pointer updates carefully
+
+But this makes the code more complex and error-prone without any benefit.
+
+### Why Not Use `left < right`?
+
+1. **More Complex Termination**: Requires additional checks after the loop
+2. **Harder to Prove Correctness**: More edge cases to consider
+3. **No Performance Benefit**: Same asymptotic complexity
+4. **Standard Practice**: `left <= right` is the widely accepted convention
+
+### Time Complexity Perspective
+
+Both approaches maintain O(log n) time complexity, but `left <= right` is:
+
+- More straightforward
+- Easier to verify
+- Less prone to off-by-one errors
+
+### Conclusion
+
+Always use `while (left <= right)` because:
+
+1. It's simpler and more intuitive
+2. It handles all edge cases correctly
+3. It matches the standard implementation used in computer science literature
+4. It doesn't require special case handling after the loop
+
+The small difference in the comparison operator makes a big difference in correctness, especially for small arrays and edge cases.

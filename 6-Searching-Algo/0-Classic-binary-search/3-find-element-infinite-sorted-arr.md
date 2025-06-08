@@ -6,7 +6,7 @@
 
 We need to find the position of a given element in an "infinite" sorted array. In reality, since we can't have truly infinite arrays in programming, this means we need to find the element without knowing the array bounds beforehand.
 
-### 2. Exponential Search (Optimal)
+## Exponential Search (Optimal)
 
 **Intuition:** For an infinite array, we first find a range where the target might exist by exponentially increasing the high index `(e.g., 1, 2, 4, 8, …) `until we find an element greater than or equal to the target or undefined.
 Then, apply binary search within that range.
