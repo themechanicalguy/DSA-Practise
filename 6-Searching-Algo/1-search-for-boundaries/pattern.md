@@ -34,11 +34,12 @@ The key is to update the boundary variable (e.g., `leftBound` or `rightBound`) w
 - **Initialize pointers:** Set `left` to 0 and `right` to the last index of the array (`length - 1`).
 - **Track the boundary:** Use a variable to store the `leftmost` or `rightmost` position found so far (e.g., leftBound or rightBound).
 - **Binary search loop:**
-  Compute the middle index (`mid`).
-  Check if the middle element is the target or satisfies the condition.
-  For `left boundary`: If a match is found, update leftBound = mid and search the left half `(right = mid - 1)` to find an earlier occurrence.
-  For `right boundary`: If a match is found, update rightBound = mid and search the right half `(left = mid + 1)` to find a later occurrence.
-  If no match, adjust `left` or `right` based on whether the target is greater or less than the middle element.
+
+  - Compute the middle index (`mid`).
+  - Check if the middle element is the target or satisfies the condition.
+  - For `left boundary`: If a match is found, update leftBound = mid and search the left half `(right = mid - 1)` to find an earlier occurrence.
+  - For `right boundary`: If a match is found, update rightBound = mid and search the right half `(left = mid + 1)` to find a later occurrence.
+  - If no match, adjust `left` or `right` based on whether the target is greater or less than the middle element.
 
 - **Termination:** The loop ends when `left > right`. Return the stored boundary.
 
@@ -111,15 +112,12 @@ console.log(searchRange([1], 1)); // [0, 0]
 
 ## Problem 2: Find the Minimum in Rotated Sorted Array
 
-Given a sorted array rotated at some pivot, find the minimum element. Assume no duplicates.
+Given a sorted array rotated at some pivot, find the `minimum element`. Assume no duplicates.
 Example:
-Input: nums = [3,4,5,1,2]
-
-Output: 1
-
-Input: nums = [4,5,6,7,0,1,2]
-
-Output: 0
+Input: nums = `[3,4,5,1,2]`
+Output: `1`
+Input: nums = `[4,5,6,7,0,1,2]`
+Output: `0`
 
 ```javascript
 /**
