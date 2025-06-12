@@ -22,18 +22,159 @@ The key observations:
 
 ## Approaches
 
-### 1. Binary Search with Pivot Finding (Two-pass)
-
-- First find the pivot point (smallest element) using binary search
-- Then perform binary search on the appropriate half
-
-### 2. Single-pass Binary Search
+### 1. Single-pass Binary Search (Optimal)
 
 - Modified binary search that checks which half is sorted and adjusts search range accordingly
 
-## Solution Code (All Approaches)
+```javascript
+/**
+ * Search in Rotated Sorted Array (Single-pass Binary Search)
+ * @param {number[]} nums - Rotated sorted array with distinct values
+ * @param {number} target - Value to search for
+ * @return {number} - Index of target if found, otherwise -1
+ */
+function search(nums, target) {
+  let left = 0;
+  let right = nums.length - 1;
 
-### Approach 1: Find Pivot then Binary Search (Two-pass)
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+
+    // Case 1: Found the target
+    if (nums[mid] === target) {
+      return mid;
+    }
+
+    // Case 2: Left half [left..mid] is sorted
+    if (nums[left] <= nums[mid]) {
+      // Check if target is within the left sorted half
+      if (nums[left] <= target && target < nums[mid]) {
+        right = mid - 1; // Search left half
+      } else {
+        left = mid + 1; // Search right half
+      }
+    }
+    // Case 3: Right half [mid..right] must be sorted (since left half isn't)
+    else {
+      // Check if target is within the right sorted half
+      if (nums[mid] < target && target <= nums[right]) {
+        left = mid + 1; // Search right half
+      } else {
+        right = mid - 1; // Search left half
+      }
+    }
+  }
+
+  // Target not found
+  return -1;
+}
+```
+
+## Time and Space Complexity Analysis
+
+- Time Complexity: O(log n)
+  - Single binary search pass
+- Space Complexity: O(1)
+  - Only constant extra space is used
+
+The single-pass approach is more elegant and has the same theoretical complexity, though in practice it might be slightly faster due to doing only one binary search.
+
+## Dry Run of Optimal Approach (Single-pass)
+
+### Example 1:
+
+nums = [4,5,6,7,0,1,2], target = 0
+
+Initial: left = 0, right = 6
+
+1. mid = 3 (nums[3]=7)
+   - nums[0]=4 <= 7 (left half sorted)
+   - target 0 is not between 4 and 7 → search right
+   - left = 4
+2. left=4, right=6
+   mid=5 (nums[5]=1)
+   - nums[4]=0 <= 1? No → right half must be sorted
+   - target 0 is not between 1 and 2 → search left
+   - right = 4
+3. left=4, right=4
+   mid=4 (nums[4]=0) → match, return 4
+
+### Example 2:
+
+nums = [4,5,6,7,0,1,2], target = 3
+
+Initial: left = 0, right = 6
+
+1. mid=3 (nums[3]=7)
+   - left half sorted (4<=7)
+   - 3 not between 4 and 7 → search right
+   - left=4
+2. left=4, right=6
+   mid=5 (nums[5]=1)
+   - nums[4]=0 <=1? No → right half sorted
+   - 3 is between 1 and 2? No → search left
+   - right=4
+3. left=4, right=4
+   mid=4 (nums[4]=0) → no match
+   Exit loop, return -1
+
+### Example 3:
+
+nums = [5,1,3], target = 3
+
+#### Initial State:
+
+- left = 0, right = 2
+- nums = [5, 1, 3]
+
+#### Step 1:
+
+- mid = Math.floor((0 + 2) / 2) = 1
+- nums[mid] = nums[1] = 1
+- Check if nums[left] (5) <= nums[mid] (1): 5 <= 1? → False
+- So we enter the `else` block (right half must be sorted)
+
+Now in the `else` block:
+
+- Check if target (3) is in the right sorted half:
+  - nums[mid] (1) < target (3) → True
+  - target (3) <= nums[right] (3) → True
+- Both conditions are true, so we search the right half:
+  - left = mid + 1 = 2
+
+#### Step 2:
+
+- left = 2, right = 2
+- mid = Math.floor((2 + 2) / 2) = 2
+- nums[mid] = nums[2] = 3
+- Found target, return 2
+
+### Example 4 (Edge case):
+
+nums = [1], target = 0
+
+Initial: left=0, right=0
+
+1. mid=0 (nums[0]=1) → no match
+   Exit loop, return -1
+
+### Edge Case Example:
+
+nums = [3,1], target = 1
+
+Initial: left=0, right=1
+
+1. mid=0 (nums[0]=3)
+   - nums[0] <= nums[0] → left half sorted
+   - 1 not between 3 and 3 → search right
+   - left=1
+2. left=1, right=1
+   mid=1 (nums[1]=1) → match, return 1
+
+### 2. Binary Search with Pivot Finding (Two-pass)
+
+- First find the pivot point (smallest element) using binary search
+- Then perform binary search on the appropriate half
 
 ```javascript
 /**
@@ -172,129 +313,3 @@ function searchRotatedArrayTwoPass(nums, target) {
 const nums = [4, 5, 6, 7, 0, 1, 2];
 console.log(searchRotatedArrayTwoPass(nums, target)); // Output: 4
 ```
-
-### Approach 2: Single-pass Binary Search (Optimal)
-
-```javascript
-/**
- * Search in rotated sorted array (single-pass binary search)
- * @param {number[]} nums
- * @param {number} target
- * @returns {number}
- */
-function searchSinglePass(nums, target) {
-  let left = 0;
-  let right = nums.length - 1;
-
-  while (left <= right) {
-    const mid = Math.floor((left + right) / 2);
-
-    if (nums[mid] === target) {
-      return mid;
-    }
-
-    // Check if left half is sorted
-    if (nums[left] <= nums[mid]) {
-      // Target is in the left sorted half
-      if (nums[left] <= target && target < nums[mid]) {
-        right = mid - 1;
-      } else {
-        left = mid + 1;
-      }
-    }
-    // Right half must be sorted
-    else {
-      // Target is in the right sorted half
-      if (nums[mid] < target && target <= nums[right]) {
-        left = mid + 1;
-      } else {
-        right = mid - 1;
-      }
-    }
-  }
-
-  return -1;
-}
-```
-
-## Time and Space Complexity Analysis
-
-### Approach 1 (Two-pass):
-
-- Time Complexity: O(log n)
-  - findPivot(): O(log n)
-  - binarySearch(): O(log n)
-- Space Complexity: O(1)
-  - Only constant extra space is used
-
-### Approach 2 (Single-pass):
-
-- Time Complexity: O(log n)
-  - Single binary search pass
-- Space Complexity: O(1)
-  - Only constant extra space is used
-
-The single-pass approach is more elegant and has the same theoretical complexity, though in practice it might be slightly faster due to doing only one binary search.
-
-## Dry Run of Optimal Approach (Single-pass)
-
-### Example 1:
-
-nums = [4,5,6,7,0,1,2], target = 0
-
-Initial: left = 0, right = 6
-
-1. mid = 3 (nums[3]=7)
-   - nums[0]=4 <= 7 (left half sorted)
-   - target 0 is not between 4 and 7 → search right
-   - left = 4
-2. left=4, right=6
-   mid=5 (nums[5]=1)
-   - nums[4]=0 <= 1? No → right half must be sorted
-   - target 0 is not between 1 and 2 → search left
-   - right = 4
-3. left=4, right=4
-   mid=4 (nums[4]=0) → match, return 4
-
-### Example 2:
-
-nums = [4,5,6,7,0,1,2], target = 3
-
-Initial: left = 0, right = 6
-
-1. mid=3 (nums[3]=7)
-   - left half sorted (4<=7)
-   - 3 not between 4 and 7 → search right
-   - left=4
-2. left=4, right=6
-   mid=5 (nums[5]=1)
-   - nums[4]=0 <=1? No → right half sorted
-   - 3 is between 1 and 2? No → search left
-   - right=4
-3. left=4, right=4
-   mid=4 (nums[4]=0) → no match
-   Exit loop, return -1
-
-### Example 3 (Edge case):
-
-nums = [1], target = 0
-
-Initial: left=0, right=0
-
-1. mid=0 (nums[0]=1) → no match
-   Exit loop, return -1
-
-### Edge Case Example:
-
-nums = [3,1], target = 1
-
-Initial: left=0, right=1
-
-1. mid=0 (nums[0]=3)
-   - nums[0] <= nums[0] → left half sorted
-   - 1 not between 3 and 3 → search right
-   - left=1
-2. left=1, right=1
-   mid=1 (nums[1]=1) → match, return 1
-
-This demonstrates the algorithm handles small arrays and edge cases correctly.
