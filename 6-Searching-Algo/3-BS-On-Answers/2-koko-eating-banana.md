@@ -2,20 +2,17 @@
 
 ## Problem Statement
 
-Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas.
-The guards have gone and will come back in h hours.
-Koko can decide how many bananas to eat per hour. Each hour, she chooses some pile of bananas
-and eats bananas from that pile. If the pile has less than k bananas, she eats all of them instead.
-Koko likes to eat slowly but still wants to finish eating before the guards return.
-Return the minimum integer k such that she can eat all the bananas within h hours.
+Koko loves to eat bananas. There are `n` piles of bananas, the `ith` pile has `piles[i]` bananas.The guards have gone and will come back in `h` hours.
+Koko can decide how many bananas to eat per hour. Each hour, she chooses some pile of bananas and eats bananas from that pile. If the pile has less than `k` bananas, she eats all of them instead. Koko likes to eat slowly but still wants to finish eating before the guards return.
+Return the minimum integer `k` such that she can eat all the bananas within `h` hours.
 Example 1:
-Input: piles = [3,6,7,11], h = 8
+Input: piles = `[3,6,7,11]`, h = 8
 Output: 4
 Example 2:
-Input: piles = [30,11,23,4,20], h = 5
+Input: piles = `[30,11,23,4,20]`, h = 5
 Output: 30
 Example 3:
-Input: piles = [30,11,23,4,20], h = 6
+Input: piles = `[30,11,23,4,20]`, h = 6
 Output: 23
 
 ## Understanding Problem
@@ -52,7 +49,7 @@ This suggests a binary search to find the smallest `k` where total hours ≤ `h`
 
 ## Approach 1. Brute Force Approach
 
-We iterate through all possible values of k from 1 to the maximum pile size, calculate the total hours required for each k, and return the smallest k where total hours ≤ h.
+We iterate through all possible values of `k` from `1` to the `maximum pile size`, calculate the total hours required for each `k`, and return the smallest `k` where total `hours ≤ h`.
 
 ```javascript
 /**
@@ -102,7 +99,7 @@ function minEatingSpeedBruteForce(piles, h) {
 
 ## Approach 2. Binary Search Approach (Optimal)
 
-Since the feasibility of `k` is monotonic (larger `k` always reduces hours), we can use binary search to find the smallest `k` where total hours ≤ `h`.
+Since the feasibility of `k` is monotonic (larger `k` always reduces hours), we can use binary search to find the smallest `k` where total `hours ≤ h`.
 We search in the range `[1, max(piles)]`.
 
 ```javascript
