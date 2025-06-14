@@ -1,4 +1,4 @@
-# 162. Find Peak Element
+# LC- 724. Find Pivot Index
 
 - A peak element is an element that is strictly greater than its neighbors.
 - Given a 0-indexed integer array nums, find a peak element, and return its index. If the array contains multiple peaks, return the index to any of the peaks.
@@ -151,20 +151,37 @@ function pivotIndex(nums) {
 - The brute force method is less efficient but straightforward.
 - Edge cases (pivot at start/end, no pivot) are handled correctly.
 
-**Final Answer (Optimal Approach):**
+**My Solution in LC**
 
 ```javascript
-function pivotIndex(nums) {
-  const totalSum = nums.reduce((sum, num) => sum + num, 0);
-  let leftSum = 0;
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var pivotIndex = function (nums) {
+  let prefixSumArr = new Array(nums.length);
+  let sum = 0;
+  let n = nums.length;
+  for (let i = 0; i < n; i++) {
+    sum = sum + nums[i];
+    prefixSumArr[i] = sum;
+  }
+  for (let i = 0; i < prefixSumArr.length; i++) {
+    let leftSum;
+    if (i === 0) leftSum = 0;
+    else {
+      leftSum = prefixSumArr[i - 1];
+    }
+    let rightSum;
+    if (i === n - 1) rightSum = 0;
+    else {
+      rightSum = prefixSumArr[n - 1] - prefixSumArr[i];
+    }
 
-  for (let i = 0; i < nums.length; i++) {
-    const rightSum = totalSum - leftSum - nums[i];
     if (leftSum === rightSum) {
       return i;
     }
-    leftSum += nums[i];
   }
   return -1;
-}
+};
 ```
