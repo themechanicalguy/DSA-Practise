@@ -17,6 +17,31 @@
 // Day 5: 10
 
 //Approach 1: Linear Search (Brute Force)
+
+/**
+ * Helper function to calculate days needed for a given capacity
+ * @param {number[]} weights - Array of package weights
+ * @param {number} capacity - Current ship capacity to test
+ * @return {number} - Days needed to ship all packages
+ */
+function calculateDaysNeeded(weights, capacity) {
+  let daysNeeded = 1;
+  let currentLoad = 0;
+
+  for (const currentWeight of weights) {
+    if (currentLoad + currentWeight > capacity) {
+      // Need a new day for this package
+      daysNeeded++;
+      currentLoad = currentWeight;
+    } else {
+      // Add to current day's load
+      currentLoad += currentWeight;
+    }
+  }
+
+  return daysNeeded;
+}
+
 /**
  * Finds the least ship capacity using linear search (not optimal for large inputs)
  * @param {number[]} weights - Array of package weights
@@ -29,23 +54,7 @@ function shipWithinDaysLinear(weights, days) {
 
   // Keep increasing capacity until we find one that works
   while (true) {
-    let daysNeeded = 1;
-    let currentLoad = 0;
-
-    for (const weight of weights) {
-      if (currentLoad + weight > capacity) {
-        daysNeeded++;
-        currentLoad = weight;
-      } else {
-        currentLoad += weight;
-      }
-
-      // Early exit if we already exceed days
-      if (daysNeeded > days) {
-        break;
-      }
-    }
-
+    const daysNeeded = calculateDaysNeeded(weights, capacity);
     if (daysNeeded <= days) {
       return capacity;
     }
@@ -81,28 +90,4 @@ function shipWithinDays(weights, days) {
   }
 
   return minCapacity;
-}
-
-/**
- * Helper function to calculate days needed for a given capacity
- * @param {number[]} weights - Array of package weights
- * @param {number} capacity - Current ship capacity to test
- * @return {number} - Days needed to ship all packages
- */
-function calculateDaysNeeded(weights, capacity) {
-  let daysNeeded = 1;
-  let currentLoad = 0;
-
-  for (const weight of weights) {
-    if (currentLoad + weight > capacity) {
-      // Need a new day for this package
-      daysNeeded++;
-      currentLoad = weight;
-    } else {
-      // Add to current day's load
-      currentLoad += weight;
-    }
-  }
-
-  return daysNeeded;
 }

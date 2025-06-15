@@ -10,14 +10,6 @@ A peak element is an element that is strictly greater than its neighbors. Given 
 
 The simplest approach is to scan through the array and check each element to see if it's a peak.
 
-### 2. Binary Search (O(log n) time)
-
-Since we can return any peak and the array has some sorted-like properties (ascending and descending sequences), we can use binary search to find a peak efficiently.
-
-## Solution Code
-
-### Approach 1: Linear Scan
-
 ```javascript
 /**
  * Finds a peak element using linear scan
@@ -41,7 +33,9 @@ function findPeakElementLinear(nums) {
 // Space Complexity: O(1) - Only using constant extra space
 ```
 
-### Approach 2: Binary Search (Optimal)
+### 2. Binary Search (O(log n) time)
+
+Since we can return any peak and the array has some sorted-like properties (ascending and descending sequences), we can use binary search to find a peak efficiently.
 
 ```javascript
 /**
