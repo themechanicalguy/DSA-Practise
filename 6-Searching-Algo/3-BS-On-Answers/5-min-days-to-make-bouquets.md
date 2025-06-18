@@ -1,31 +1,62 @@
 # LC - 1482 Minimum Number of Days to Make m Bouquets
 
-you are given an integer array bloomDay of length n, an integer m and an integer k.
-You want to make m bouquets. To make a bouquet, you need to use k adjacent flowers from the garden.
-The flowers will bloom in bloomDay[i] days.
-The problem is to find the minimum number of days you have to wait until you can make m bouquets.
+## Problem Description
+
+You are given an integer array `bloomDay` of length n, an integer `m` and an integer `k`.
+You want to make `m` bouquets. To make a bouquet, you need to use `k` adjacent flowers from the garden.
+The flowers will bloom in `bloomDay[i]` days.
+
+The problem is to find the `minimum number of days` you have to wait until you can make `m bouquets`.
 Return the minimum number of days you have to wait until you can make m bouquets.
+
 If it is impossible to make m bouquets return -1.
-Example 1:
+
+**Example 1:**
 Input: bloomDay = [1,10,3,10,2], m = 3, k = 1
 Output: 3
 Explanation: We can make the following bouquets:
 
-1. [1] from bloomDay[0]
-2. [3] from bloomDay[2]
-3. [2] from bloomDay[4]
-   So we need to wait 3 days before we can make the bouquets.
-   Example 2:
-   Input: bloomDay = [1,10,3,10,2], m = 3, k = 2
-   Output: -1
-   Explanation: We need 3 bouquets of size 2, but we can only make 1 bouquet of size 2.
-   Example 3:
-   Input: bloomDay = [7,7,7,7,12,7,7], m = 2, k = 3
-   Output: 12
-   Explanation: We can make the following bouquets:
-4. [7,7,7] from bloomDay[0], bloomDay[1], bloomDay[2]
-5. [12,7,7] from bloomDay[4], bloomDay[5], bloomDay[6]
-   So we need to wait 12 days before we can make the bouquets.
+- [1] from bloomDay[0]
+- [3] from bloomDay[2]
+- [2] from bloomDay[4]
+  So we need to wait 3 days before we can make the bouquets.
+
+## Intuition
+
+- The goal is to find the `minimum of days` such that we can form `m` bouquets, where each bouquet requires `k` adjacent flowers that have bloomed by that day.
+- If it’s impossible to make `m` bouquets (e.g., due to insufficient flowers or non-adjacent blooms), we return -1.
+
+Key observations:
+
+1. If `m * k` > total flowers, it's impossible (return -1)
+2. The answer must be between the minimum and maximum bloom days
+3. For any given day, we can check if it's possible to make the bouquets
+
+- **Binary Search on Days:**
+
+  - The answer (minimum days) lies between the minimum and maximum values in `bloomDay`.
+  - We can use binary search to find the minimum days that allows us to make `m` bouquets.
+
+- **Feasibility Check:**
+
+  - For a given day, we can check if it’s possible to make `m` bouquets by counting groups of `k` adjacent bloomed flowers.
+  - A flower at index `i` is bloomed if `bloomDay[i] <= day`.
+
+- **Edge Cases**:
+
+  - If `m * k > n` (where n is the length of bloomDay), it’s impossible to make m bouquets, as we don’t have enough flowers.
+  - If there are enough flowers but they are not adjacent, we may still fail to form m bouquets.
+
+- **Monotonic Property:**
+  - If we can make `m` bouquets on day `d`, we can also make them on any day `d' > d`. If we cannot make `m` bouquets on day `d`, we cannot make them on any day `d' < d`. This makes binary search suitable.
+
+## Approaches
+
+### 1. Brute Force (Linear Search)
+
+- Check each day from min to max bloom day
+- For each day, count how many bouquets can be made
+- Return the first day that satisfies the requirement
 
 ```javascript
 //Approach 1: Linear Search with Greedy Check
@@ -80,6 +111,15 @@ function canMakeBouquets(bloomDay, m, k, day) {
 }
 ```
 
+**Time Complexity**: O(n \* (maxDay - minDay)) - In worst case, we check every day between min and max
+**Space Complexity**: O(1) - Constant extra space
+
+### 2. Binary Search (Optimal)
+
+- Use binary search between min and max bloom days
+- For each mid day, check if we can make enough bouquets
+- Adjust search range based on the result
+
 ```javascript
 //Approach 2: Binary Search with Greedy Check
 /**
@@ -116,120 +156,6 @@ function minDaysToMakeBouquets(bloomDay, m, k) {
   }
 
   return result;
-}
-```
-
-## Intuition
-
-This problem requires finding the minimum day by which we can gather enough adjacent blooming flowers to make `m` bouquets, each consisting of `k` adjacent flowers.
-
-Key observations:
-
-1. If `m * k` > total flowers, it's impossible (return -1)
-2. The answer must be between the minimum and maximum bloom days
-3. For any given day, we can check if it's possible to make the bouquets
-
-## Approaches
-
-### 1. Brute Force (Linear Search)
-
-- Check each day from min to max bloom day
-- For each day, count how many bouquets can be made
-- Return the first day that satisfies the requirement
-
-### 2. Binary Search (Optimal)
-
-- Use binary search between min and max bloom days
-- For each mid day, check if we can make enough bouquets
-- Adjust search range based on the result
-
-## Solution Code
-
-### Approach 1: Brute Force
-
-```javascript
-function minDaysBruteForce(bloomDay, m, k) {
-  const totalFlowersNeeded = m * k;
-  if (totalFlowersNeeded > bloomDay.length) return -1;
-
-  const minDay = Math.min(...bloomDay);
-  const maxDay = Math.max(...bloomDay);
-
-  for (let day = minDay; day <= maxDay; day++) {
-    if (canMakeBouquets(bloomDay, m, k, day)) {
-      return day;
-    }
-  }
-
-  return -1;
-}
-
-function canMakeBouquets(bloomDay, m, k, day) {
-  let bouquets = 0;
-  let flowersInCurrentBouquet = 0;
-
-  for (let i = 0; i < bloomDay.length; i++) {
-    if (bloomDay[i] <= day) {
-      flowersInCurrentBouquet++;
-      if (flowersInCurrentBouquet === k) {
-        bouquets++;
-        flowersInCurrentBouquet = 0;
-      }
-    } else {
-      flowersInCurrentBouquet = 0;
-    }
-  }
-
-  return bouquets >= m;
-}
-```
-
-**Time Complexity**: O(n \* (maxDay - minDay)) - In worst case, we check every day between min and max
-**Space Complexity**: O(1) - Constant extra space
-
-### Approach 2: Binary Search (Optimal)
-
-```javascript
-function minDays(bloomDay, m, k) {
-  const totalFlowersNeeded = m * k;
-  if (totalFlowersNeeded > bloomDay.length) return -1;
-
-  let left = Math.min(...bloomDay);
-  let right = Math.max(...bloomDay);
-  let result = -1;
-
-  while (left <= right) {
-    const mid = Math.floor((left + right) / 2);
-    if (canMakeBouquets(bloomDay, m, k, mid)) {
-      result = mid;
-      right = mid - 1;
-    } else {
-      left = mid + 1;
-    }
-  }
-
-  return result;
-}
-
-function canMakeBouquets(bloomDay, m, k, day) {
-  let bouquets = 0;
-  let consecutiveFlowers = 0;
-
-  for (let i = 0; i < bloomDay.length; i++) {
-    if (bloomDay[i] <= day) {
-      consecutiveFlowers++;
-      if (consecutiveFlowers === k) {
-        bouquets++;
-        consecutiveFlowers = 0;
-      }
-    } else {
-      consecutiveFlowers = 0;
-    }
-
-    if (bouquets >= m) return true;
-  }
-
-  return bouquets >= m;
 }
 ```
 
