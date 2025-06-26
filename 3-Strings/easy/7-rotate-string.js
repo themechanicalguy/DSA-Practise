@@ -26,7 +26,7 @@ function rotateStringWithModulo(s, goal) {
     // Verify each character matches after this shift
     for (let i = 0; i < n; i++) {
       // The shifted position is (i + shift) % n
-      //Modulo Handles Circular Shifts: (i + shift) % n ensures we wrap around correctly.
+      //Modulo Handles Circular Shifts: (i + shift) % n ensures we wrap around correctly. -- to get confused in this condition
       if (s[(i + shift) % n] !== goal[i]) {
         match = false;
         break;

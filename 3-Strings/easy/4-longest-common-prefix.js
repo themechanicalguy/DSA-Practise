@@ -33,10 +33,34 @@ function longestCommonPrefixHorizontal(stringsArray) {
     }
 
     // Update the prefix to the common part
-    prefix = prefix.substring(0, j);
+    prefix = prefix.slice(0, j);
 
     // If prefix becomes empty, no common prefix exists
     if (prefix === "") break;
+  }
+
+  return prefix;
+}
+
+/**
+ * Finds the longest common prefix among an array of strings using horizontal scanning.
+ * @param {string[]} strs - Array of strings
+ * @returns {string} - Longest common prefix
+ */
+function longestCommonPrefixHorizontal(strs) {
+  // Handle edge cases: empty array or single string
+  if (!strs.length) return "";
+  if (strs.length === 1) return strs[0];
+
+  let prefix = strs[0]; // Start with first string as prefix
+
+  // Compare prefix with each string
+  for (let i = 1; i < strs.length; i++) {
+    // Shorten prefix while it doesn't match the start of current string
+    while (strs[i].indexOf(prefix) !== 0) {
+      prefix = prefix.slice(0, -1); // Remove last character
+      if (!prefix) return ""; // If prefix becomes empty, no common prefix
+    }
   }
 
   return prefix;
