@@ -18,18 +18,9 @@ The problem requires us to find, for each day, how many days we have to wait unt
 - If no such day exists in the future, we return `0` for that index.
 - The key is to efficiently compare each `temperature` with future temperatures while avoiding redundant computations.
 
-**Key Observations:**
-
-- For each day `i`, we need to find the smallest index `j` (where `j > i`) such that `temperatures[j] > temperatures[i]`.
-- The answer for index `i` is `j - i` (the number of days to wait) or 0 if no such j exists.
-- Temperatures are integers, and the array is non-empty, so we don’t need to handle empty arrays or invalid inputs.
-- The problem suggests a pattern where we can optimize by leveraging the fact that we’re looking for the next warmer day, hinting at a stack-based or iterative approach to avoid checking every future day naively.
-
 ## 1. **Brute Force Approach**:
 
 - For each day, iterate through all subsequent days until a warmer temperature is found.
-- **Time Complexity**: O(n²) in the worst case (when `temperatures` are in descending order).
-- **Space Complexity**: O(1) (excluding the output array).
 
 ```javascript
 /**
@@ -56,8 +47,8 @@ function dailyTemperaturesBruteForce(temperatures) {
 }
 ```
 
-**Time Complexity**: O(n²)  
-**Space Complexity**: O(1) (excluding output array).
+**Time Complexity**: O(n²) in the worst case (when `temperatures` are in descending order).
+**Space Complexity**: O(1) (excluding the output array).
 
 ## **Optimal Approach (Using Monotonic Stack)**:
 
