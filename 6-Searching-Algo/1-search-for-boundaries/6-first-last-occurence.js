@@ -115,3 +115,65 @@ var searchRange = function (nums, target) {
 
   return [first, last];
 };
+
+
+
+/**Below code is written by Author: Venkataramanan B */
+// Below code is brute force
+function searchRangeBrute (nums, target) {
+  let first = -1;
+  let last = -1;
+  for (let i=0; i<nums.length; i++) {
+    if (first === -1 && nums[i]===target) {
+      first = i;
+      last = i;
+    } else if(nums[i]===target) {
+      last = i;
+    } else if(nums[i] > target) {
+      break;
+    }
+  }
+  return [first, last];
+}
+
+function searchRangeOpti (nums, target) {
+
+  const findFirst = () => {
+    let left=0, right = nums.length-1, ans=-1;
+
+    while(left <= right) {
+      const mid = Math.floor((left+right) /2);
+      if (nums[mid] === target) {
+        right=mid-1;
+        ans = mid;
+      } else if (nums[mid] <target) {
+        left = mid+1;
+      } else {
+        right = mid-1;
+      }
+    }
+    return ans;
+  }
+
+  const findLast = () => {
+    let left=0, right = nums.length-1, ans=-1;
+
+    while(left <= right) {
+      const mid = Math.floor((left+right) /2);
+      if (nums[mid] === target) {
+        left=mid+1;
+        ans = mid;
+      } else if (nums[mid] <target) {
+        left = mid+1;
+      } else {
+        right = mid-1;
+      }
+    }
+    return ans;
+  }
+
+  return [findFirst(), findLast()]
+}
+
+console.log(searchRangeOpti([3,4,13,13,13,20,40], 13));
+console.log(searchRangeBrute([1], 1));

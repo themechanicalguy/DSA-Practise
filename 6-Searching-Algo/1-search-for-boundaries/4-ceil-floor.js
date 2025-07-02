@@ -84,3 +84,64 @@ function findFloorAndCeilingWithSorting(arr, x) {
     ceil === -1 && sortedArr[sortedArr.length - 1] < x ? -1 : ceil,
   ];
 }
+
+
+const findFloorAndCeilingBrute = (arr, x) => {
+
+    let floor, ceil;
+    for (let i=0; i<arr.length; i++) {
+      if (arr[i] <= x) {
+        floor = arr[i];
+      } else {
+        break;
+      }
+    }
+
+    for (let i=0; i<arr.length; i++) {
+      if (arr[i] >= x) {
+        ceil = arr[i];
+        break;
+      }
+    }
+    return [floor, ceil];
+}
+
+
+function findFloorAndCeilingOpti (arr, x) {
+
+  const floorFn =() => {
+    let left =0, right=arr.length-1, ans=-1;
+    while (left <= right) {
+      const mid = Math.floor((left+right)/2);
+
+      if (arr[mid] <= x) {
+        left = mid+1;
+        ans=mid;
+      } else {
+        right =mid-1;
+      }
+    }
+    return ans
+  }
+
+  const ceilFn = () => {
+    let left =0, right=arr.length-1, ans=-1;
+    while (left <= right) {
+      const mid = Math.floor((left+right)/2);
+
+      if (arr[mid] >= x) {
+        ans=mid;
+        right =mid-1;
+      } else {
+        left = mid+1;
+      }
+    }
+    return ans
+  }
+
+  return [arr[floorFn()], arr[ceilFn()]];
+}
+
+const x = 6, arr =[3, 4, 4, 7, 8, 10];
+console.log("Ans for x=6 : ", findFloorAndCeilingOpti(arr, x));
+console.log("Ans for x=8 : ", findFloorAndCeilingOpti(arr, 8));
