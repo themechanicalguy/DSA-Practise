@@ -119,7 +119,7 @@ function calculateSpan(prices) {
 console.log(calculateSpan([100, 80, 60, 70, 60, 75, 85])); // [1,1,1,2,1,4,6]
 ```
 
-## 4. Minimum Stack
+## Minimum Stack
 
 **Pattern**: Implementing a stack that can retrieve the minimum element in constant time.
 
@@ -173,7 +173,7 @@ console.log(minStack.top()); // 0
 console.log(minStack.getMin()); // -2
 ```
 
-## 5. Reverse Polish Notation (Postfix Evaluation)
+## Reverse Polish Notation (Postfix Evaluation)
 
 **Pattern**: Evaluating postfix expressions using stack.
 
@@ -211,7 +211,54 @@ console.log(evalRPN(["2", "1", "+", "3", "*"])); // 9 ( (2 + 1) * 3 )
 console.log(evalRPN(["4", "13", "5", "/", "+"])); // 6 (4 + (13 / 5))
 ```
 
-## 6. Asteroid Collision
+## Expression Evaluation
+
+**Use Case**: Evaluating mathematical expressions, especially in postfix notation.
+
+### Example: Postfix Evaluation
+
+```javascript
+function evalPostfix(expression) {
+  const stack = [];
+  const tokens = expression.split(" ");
+
+  for (let token of tokens) {
+    if (!isNaN(token)) {
+      stack.push(parseFloat(token));
+    } else {
+      const b = stack.pop();
+      const a = stack.pop();
+      switch (token) {
+        case "+":
+          stack.push(a + b);
+          break;
+        case "-":
+          stack.push(a - b);
+          break;
+        case "*":
+          stack.push(a * b);
+          break;
+        case "/":
+          stack.push(a / b);
+          break;
+      }
+    }
+  }
+
+  return stack.pop();
+}
+
+console.log(evalPostfix("2 3 +")); // 5
+console.log(evalPostfix("4 5 * 6 +")); // 26
+```
+
+**Key Points**:
+
+- Operands are pushed to stack
+- Operators pop required operands
+- Result pushed back to stack
+
+## Asteroid Collision Pattern
 
 **Pattern**: Simulating collisions where elements moving in opposite directions cancel each other out.
 
@@ -219,32 +266,39 @@ console.log(evalRPN(["4", "13", "5", "/", "+"])); // 6 (4 + (13 / 5))
 
 ```javascript
 /**
- * Simulates asteroid collisions where positive moves right, negative moves left.
- * Approach: Use stack to simulate collisions and handle destruction.
- * Time Complexity: O(n), Space Complexity: O(n)
+ * @param {number[]} asteroids
+ * @return {number[]}
  */
 function asteroidCollision(asteroids) {
   const stack = [];
 
-  for (let asteroid of asteroids) {
-    let addToStack = true;
+  for (const asteroid of asteroids) {
+    let shouldAdd = true;
+    // No collision if stack is empty or no opposite direction
+    while (stack.length > 0 && asteroid < 0 && stack[stack.length - 1] > 0) {
+      const topAsteroid = stack[stack.length - 1];
+      const topSize = Math.abs(topAsteroid);
+      const currentSize = Math.abs(currentAsteroid);
 
-    while (stack.length && asteroid < 0 && stack[stack.length - 1] > 0) {
-      const top = stack[stack.length - 1];
-
-      if (top > -asteroid) {
-        addToStack = false;
-        break;
-      } else if (top === -asteroid) {
+      // If top asteroid is smaller, it explodes
+      if (topSize < currentSize) {
         stack.pop();
-        addToStack = false;
+        continue;
+      }
+      // If current asteroid is smaller, it explodes
+      else if (topSize > currentSize) {
+        shouldAdd = false;
         break;
-      } else {
+      }
+      // If both are equal, both explode
+      else {
         stack.pop();
+        shouldAdd = false;
+        break;
       }
     }
 
-    if (addToStack) {
+    if (shouldAdd) {
       stack.push(asteroid);
     }
   }
@@ -256,7 +310,7 @@ console.log(asteroidCollision([5, 10, -5])); // [5,10]
 console.log(asteroidCollision([8, -8])); // []
 ```
 
-## 7. Removing Adjacent Duplicates
+## Removing Adjacent Duplicates Pattern
 
 **Pattern**: Removing adjacent duplicates from a string or array.
 
@@ -286,7 +340,7 @@ console.log(removeDuplicates("abbaca")); // "ca"
 console.log(removeDuplicates("azxxzy")); // "ay"
 ```
 
-## 8. Largest Rectangle in Histogram
+## Largest Rectangle in Histogram
 
 **Pattern**: Finding the largest rectangle that can be formed under a histogram.
 
@@ -325,7 +379,95 @@ function largestRectangleArea(heights) {
 console.log(largestRectangleArea([2, 1, 5, 6, 2, 3])); // 10
 ```
 
-## Identifying Stack Problems
+## Reversal Pattern
+
+Problems requiring reversing elements (e.g., strings, arrays) or processing items in reverse order of input.
+
+**Use Case**: Problems requiring element reversal or processing in reverse order.
+**Approach:** Push each character onto the stack, then pop to construct the reversed string.
+
+### Example: Reverse a String
+
+```javascript
+function reverseString(str) {
+  const stack = [];
+
+  // Push each character onto stack
+  for (let char of str) {
+    stack.push(char);
+  }
+
+  // Pop characters to build reversed string
+  let reversed = "";
+  while (stack.length > 0) {
+    reversed += stack.pop();
+  }
+
+  return reversed;
+}
+
+console.log(reverseString("hello")); // "olleh"
+```
+
+**Explanation:** Each character is pushed onto the stack, so the last character is at the top. Popping retrieves characters in reverse order, constructing the reversed string.
+
+**Key Points**:
+
+- Time Complexity: O(n)
+- Space Complexity: O(n)
+- Works for any reversible sequence
+
+## Backtracking/Undo Pattern
+
+**Use Case**: Implementing history or step reversal functionality.
+
+### Example: Browser History
+
+```javascript
+class BrowserHistory {
+  constructor(homepage) {
+    this.history = [homepage];
+    this.forwardStack = [];
+    this.currentIndex = 0;
+  }
+
+  visit(url) {
+    this.forwardStack = [];
+    this.history = this.history.slice(0, this.currentIndex + 1);
+    this.history.push(url);
+    this.currentIndex++;
+  }
+
+  back(steps) {
+    const newIndex = Math.max(0, this.currentIndex - steps);
+    while (this.currentIndex > newIndex) {
+      this.forwardStack.push(this.history[this.currentIndex]);
+      this.currentIndex--;
+    }
+    return this.history[this.currentIndex];
+  }
+
+  forward(steps) {
+    const newIndex = Math.min(
+      this.history.length - 1,
+      this.currentIndex + steps
+    );
+    while (this.currentIndex < newIndex) {
+      this.currentIndex++;
+      this.history[this.currentIndex] = this.forwardStack.pop();
+    }
+    return this.history[this.currentIndex];
+  }
+}
+```
+
+**Key Points**:
+
+- Two-stack approach (history + forward stack)
+- Visiting new URLs clears forward history
+- Back/forward operations move between stacks
+
+## Problem Identification Guide
 
 Look for these characteristics to identify stack problems:
 
@@ -336,3 +478,29 @@ Look for these characteristics to identify stack problems:
 - Problems where you need to maintain some state about previous elements
 
 Stack problems often have O(n) time complexity solutions with O(n) space complexity due to the stack storage.
+
+| Pattern               | Key Indicators                        | Example Problems                      |
+| --------------------- | ------------------------------------- | ------------------------------------- |
+| Reversal              | "Reverse", "Invert" order             | Reverse string, Reverse linked list   |
+| Parentheses Matching  | Nested structures, validation         | Valid parentheses, HTML tag validator |
+| Backtracking/Undo     | History, navigation, undo operations  | Browser history, Text editor undo     |
+| Expression Evaluation | Mathematical expressions              | Postfix calculator, Infix conversion  |
+| Monotonic Stack       | Next/previous greater/smaller element | Daily temperatures, Stock span        |
+
+## Best Practices
+
+1. **Edge Cases**: Always handle empty stack scenarios
+2. **Complexity**: Aim for O(n) time with single-pass solutions
+3. **Data Structures**: Use arrays with push/pop for stack operations
+4. **Testing**: Verify with nested, empty, and edge case inputs
+
+## Conclusion
+
+Stack-based solutions excel at problems requiring:
+
+- Last-in-first-out processing
+- State tracking
+- Nested structure validation
+- Element order manipulation
+
+Each pattern has distinct characteristics that make it suitable for specific problem types. Recognizing these patterns is key to selecting the right approach.

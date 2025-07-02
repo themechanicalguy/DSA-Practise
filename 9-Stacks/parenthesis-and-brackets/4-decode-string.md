@@ -44,7 +44,7 @@ function decodeString(s) {
       let prevString = stack.pop();
       // Repeat the current string and append to the previous string
       currentString = prevString + currentString.repeat(num);
-    } else if (isDigit(char)) {
+    } else if (char >= "0" && char <= "9") {
       // Build the number digit by digit
       currentNumber = currentNumber * 10 + parseInt(char, 10);
     } else {
@@ -56,9 +56,9 @@ function decodeString(s) {
   return currentString;
 }
 
-function isDigit(char) {
-  return char >= "0" && char <= "9";
-}
+// function isDigit(char) {
+//   return char >= "0" && char <= "9";
+// }
 ```
 
 ## Approach 2: Recursion (DFS)
