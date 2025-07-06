@@ -11,8 +11,6 @@ The problem requires merging two sorted arrays into one sorted array in-place, u
 - Works in-place without additional space
 - Most efficient approach
 
-### Optimal Two Pointers (End to Start)
-
 ```javascript
 /**
  * Merges two sorted arrays in-place using three pointers from the end
