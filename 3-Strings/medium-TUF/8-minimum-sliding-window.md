@@ -83,7 +83,7 @@ var minWindow = function (s, t) {
       }
       // Once minWindowLength is track first remove from window to slide to next
       window[s[left]]--;
-      // Remove character at left from window
+      // Remove character at left from window and decrease have
       if (countT[s[left]] && window[s[left]] < countT[s[left]]) {
         have--;
       }

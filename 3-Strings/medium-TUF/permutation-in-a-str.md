@@ -1,4 +1,6 @@
-### Problem Understanding
+# LC 567. Permutation in String
+
+## Problem Understanding
 
 We need to determine if any permutation of `s1` exists as a substring in `s2`. A permutation of `s1` is any rearrangement of its characters. For example, permutations of "ab" are "ab" and "ba".
 
