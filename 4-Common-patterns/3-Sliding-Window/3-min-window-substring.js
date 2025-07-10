@@ -1,4 +1,4 @@
-//LC-761-Minimum Window Substring
+//LC-76-Minimum Window Substring
 
 //brute force
 function minWindow(s, t) {

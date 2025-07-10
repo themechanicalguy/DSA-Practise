@@ -31,7 +31,9 @@ We need to find the next greater element for each element in `nums1` based on th
 
 ## Approaches
 
-## 1. **Brute Force Approach**: For each element in `nums1`, find its position in `nums2` and then scan the remaining elements to the right to find the next greater element.
+## 1. **Brute Force Approach**:
+
+For each element in `nums1`, find its position in `nums2` and then scan the remaining elements to the right to find the next greater element.
 
 **Intuition**:
 
