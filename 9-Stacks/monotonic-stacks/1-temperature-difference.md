@@ -78,7 +78,7 @@ function dailyTemperatures(temperatures) {
       answer[unresolvedDay] = currentDay - unresolvedDay;
     }
 
-    stack.push(currentDay); // Push current day to stack (unresolved for now)
+    stack.push(currentDay); // Push current day ttemperatureso stack (unresolved for now)
   }
 
   return answer;

@@ -26,8 +26,7 @@ function isValid(s) {
     if (char in map) {
       stack.push(char); // Push opening brackets
     } else {
-      const last = stack.pop();
-      if (map[last] !== char) {
+      if (stack.pop() !== char) {
         return false; // Mismatch found
       }
     }
