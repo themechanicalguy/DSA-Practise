@@ -128,6 +128,46 @@ function maxProductTwoPass(nums) {
   return maxProduct;
 }
 
+// Solved in one iteration
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxProduct = function (nums) {
+  let n = nums.length;
+  if (!nums || nums.length === 0) return 0;
+
+  // Initialize maximum product
+  let maxProduct = nums[0];
+  let prefixMultiplication = 1;
+  let suffixMultiplication = 1;
+
+  // Forward pass: compute product from left to right
+  for (let i = 0; i < nums.length; i++) {
+    // prefixMultiplication *= nums[i];
+    // maxProduct = Math.max(maxProduct, prefixMultiplication);
+    // Reset product if zero is encountered
+    if (prefixMultiplication === 0) prefixMultiplication = 1;
+    if (suffixMultiplication === 0) suffixMultiplication = 1;
+    prefixMultiplication *= nums[i];
+    suffixMultiplication *= nums[n - i - 1];
+    maxProduct = Math.max(
+      maxProduct,
+      Math.max(prefixMultiplication, suffixMultiplication)
+    );
+  }
+
+  // Backward pass: compute product from right to left
+  // for (let i = nums.length - 1; i >= 0; i--) {
+  //     suffixMultiplication *= nums[i];
+  //     maxProduct = Math.max(maxProduct, suffixMultiplication);
+  //     // Reset product if zero is encountered
+  //     if (suffixMultiplication === 0) suffixMultiplication = 1;
+  // }
+
+  return maxProduct;
+};
+
 // Analysis: Can We Use Only the Forward Pass?
 // The Optimized Two-Pass Approach computes the maximum product by:
 

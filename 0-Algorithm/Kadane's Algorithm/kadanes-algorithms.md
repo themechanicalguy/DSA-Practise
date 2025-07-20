@@ -15,7 +15,11 @@ At each element, the algorithm decides whether to:
 - Start a new subarray at the current element, or
 - Continue the previous subarray by adding the current element
 
-### Implementation
+## Problems That Can Be Solved Using This Pattern
+
+Kadane's pattern is useful for various problems involving contiguous subsequences:
+
+### 1. Maximum Subarray Sum (Classic Problem)
 
 ```javascript
 function kadanesAlgorithm(nums) {
@@ -34,7 +38,7 @@ function kadanesAlgorithm(nums) {
 
   return maxGlobal;
 }
-//Alternate approach
+//Alternate approach -- old approach we started
 const maxsubArraySum = (arr) => {
   // assigning first element as max value
   let maxSum = arr[0];
@@ -68,16 +72,6 @@ Let's use the array `[-2, 1, -3, 4, -1, 2, 1, -5, 4]`:
 9. i=8 (4): maxCurrent = max(4, 1+4) = 5, maxGlobal = max(6, 5) = 6
 
 Final result: 6 (from subarray [4, -1, 2, 1])
-
-## Problems That Can Be Solved Using This Pattern
-
-Kadane's pattern is useful for various problems involving contiguous subsequences:
-
-### 1. Maximum Subarray Sum (Classic Problem)
-
-```javascript
-// Already shown above
-```
 
 ### 2. Maximum Product Subarray
 

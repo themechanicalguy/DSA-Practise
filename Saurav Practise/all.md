@@ -277,6 +277,8 @@ const k = 15;
 console.log(longestSubarrayWithSumK(arr, k)); // Output: 4
 ```
 
+---
+
 # Longest Subarray with Sum 0 - 17 July
 
 ```javascript
@@ -323,6 +325,8 @@ function maxLength(arr) {
 }
 ```
 
+---
+
 # 1732. Find the Highest Altitude
 
 ```javascript
@@ -351,7 +355,33 @@ var largestAltitude = function (gain) {
 };
 ```
 
+---
+
 # 724. Find Pivot Index - 18th July
+
+Given an array of integers nums, calculate the **pivot index** of this array.
+
+- The **pivot index** is the index where the sum of all the numbers strictly to the left of the index is equal to the sum of all the numbers strictly to the index's right.
+
+If the index is on the left edge of the array, then the left sum is 0 because there are no elements to the left. This also applies to the right edge of the array.
+
+Return the leftmost **pivot index**. If no such index exists, return -1.
+
+- Example 1:
+
+Input: nums = [1,7,3,6,5,6]
+Output: 3
+Explanation:
+The pivot index is 3.
+Left sum = nums[0] + nums[1] + nums[2] = 1 + 7 + 3 = 11
+Right sum = nums[4] + nums[5] = 5 + 6 = 11
+
+- Example 2:
+
+Input: nums = [1,2,3]
+Output: -1
+Explanation:
+There is no index that satisfies the conditions in the problem statement.
 
 ```javascript
 /**
@@ -378,3 +408,158 @@ var pivotIndex = function (nums) {
   // found the item
 };
 ```
+
+---
+
+# 1. Two Sum
+
+# 75. Sort Colors
+
+# 15. 3Sum
+
+# 18. 4Sum
+
+# 169. Majority Element
+
+# 229. Majority Element II
+
+---
+
+# 53. Maximum Subarray - July 19
+
+## How Kadane's Algorithm Works
+
+The algorithm works by maintaining two variables as it iterates through the array:
+
+1. `maxCurrent`: Maximum sum of the subarray ending at the current position
+2. `maxGlobal`: Maximum sum found so far
+
+At each element, the algorithm decides whether to:
+
+- Start a new subarray at the current element, or
+- Continue the previous subarray by adding the current element
+
+```javascript
+function kadanesAlgorithm(nums) {
+  if (nums.length === 0) return 0;
+
+  let maxCurrent = nums[0];
+  let maxGlobal = nums[0];
+
+  for (let i = 1; i < nums.length; i++) {
+    // Decide whether to start new subarray or continue current one
+    maxCurrent = Math.max(nums[i], maxCurrent + nums[i]);
+
+    // Update global maximum if current maximum is greater
+    maxGlobal = Math.max(maxGlobal, maxCurrent);
+  }
+
+  return maxGlobal;
+}
+```
+
+---
+
+# 152. Maximum Product Subarray
+
+Given an integer array nums, find a subarray that has the largest product, and return the product.
+
+The test cases are generated so that the answer will fit in a 32-bit integer.
+
+Example 1:
+
+Input: nums = [2,3,-2,4]
+Output: 6
+Explanation: [2,3] has the largest product 6.
+Example 2:
+
+Input: nums = [-2,0,-1]
+Output: 0
+Explanation: The result cannot be 2, because [-2,-1] is not a subarray.
+
+## Solution
+
+This problem can be solved in 2 approaches i.e kadanes algo and general observation
+Kadane Algorithm is difficult here so go for the simple observation.
+
+- If we have even -ive number then multiplication of entire array will be max sum
+- If we have odd number of -ive nos. then either multiplication of all the elements from left to right will give maxProduct or right to left will give max product. It depends on the position of the odd -ive no. in the array.
+- If you encounter **0 in array**, we need to reset the prod value to 1 again -- **VVI in this appraoch**
+
+```javascript
+function maxProductTwoPass(nums) {
+  if (!nums || nums.length === 0) return 0;
+
+  // Initialize maximum product
+  let maxProduct = nums[0];
+  let forwardProduct = 1;
+  let backwardProduct = 1;
+
+  // Forward pass: compute product from left to right
+  for (let i = 0; i < nums.length; i++) {
+    forwardProduct *= nums[i];
+    maxProduct = Math.max(maxProduct, forwardProduct);
+    // Reset product if zero is encountered
+    if (forwardProduct === 0) forwardProduct = 1;
+  }
+
+  // Backward pass: compute product from right to left
+  for (let i = nums.length - 1; i >= 0; i--) {
+    backwardProduct *= nums[i];
+    maxProduct = Math.max(maxProduct, backwardProduct);
+    // Reset product if zero is encountered
+    if (backwardProduct === 0) backwardProduct = 1;
+  }
+
+  return maxProduct;
+}
+```
+
+```javascript
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxProduct = function (nums) {
+  let n = nums.length;
+  if (!nums || nums.length === 0) return 0;
+
+  // Initialize maximum product
+  let maxProduct = nums[0];
+  let prefixMultiplication = 1;
+  let suffixMultiplication = 1;
+
+  for (let i = 0; i < nums.length; i++) {
+    if (prefixMultiplication === 0) prefixMultiplication = 1;
+    if (suffixMultiplication === 0) suffixMultiplication = 1;
+    prefixMultiplication *= nums[i];
+    suffixMultiplication *= nums[n - i - 1];
+    maxProduct = Math.max(
+      maxProduct,
+      Math.max(prefixMultiplication, suffixMultiplication)
+    );
+  }
+
+  return maxProduct;
+};
+```
+
+---
+
+# 918. Maximum Sum Circular Subarray
+
+FAILED
+
+# Count the number of subarrays with given xor K
+
+# Next Permutation
+
+---
+
+# July 20
+
+# 118. Pascal's Triangle
+
+# Count Inversions
+
+# Reverse Pairs
