@@ -12,6 +12,8 @@ Row 4: [1, 3, 3, 1]
 Row 5: [1, 4, 6, 4, 1]
 ```
 
+![alt text](image.png)
+
 ### Intuition and Approach
 
 1. **Identify the Pattern**:

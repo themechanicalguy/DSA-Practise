@@ -10,7 +10,9 @@ Output: `[1,3,2]`
 
 ## Understanding the Problem
 
-A permutation is an arrangement of elements in a specific order. The "next permutation" is the lexicographically next greater arrangement of numbers.
+- A permutation is an arrangement of elements in a specific order.
+- The "next permutation" is the lexicographically next greater arrangement of numbers.
+
 If no such arrangement exists (like [3,2,1]), we return the smallest possible permutation ([1,2,3]).
 
 ## Intuition
@@ -38,19 +40,27 @@ This is the most efficient approach with O(n) time and O(1) space.
  */
 function nextPermutation(nums) {
   // Step 1: Find the first decreasing element from the end (pivot)
-  let pivot = nums.length - 2;
-  while (pivot >= 0 && nums[pivot] >= nums[pivot + 1]) {
-    pivot--;
+  let pivot = -1;
+  for (let i = nums.length - 2; i >= 0; i--) {
+    if (nums[i] < nums[i + 1]) {
+      pivot = i;
+      break;
+    }
   }
 
-  if (pivot >= 0) {
-    // Step 2: Find the smallest element larger than nums[pivot] to its right
-    let successor = nums.length - 1;
-    while (successor > pivot && nums[successor] <= nums[pivot]) {
-      successor--;
+  // Step 2- Edge Case- if pivot = -1; just reverse the array and return
+  if (pivot === -1) {
+    nums.reverse();
+    return nums;
+  }
+
+  // Step 3: Find the smallest element larger than nums[pivot] to its right
+  // take pivot element and compare from the last value of array and find the next max value and swap, break
+  for (let i = nums.length - 1; i > pivot; i--) {
+    if (nums[pivot] < nums[i]) {
+      [nums[pivot], nums[i]] = [nums[i], nums[pivot]];
+      break;
     }
-    // Step 3: Swap the pivot and successor
-    [nums[pivot], nums[successor]] = [nums[successor], nums[pivot]];
   }
 
   // Step 4: Reverse the suffix after the pivot
@@ -61,6 +71,8 @@ function nextPermutation(nums) {
     left++;
     right--;
   }
+
+  return nums;
 }
 ```
 
@@ -119,88 +131,4 @@ Actually, the correct steps should be:
 3. Single element array remains unchanged
 4. Sorted array ([1,2,3] → [1,3,2])
 
-## Alternative Implementation (More Readable)
-
-```javascript
-function nextPermutationAll(arr) {
-  // Helper function to get all permutations
-  function getAllPermutations(nums) {
-    if (nums.length <= 1) return [nums];
-
-    const result = [];
-    for (let i = 0; i < nums.length; i++) {
-      const current = nums[i];
-      const remaining = [...nums.slice(0, i), ...nums.slice(i + 1)];
-      const perms = getAllPermutations(remaining);
-
-      for (let perm of perms) {
-        result.push([current, ...perm]);
-      }
-    }
-    return result;
-  }
-
-  // Convert array to string for comparison
-  const originalStr = arr.join("");
-
-  // Get all permutations and sort them
-  const allPerms = getAllPermutations(arr)
-    .map((perm) => perm.join(""))
-    .sort();
-
-  // Find next permutation
-  const currentIndex = allPerms.indexOf(originalStr);
-  if (currentIndex === allPerms.length - 1) {
-    return allPerms[0].split("").map(Number);
-  }
-
-  return allPerms[currentIndex + 1].split("").map(Number);
-}
-
-// Test cases
-console.log(nextPermutationAll([1, 2, 3])); // [1,3,2]
-console.log(nextPermutationAll([3, 2, 1])); // [1,2,3]
-console.log(nextPermutationAll([1, 1, 5])); // [1,5,1]
-```
-
 This problem demonstrates how a careful observation of the permutation pattern can lead to an efficient solution without generating all permutations.
-
-//Brute force
-
-// Approach 2- Standard Algorithm Approach (In-Place Modification): Optimal
-
-function nextPermutation(arr) {
-// Find first decreasing element from right
-let pivotIndex = arr.length - 2;
-while (pivotIndex >= 0 && arr[pivotIndex] >= arr[pivotIndex + 1]) {
-pivotIndex--;
-}
-
-// If no such element found, return sorted array
-if (pivotIndex < 0) {
-return arr.sort((a, b) => a - b);
-}
-
-// Find number just larger than arr[pivotIndex]
-let swapIndex = arr.length - 1;
-while (swapIndex >= 0 && arr[swapIndex] <= arr[pivotIndex]) {
-swapIndex--;
-}
-
-// Swap the two numbers
-[arr[pivotIndex], arr[swapIndex]] = [arr[swapIndex], arr[pivotIndex]];
-
-// Reverse the subarray after pivotIndex
-let leftPointer = pivotIndex + 1;
-let rightPointer = arr.length - 1;
-while (leftPointer < rightPointer) {
-[arr[leftPointer], arr[rightPointer]] = [
-arr[rightPointer],
-arr[leftPointer],
-];
-leftPointer++;
-rightPointer--;
-}
-
-return arr;
-}
