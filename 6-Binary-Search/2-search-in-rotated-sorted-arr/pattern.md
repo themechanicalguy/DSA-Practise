@@ -13,12 +13,14 @@ You can identify this pattern when:
 - The array has `no duplicates` (or duplicates are explicitly handled in some variations).
 - You need to `find an element` or determine its `index` in the array.
 - The problem requires `logarithmic time complexity` (O(log n)), suggesting a binary search-based approach.
-- Key characteristics:
-  - The array is divided into `two sorted subarrays` due to rotation.
-  - At least one half of the array (left or right of the midpoint) is always sorted.
+
+**Key characteristics:**
+
+- The array is divided into `two sorted subarrays` due to rotation.
+- At least one half of the array (left or right of the midpoint) is always sorted.
 - i.e Find a target or a specific property (e.g., minimum) in a sorted array that has been rotated at an unknown pivot.
 
-Common problems include:
+**Common problems include:**
 
 - Finding a target element in a rotated sorted array.
 - Finding the pivot (rotation point) or the minimum element.

@@ -22,9 +22,6 @@ We need to find, for each spell, how many potions can form a successful pair wit
 
 #### **1. Brute Force Approach**
 
-- **Time Complexity**: O(n \* m), where n is the length of `spells` and m is the length of `potions`.
-- **Space Complexity**: O(1) (excluding the output array).
-
 ```javascript
 /**
  * Brute force approach: For each spell, check all potions.
@@ -58,10 +55,10 @@ function successfulPairsBruteForce(spells, potions, success) {
 }
 ```
 
-#### **2. Optimized Approach (Sorting + Binary Search)**
+- **Time Complexity**: `O(nm)`, where n is the length of `spells` and m is the length of `potions`.
+- **Space Complexity**: O(1) (excluding the output array).
 
-- **Time Complexity**: O(m log m + n log m), where m is the length of `potions` (for sorting) and n is the length of `spells` (for binary search for each spell).
-- **Space Complexity**: O(log m) (for sorting, due to recursion stack in the sorting algorithm).
+#### **2. Optimized Approach (Sorting + Binary Search)**
 
 ```javascript
 /**
@@ -108,6 +105,9 @@ function successfulPairs(spells, potions, success) {
   return pairs; // Return the result array
 }
 ```
+
+- **Time Complexity**: O(m log m + n log m), where m is the length of `potions` (for sorting) and n is the length of `spells` (for binary search for each spell).
+- **Space Complexity**: O(log m) (for sorting, due to recursion stack in the sorting algorithm).
 
 ### **Dry Run of Optimal Approach**
 
