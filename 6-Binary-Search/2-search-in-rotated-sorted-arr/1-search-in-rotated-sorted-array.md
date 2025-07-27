@@ -41,9 +41,7 @@ function search(nums, target) {
     const mid = Math.floor((left + right) / 2);
 
     // Case 1: Found the target
-    if (nums[mid] === target) {
-      return mid;
-    }
+    if (nums[mid] === target) return mid;
 
     // Case 2: Left half [left..mid] is sorted
     if (nums[left] <= nums[mid]) {

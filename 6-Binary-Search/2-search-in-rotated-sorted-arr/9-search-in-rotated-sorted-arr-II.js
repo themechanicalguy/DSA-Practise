@@ -141,9 +141,7 @@ function searchInRotatedArray(nums, target) {
     const mid = Math.floor((left + right) / 2);
 
     // Found the target
-    if (nums[mid] === target) {
-      return true;
-    }
+    if (nums[mid] === target) return true;
 
     // When left, mid and right elements are same, we can't decide which side is sorted
     // So we move both pointers inward
