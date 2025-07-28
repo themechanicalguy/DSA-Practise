@@ -1,12 +1,10 @@
 # LC - 1482 Minimum Number of Days to Make m Bouquets
 
-## Problem Description
-
 You are given an integer array `bloomDay` of length n, an integer `m` and an integer `k`.
-You want to make `m` bouquets. To make a bouquet, you need to use `k` adjacent flowers from the garden.
-The flowers will bloom in `bloomDay[i]` days.
 
-The problem is to find the `minimum number of days` you have to wait until you can make `m bouquets`.
+- You want to make `m` bouquets. To make a bouquet, you need to use `k` adjacent(situated next to or close to something) flowers from the garden. The flowers will bloom in `bloomDay[i]` days.
+
+The problem is to find the `minimum number of days` you have to wait until you can make `m` bouquets.
 Return the minimum number of days you have to wait until you can make m bouquets.
 
 If it is impossible to make m bouquets return -1.
@@ -49,8 +47,6 @@ Key observations:
 
 - **Monotonic Property:**
   - If we can make `m` bouquets on day `d`, we can also make them on any day `d' > d`. If we cannot make `m` bouquets on day `d`, we cannot make them on any day `d' < d`. This makes binary search suitable.
-
-## Approaches
 
 ### 1. Brute Force (Linear Search)
 
@@ -111,8 +107,8 @@ function canMakeBouquets(bloomDay, m, k, day) {
 }
 ```
 
-**Time Complexity**: O(n \* (maxDay - minDay)) - In worst case, we check every day between min and max
-**Space Complexity**: O(1) - Constant extra space
+**Time Complexity**: `O(n(maxDay - minDay))` - In worst case, we check every day between min and max
+**Space Complexity**: `O(1)` - Constant extra space
 
 ### 2. Binary Search (Optimal)
 
