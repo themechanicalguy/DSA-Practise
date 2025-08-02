@@ -20,15 +20,17 @@ https://www.geeksforgeeks.org/problems/the-painters-partition-problem1535/1
 - We need to partition these boards into `k` contiguous segments (one per painter).
 - Each painter takes time equal to the sum of lengths of their assigned boards.
 - The total time is the maximum sum of any segment.
-- We need to minimize this maximum sum.
+- We need to `minimize this maximum` sum.
 
 ## Key Insights
 
-- This is a minimization problem where we’re trying to find the smallest possible maximum sum of `k` contiguous subarrays.
+- This is a `minimization problem` where we’re trying to find the smallest possible maximum sum of `k` contiguous subarrays.
 - The answer (minimum time) must lie between:
   - **Lower bound:** The maximum board length `(max(arr))`, because no painter can take less time than the longest single board.
   - **Upper bound:** The sum of all board lengths `(sum(arr))`, which is the time taken if one painter paints all boards.
-- We can’t greedily assign boards to painters (e.g., by equalizing sums), as the constraint of contiguous segments makes it tricky.
+
+We can’t greedily assign boards to painters (e.g., by equalizing sums), as the `constraint of contiguous segments makes it tricky`.
+
 - The problem resembles the `Split Array Largest Sum` problem, which can be solved using:
   - **Binary Search:** Guess a maximum sum and check if it’s possible to partition the array into k or fewer segments.
   - **Dynamic Programming:** Compute the minimum maximum sum for all possible partitions.
