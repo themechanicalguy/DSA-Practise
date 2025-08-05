@@ -60,6 +60,41 @@ console.log(countRotationsLinear([5, 1, 2, 3, 4])); // Output: 1
 
 #### 2. Binary Search Approach
 
+**Simple Appraoch**
+
+```javascript
+/**
+ * Function to find the number of times a sorted array has been right-rotated.
+ * @param {number[]} arr - The rotated sorted array.
+ * @return {number} - The number of rotations.
+ */
+function findRotationCount(arr) {
+  let left = 0;
+  let right = arr.length - 1;
+
+  // Binary search with < condition
+  while (left < right) {
+    let mid = Math.floor((left + right) / 2);
+
+    // Check if the middle element is greater than the rightmost element
+    if (arr[mid] > arr[right]) {
+      left = mid + 1;
+    } else {
+      right = mid;
+    }
+  }
+
+  // The index of the smallest element is the number of rotations
+  return left;
+}
+
+// Test cases
+console.log(findRotationCount([5, 1, 2, 3, 4])); // Output: 1
+console.log(findRotationCount([1, 2, 3, 4, 5])); // Output: 0
+console.log(findRotationCount([2, 4, 6, 9])); // Output: 0 (assuming original array is [2, 4, 6, 9])
+console.log(findRotationCount([6, 9, 2, 4])); // Output: 2
+```
+
 ```javascript
 /**
  * Finds the number of times a sorted array has been rotated using binary search.
@@ -78,7 +113,15 @@ function countRotationsBinary(rotatedArray) {
 
   while (left <= right) {
     const mid = Math.floor((left + right) / 2);
+    // Taking modulo arr.length wraps the index around to the start of the array.
+    // For example, if arr.length = 4 and mid = 3,
+    // then (3 + 1) % 4 = 4 % 4 = 0,
+    // which is the first index of the array.
     const next = (mid + 1) % n;
+    // Taking modulo arr.length wraps the index around to the end of the array.
+    // For example, if arr.length = 4 and mid = 0,
+    // then (0 - 1 + 4) % 4 = 3 % 4 = 3,
+    // which is the last index of the array.
     const prev = (mid - 1 + n) % n;
 
     // Check if mid is the smallest element.

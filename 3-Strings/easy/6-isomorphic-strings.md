@@ -1,7 +1,7 @@
 # LC 205 Isomorphic Strings
 
 - Given two strings `s` and `t`, determine if they are isomorphic.
-- Two strings `s` and t are isomorphic if the characters in `s` can be replaced to get `t`.
+- Two strings `s` and `t` are isomorphic if the characters in `s` can be replaced to get `t`.
 - All occurrences of a character must be replaced with another character while preserving the order of characters.
 - No two characters may map to the same character, but a character may map to itself.
 
@@ -12,19 +12,21 @@ Two strings `s` and `t` are isomorphic if the characters in `s` can be replaced 
 1. **Preservation of Order**: The order of characters must remain the same.
 2. **Consistent Mapping Rule**:
 
-- **Every occurrence of a character in `s` must be replaced with the same character in `t`**: This means if a character `'x'` in `s` is mapped to `'y'` in `t`, then **all** occurrences of `'x'` in `s` must be replaced with `'y'` in `t`. You cannot map the same character in `s` to different characters in `t`.
+- **Every occurrence of a character in `s` must be replaced with the same character in `t`**:
+
+  This means if a character `x` in `s` is mapped to `y` in `t`, then **all** occurrences of `x` in `s` must be replaced with `y` in `t`. You cannot map the same character in `s` to different characters in `t`.
 
 **Example**:
 
 - Let `s = "egg"` and `t = "add"`.
 
-1. First character: `'e'` in `s` maps to `'a'` in `t`.
+1. First character: `e` in `s` maps to `'a'` in `t`.
 2. Second character: `'g'` in `s` maps to `'d'` in `t`.
 3. Third character: `'g'` in `s` maps to `'d'` in `t` (same as the second character).
 
 **Check for Consistent Mapping**:
 
-- `'e'` in `s` always maps to `'a'` in `t` (only one occurrence, so trivially consistent).
+- `e` in `s` always maps to `'a'` in `t` (only one occurrence, so trivially consistent).
 - `'g'` in `s` appears twice, and both times it maps to `'d'` in `t`. This is consistent.
 
 **Conclusion**: The strings `"egg"` and `"add"` are **isomorphic** because the mapping is consistent.
@@ -45,8 +47,11 @@ Two strings `s` and `t` are isomorphic if the characters in `s` can be replaced 
 
 3. **Bijective Mapping Rule**:
 
-- **No two characters in `s` can map to the same character in `t`**: This means each character in `t` must be uniquely mapped from a character in `s`. In other words, if `'a'` in `s` maps to `'x'` in `t`, then no other character in `s` (like `'b'`) can also map to `'x'` in `t`.
-- **Vice versa**: Similarly, no two characters in `t` can map to the same character in `s`. If `'x'` in `t` maps back to `'a'` in `s`, then no other character in `t` (like `'y'`) can map back to `'a'` in `s`.
+- **No two characters in `s` can map to the same character in `t`**:
+
+This means each character in `t` must be uniquely mapped from a character in `s`. In other words, if `'a'` in `s` maps to `x` in `t`, then no other character in `s` (like `'b'`) can also map to `x` in `t`.
+
+- **Vice versa**: Similarly, no two characters in `t` can map to the same character in `s`. If `x` in `t` maps back to `'a'` in `s`, then no other character in `t` (like `y`) can map back to `'a'` in `s`.
 
 **Example**:
 
@@ -64,8 +69,6 @@ Two strings `s` and `t` are isomorphic if the characters in `s` can be replaced 
 
 **Conclusion**: The strings `"badc"` and `"baba"` are **not isomorphic** because the mapping is not bijective.
 
-### Correct Example of Bijective Mapping
-
 **Example**:
 
 - Let `s = "paper"` and `t = "title"`.
@@ -75,24 +78,24 @@ Two strings `s` and `t` are isomorphic if the characters in `s` can be replaced 
 1. `'p'` in `s` maps to `'t'` in `t`.
 2. `'a'` in `s` maps to `'i'` in `t`.
 3. `'p'` in `s` maps to `'t'` in `t` (consistent with previous mapping).
-4. `'e'` in `s` maps to `'l'` in `t`.
-5. `'r'` in `s` maps to `'e'` in `t`.
+4. `e` in `s` maps to `'l'` in `t`.
+5. `'r'` in `s` maps to `e` in `t`.
 
 **Check for Bijective Mapping**:
 
 - Each character in `s` maps to a unique character in `t`:
   - `'p'` → `'t'`
   - `'a'` → `'i'`
-  - `'e'` → `'l'`
-  - `'r'` → `'e'`
+  - `e` → `'l'`
+  - `'r'` → `e`
 - No two characters in `s` map to the same character in `t`:
   - `'p'` and `'a'` map to `'t'` and `'i'` respectively (unique).
-  - `'e'` and `'r'` map to `'l'` and `'e'` respectively (unique).
+  - `e` and `'r'` map to `'l'` and `e` respectively (unique).
 - Similarly, no two characters in `t` map to the same character in `s`:
   - `'t'` in `t` maps back to `'p'` in `s`.
   - `'i'` in `t` maps back to `'a'` in `s`.
-  - `'l'` in `t` maps back to `'e'` in `s`.
-  - `'e'` in `t` maps back to `'r'` in `s`.
+  - `'l'` in `t` maps back to `e` in `s`.
+  - `e` in `t` maps back to `'r'` in `s`.
 
 **Conclusion**: The strings `"paper"` and `"title"` are **isomorphic** because the mapping is bijective.
 
@@ -198,8 +201,8 @@ function isIsomorphic(s, t) {
 
 - Initialize `sToT = {}`, `tToS = {}`.
 - i = 0:
-  - charS = 'e', charT = 'a'.
-  - `sToT` doesn't have 'e', `tToS` doesn't have 'a'.
+  - charS = e, charT = 'a'.
+  - `sToT` doesn't have e, `tToS` doesn't have 'a'.
   - `sToT = {e: a}`, `tToS = {a: e}`.
 - i = 1:
   - charS = 'g', charT = 'd'.
@@ -236,11 +239,11 @@ function isIsomorphic(s, t) {
   - charS = 'p', charT = 't'.
   - `sToT` has 'p' mapped to 't' (consistent), `tToS` has 't' mapped to 'p' (consistent).
 - i = 3:
-  - charS = 'e', charT = 'l'.
+  - charS = e, charT = 'l'.
   - `sToT = {p: t, a: i, e: l}`, `tToS = {t: p, i: a, l: e}`.
 - i = 4:
-  - charS = 'r', charT = 'e'.
-  - `sToT` doesn't have 'r', but `tToS` has 'e' mapped to 'l' ≠ 'r' → but wait, no: `tToS` checks if 'e' is already mapped to something else. Here, 'e' is not in `tToS` yet.
+  - charS = 'r', charT = e.
+  - `sToT` doesn't have 'r', but `tToS` has e mapped to 'l' ≠ 'r' → but wait, no: `tToS` checks if e is already mapped to something else. Here, e is not in `tToS` yet.
   - `sToT = {p: t, a: i, e: l, r: e}`, `tToS = {t: p, i: a, l: e, e: r}`.
 - Loop completes → return `true`.
 

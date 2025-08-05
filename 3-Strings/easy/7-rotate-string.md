@@ -27,42 +27,71 @@ To check if `s` can become `goal` after some number of shifts, we can consider t
 
 ```javascript
 /**
- * Check if string `s` can become `goal` after some number of shifts.
+ * Checks if string s can become goal after some number of left-to-right shifts.
+ * A shift moves the leftmost character to the rightmost position.
  * @param {string} s - The original string.
- * @param {string} goal - The target string.
- * @return {boolean} - True if `s` can become `goal` via shifts, false otherwise.
+ * @param {string} goal - The target string to match.
+ * @return {boolean} - True if s can become goal after some shifts, false otherwise.
  */
-//
-//space-efficient (O(1) extra space) and time-efficient (O(n²) worst case).
-function rotateStringWithModulo(s, goal) {
-  if (s.length !== goal.length) {
-    return false;
-  }
-  const n = s.length;
-  // Check for all possible shift amounts
-  for (let shift = 0; shift < n; shift++) {
-    let match = true;
+var rotateString = function (s, goal) {
+  if (s.length !== goal.length) return false; // Early exit if lengths differ.
 
-    // Verify each character matches after this shift
-    for (let i = 0; i < n; i++) {
-      // The shifted position is (i + shift) % n
-      //Modulo Handles Circular Shifts: (i + shift) % n ensures we wrap around correctly. -- to get confused in this condition
-      if (s[(i + shift) % n] !== goal[i]) {
-        match = false;
-        break;
-      }
+  for (let rotation = 0; rotation < s.length; rotation++) {
+    let matchedChars = 0;
+    // Compare s with goal rotated by 'rotation' positions.
+    while (
+      matchedChars < s.length &&
+      s[matchedChars] === goal[(matchedChars + rotation) % s.length]
+    ) {
+      matchedChars++;
     }
-
-    if (match) {
-      return true;
-    }
+    if (matchedChars === s.length) return true; // All characters matched.
   }
-
-  return false;
-}
+  return false; // No rotation matched.
+};
 ```
 
-#### Approach 2: Concatenation and Substring Check
+- **Time Complexity**: O(n^2)
+
+### **Dry Run 1: `s = "abcde"`, `goal = "cdeab"`**
+
+**Goal:** Check if rotating `"abcde"` can become `"cdeab"`.
+
+#### **Step-by-Step Execution:**
+
+1. **Initial Check:**
+
+   - Lengths of `s` (`5`) and `goal` (`5`) are equal → Proceed.
+
+2. **Rotation `i = 0`:**
+
+   - Compare `s[0]` (`'a'`) with `goal[(0 + 0) % 5]` (`goal[0] = 'c'`).
+     - `'a' === 'c'`? **No** → Break inner loop, try next rotation.
+
+3. **Rotation `i = 1`:**
+
+   - Compare `s[0]` (`'a'`) with `goal[(0 + 1) % 5]` (`goal[1] = 'd'`).
+     - `'a' === 'd'`? **No** → Break inner loop, try next rotation.
+
+4. **Rotation `i = 2`:**
+
+   - Compare `s[0]` (`'a'`) with `goal[(0 + 2) % 5]` (`goal[2] = 'e'`).
+     - `'a' === 'e'`? **No** → Break inner loop, try next rotation.
+
+5. **Rotation `i = 3`:**
+   - Compare `s[0]` (`'a'`) with `goal[(0 + 3) % 5]` (`goal[3] = 'a'`).
+     - `'a' === 'a'`? **Yes** → Move to next character (`matchedChars = 1`).
+   - Compare `s[1]` (`'b'`) with `goal[(1 + 3) % 5]` (`goal[4] = 'b'`).
+     - `'b' === 'b'`? **Yes** → Move to next character (`matchedChars = 2`).
+   - Compare `s[2]` (`'c'`) with `goal[(2 + 3) % 5]` (`goal[0] = 'c'`).
+     - `'c' === 'c'`? **Yes** → Move to next character (`matchedChars = 3`).
+   - Compare `s[3]` (`'d'`) with `goal[(3 + 3) % 5]` (`goal[1] = 'd'`).
+     - `'d' === 'd'`? **Yes** → Move to next character (`matchedChars = 4`).
+   - Compare `s[4]` (`'e'`) with `goal[(4 + 3) % 5]` (`goal[2] = 'e'`).
+     - `'e' === 'e'`? **Yes** → `matchedChars = 5` (equal to `s.length`).
+   - **All characters matched for `i = 3`** → Return `true`.
+
+#### Approach 2: Concatenation and Substring Check -- Optimal
 
 ```javascript
 /**
@@ -81,6 +110,9 @@ function canBecomeGoal(s, goal) {
   return concatenated.includes(goal);
 }
 ```
+
+- **Time Complexity**: O(n), because `includes` is O(n) for each character, and we do this for each of the n characters.
+- **Space Complexity**: O(n)
 
 #### Approach 3: Simulation of Shifts
 

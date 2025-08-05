@@ -1180,97 +1180,139 @@ There are several approaches to solve this problem:
 
 ### Solution Code
 
-#### Approach 1: Brute Force (Linear Search)
-
 ```javascript
 /**
- * Finds the k-th missing positive integer using linear search.
- * @param {number[]} arr - The strictly increasing sorted array of positive integers.
- * @param {number} k - The k-th missing positive integer to find.
- * @return {number} The k-th missing positive integer.
+ * Finds the number of times a sorted array has been rotated using linear search.
+ * @param {number[]} rotatedArray - The rotated sorted array.
+ * @returns {number} - The number of rotations.
  */
-function findKthPositiveBruteForce(arr, k) {
-  let missingCount = 0;
-  let currentNumber = 1;
-  let index = 0;
-  const n = arr.length;
-
-  while (missingCount < k) {
-    if (index < n && arr[index] === currentNumber) {
-      index++;
-    } else {
-      missingCount++;
+function countRotationsLinear(rotatedArray) {
+  // The number of rotations is equal to the index of the smallest element.
+  let minIndex = 0;
+  for (let i = 1; i < rotatedArray.length; i++) {
+    if (rotatedArray[i] < rotatedArray[minIndex]) {
+      minIndex = i;
     }
-    if (missingCount === k) {
-      return currentNumber;
-    }
-    currentNumber++;
   }
-  return -1; // Shouldn't reach here for valid inputs
+  return minIndex;
 }
+
+// Example Usage:
+console.log(countRotationsLinear([1, 2, 3, 4, 5])); // Output: 0
+console.log(countRotationsLinear([3, 4, 5, 1, 2])); // Output: 3
+console.log(countRotationsLinear([5, 1, 2, 3, 4])); // Output: 1
 ```
 
-**Time Complexity**: O(n + k), where n is the length of the array. In the worst case, we might need to check up to `arr[n-1] + k` numbers.
-**Space Complexity**: O(1), as we use a constant amount of extra space.
+#### 2. Binary Search Approach
 
-#### Approach 2: Binary Search (Optimal)
+**Simple Appraoch** - `while (left < right)` condition
 
 ```javascript
 /**
- * Finds the k-th missing positive integer using binary search.
- * @param {number[]} arr - The strictly increasing sorted array of positive integers.
- * @param {number} k - The k-th missing positive integer to find.
- * @return {number} The k-th missing positive integer.
+ * Function to find the number of times a sorted array has been right-rotated.
+ * @param {number[]} arr - The rotated sorted array.
+ * @return {number} - The number of rotations.
  */
-function findKthPositiveBinarySearch(arr, k) {
+function findRotationCount(arr) {
   let left = 0;
   let right = arr.length - 1;
 
-  while (left <= right) {
-    const mid = Math.floor((left + right) / 2);
-    const missingCount = arr[mid] - (mid + 1);
+  // Binary search with < condition
+  while (left < right) {
+    let mid = Math.floor((left + right) / 2);
 
-    if (missingCount < k) {
+    // Check if the middle element is greater than the rightmost element
+    if (arr[mid] > arr[right]) {
       left = mid + 1;
     } else {
-      right = mid - 1;
+      right = mid;
     }
   }
 
-  // At this point, left is the smallest index where missingCount >= k
-  // The k-th missing number is k + left
-  return k + left;
+  // The index of the smallest element is the number of rotations
+  return left;
 }
+
+// Test cases
+console.log(findRotationCount([5, 1, 2, 3, 4])); // Output: 1
+console.log(findRotationCount([1, 2, 3, 4, 5])); // Output: 0
+console.log(findRotationCount([2, 4, 6, 9])); // Output: 0 (assuming original array is [2, 4, 6, 9])
+console.log(findRotationCount([6, 9, 2, 4])); // Output: 2
 ```
 
-**Time Complexity**: O(log n), where n is the length of the array. Binary search reduces the problem size by half in each iteration.
-**Space Complexity**: O(1), as we use a constant amount of extra space.
+```javascript
+/**
+ * Finds the number of times a sorted array has been rotated using binary search.
+ * @param {number[]} rotatedArray - The rotated sorted array.
+ * @returns {number} - The number of rotations.
+ */
+function countRotationsBinary(rotatedArray) {
+  const n = rotatedArray.length;
+  let left = 0;
+  let right = n - 1;
 
-### Dry Run of Optimal Approach (Binary Search)
+  // If the array is not rotated at all.
+  if (rotatedArray[left] <= rotatedArray[right]) {
+    return 0;
+  }
 
-#### Example 1:
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    // Taking modulo arr.length wraps the index around to the start of the array.
+    // For example, if arr.length = 4 and mid = 3,
+    // then (3 + 1) % 4 = 4 % 4 = 0,
+    // which is the first index of the array.
+    const next = (mid + 1) % n;
+    // Taking modulo arr.length wraps the index around to the end of the array.
+    // For example, if arr.length = 4 and mid = 0,
+    // then (0 - 1 + 4) % 4 = 3 % 4 = 3,
+    // which is the last index of the array.
+    const prev = (mid - 1 + n) % n;
 
-**Input**: arr = [2,3,4,7,11], k = 5
+    // Check if mid is the smallest element.
+    if (
+      rotatedArray[mid] <= rotatedArray[next] &&
+      rotatedArray[mid] <= rotatedArray[prev]
+    ) {
+      return mid;
+    }
 
-1. **Initial**: left = 0, right = 4
-2. **Mid = 2**: arr[2] = 4, missingCount = 4 - (2 + 1) = 1 < 5 → left = 3
-3. **Mid = 3**: arr[3] = 7, missingCount = 7 - (3 + 1) = 3 < 5 → left = 4
-4. **Mid = 4**: arr[4] = 11, missingCount = 11 - (4 + 1) = 6 >= 5 → right = 3
-5. **Loop ends**: left = 4
-6. **Result**: k + left = 5 + 4 = 9
+    // Decide which half to search.
+    if (rotatedArray[mid] <= rotatedArray[right]) {
+      right = mid - 1;
+    } else {
+      left = mid + 1;
+    }
+  }
 
-**Output**: 9
+  return 0;
+}
 
-#### Example 2:
+// Example Usage:
+console.log(countRotationsBinary([1, 2, 3, 4, 5])); // Output: 0
+console.log(countRotationsBinary([3, 4, 5, 1, 2])); // Output: 3
+console.log(countRotationsBinary([5, 1, 2, 3, 4])); // Output: 1
+```
 
-**Input**: arr = [1,2,3,4], k = 2
+### Dry Run of Binary Search Approach:
 
-1. **Initial**: left = 0, right = 3
-2. **Mid = 1**: arr[1] = 2, missingCount = 2 - (1 + 1) = 0 < 2 → left = 2
-3. **Mid = 2**: arr[2] = 3, missingCount = 3 - (2 + 1) = 0 < 2 → left = 3
-4. **Mid = 3**: arr[3] = 4, missingCount = 4 - (3 + 1) = 0 < 2 → left = 4
-5. **Loop ends**: left = 4
-6. **Result**: k + left = 2 + 4 = 6
+#### Example 1: `[1, 2, 3, 4, 5]`
+
+- Initial: `left = 0`, `right = 4`.
+- Check if `arr[left] <= arr[right]` → `1 <= 5` → `true`. Return `0`.
+
+#### Example 2: `[3, 4, 5, 1, 2]`
+
+- Initial: `left = 0`, `right = 4`.
+- `arr[left] > arr[right]` → proceed.
+- `mid = 2` → `arr[mid] = 5`.
+  - `next = 3`, `prev = 1`.
+  - Check if `5 <= 1 && 5 <= 4` → `false`.
+  - Since `5 <= 2` → `false`, so `left = 3`.
+- Now `left = 3`, `right = 4`.
+- `mid = 3` → `arr[mid] = 1`.
+  - `next = 4`, `prev = 2`.
+  - Check if `1 <= 2 && 1 <= 5` → `true`. Return `3`.
 
 ---
 
