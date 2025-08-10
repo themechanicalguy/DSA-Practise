@@ -1,463 +1,736 @@
-# AUG 5th
-
-# 205. Isomorphic Strings --1
-
-Two strings `s` and `t` are isomorphic if the characters in `s` can be replaced to get `t` with the following rules:
-
-1. **Preservation of Order**: The order of characters must remain the same.
-2. **Consistent Mapping Rule**:
-
-- **Every occurrence of a character in `s` must be replaced with the same character in `t`**:
-
-  This means if a character `x` in `s` is mapped to `y` in `t`, then **all** occurrences of `x` in `s` must be replaced with `y` in `t`. You cannot map the same character in `s` to different characters in `t`.
-
-**Example**:
-
-- Let `s = "egg"` and `t = "add"`.
-
-1. First character: `e` in `s` maps to `'a'` in `t`.
-2. Second character: `'g'` in `s` maps to `'d'` in `t`.
-3. Third character: `'g'` in `s` maps to `'d'` in `t` (same as the second character).
-
-**Check for Consistent Mapping**:
-
-- `e` in `s` always maps to `'a'` in `t` (only one occurrence, so trivially consistent).
-- `'g'` in `s` appears twice, and both times it maps to `'d'` in `t`. This is consistent.
-
-**Conclusion**: The strings `"egg"` and `"add"` are **isomorphic** because the mapping is consistent.
-
-**Example**:
-
-- Let `s = "foo"` and `t = "bar"`.
-
-1. First character: `'f'` in `s` maps to `'b'` in `t`.
-2. Second character: `'o'` in `s` maps to `'a'` in `t`.
-3. Third character: `'o'` in `s` maps to `'r'` in `t`.
-
-**Problem**:
-
-- The character `'o'` in `s` is mapped to `'a'` in the second position but to `'r'` in the third position. This violates the **consistent mapping rule** because `'o'` cannot map to two different characters (`'a'` and `'r'`) in `t`.
-
-**Conclusion**: The strings `"foo"` and `"bar"` are **not isomorphic** because the mapping is inconsistent.
-
-3. **Bijective Mapping Rule**:
-
-- **No two characters in `s` can map to the same character in `t`**:
-
-This means each character in `t` must be uniquely mapped from a character in `s`. In other words, if `'a'` in `s` maps to `x` in `t`, then no other character in `s` (like `'b'`) can also map to `x` in `t`.
-
-- **Vice versa**: Similarly, no two characters in `t` can map to the same character in `s`. If `x` in `t` maps back to `'a'` in `s`, then no other character in `t` (like `y`) can map back to `'a'` in `s`.
-
-**Example**:
-
-- Let `s = "badc"` and `t = "baba"`.
-
-1. `'b'` in `s` maps to `'b'` in `t`.
-2. `'a'` in `s` maps to `'a'` in `t`.
-3. `'d'` in `s` maps to `'b'` in `t`.
-4. `'c'` in `s` maps to `'a'` in `t`.
-
-**Violation of Bijective Mapping**:
-
-- Here, `'b'` in `t` is being mapped by both `'b'` and `'d'` from `s`. This violates the rule that no two characters in `s` can map to the same character in `t`.
-- Similarly, `'a'` in `t` is being mapped by both `'a'` and `'c'` from `s`, which is also a violation.
-
-**Conclusion**: The strings `"badc"` and `"baba"` are **not isomorphic** because the mapping is not bijective.
-
-**Example**:
-
-- Let `s = "paper"` and `t = "title"`.
-
-**Mapping**:
-
-1. `'p'` in `s` maps to `'t'` in `t`.
-2. `'a'` in `s` maps to `'i'` in `t`.
-3. `'p'` in `s` maps to `'t'` in `t` (consistent with previous mapping).
-4. `e` in `s` maps to `'l'` in `t`.
-5. `'r'` in `s` maps to `e` in `t`.
-
-**Check for Bijective Mapping**:
-
-- Each character in `s` maps to a unique character in `t`:
-  - `'p'` → `'t'`
-  - `'a'` → `'i'`
-  - `e` → `'l'`
-  - `'r'` → `e`
-- No two characters in `s` map to the same character in `t`:
-  - `'p'` and `'a'` map to `'t'` and `'i'` respectively (unique).
-  - `e` and `'r'` map to `'l'` and `e` respectively (unique).
-- Similarly, no two characters in `t` map to the same character in `s`:
-  - `'t'` in `t` maps back to `'p'` in `s`.
-  - `'i'` in `t` maps back to `'a'` in `s`.
-  - `'l'` in `t` maps back to `e` in `s`.
-  - `e` in `t` maps back to `'r'` in `s`.
-
-**Conclusion**: The strings `"paper"` and `"title"` are **isomorphic** because the mapping is bijective.
-
-### Key Takeaway
-
-For two strings to be isomorphic, the mapping between their characters must be **one-to-one and onto** (bijective). This ensures that:
-
-1. Every character in `s` maps to exactly one unique character in `t`.
-2. Every character in `t` is mapped by exactly one unique character in `s`.
-
-This prevents any overlaps or conflicts in the mappings, ensuring the strings can be perfectly transformed into each other by character replacements.
-
-### Approach 1: Two Hash Maps (Bijective Mapping Check)
-
-- **Intuition**: We need to ensure that each character in `s` maps to exactly one character in `t` and vice versa.
-- **Steps**:
-  1. If lengths of `s` and `t` are different, return `false`.
-  2. Create two maps: `sToT` (maps characters from `s` to `t`) and `tToS` (maps characters from `t` to `s`).
-  3. Iterate through each character in `s` and `t` simultaneously:
-     - If `s[i]` is in `sToT` but `sToT[s[i]] !== t[i]`, return `false`.
-     - If `t[i]` is in `tToS` but `tToS[t[i]] !== s[i]`, return `false`.
-     - Otherwise, add mappings `sToT[s[i]] = t[i]` and `tToS[t[i]] = s[i]`.
-  4. If loop completes, return `true`.
+# Singly Linked List Implementation without Tail
 
 ```javascript
-/**
- * Determines if two strings are isomorphic using two hash maps.
- * @param {string} s - The first string.
- * @param {string} t - The second string.
- * @return {boolean} - True if isomorphic, false otherwise.
- */
-function isIsomorphic(s, t) {
-  if (s.length !== t.length) return false;
+class Node {
+  constructor(value) {
+    this.value = value; // Store the value of the node
+    this.next = null; // Pointer to the next node (initially null)
+  }
+}
 
-  const sToT = new Map(); // Maps characters from s to t
-  const tToS = new Map(); // Maps characters from t to s
+class SinglyLinkedList {
+  constructor() {
+    this.head = null; // Head pointer (initially null for empty list)
+    this.length = 0; // Track length for O(1) access
+  }
 
-  for (let i = 0; i < s.length; i++) {
-    const charS = s[i];
-    const charT = t[i];
+  // Add to end of list - O(n) time
+  push(value) {
+    const newNode = new Node(value); // Create new node
 
-    // Check if charS is already mapped to a different charT
-    if (sToT.has(charS)) {
-      if (sToT.get(charS) !== charT) {
-        return false;
+    if (!this.head) {
+      // If list is empty, set new node as head
+      this.head = newNode;
+    } else {
+      // Otherwise traverse to end and add new node
+      let current = this.head;
+      while (current.next) {
+        current = current.next;
       }
-    } else {
-      sToT.set(charS, charT);
+      current.next = newNode;
     }
 
-    // Check if charT is already mapped to a different charS
-    if (tToS.has(charT)) {
-      if (tToS.get(charT) !== charS) {
-        return false;
+    this.length++; // Increment length
+    return this; // Return list for chaining
+  }
+
+  // Remove from end of list - O(n) time
+  pop() {
+    if (!this.head) return undefined; // Empty list case
+
+    let current = this.head;
+    let prev = current;
+
+    // Traverse until current is last node
+    while (current.next) {
+      prev = current;
+      current = current.next;
+    }
+
+    this.length--;
+    if (this.length === 0) {
+      this.head = null; // List is now empty
+    } else {
+      prev.next = null; // Remove reference to popped node
+    }
+
+    return current.value; // Return removed value
+  }
+
+  // Remove from beginning - O(1) time
+  shift() {
+    if (!this.head) return undefined; // Empty list case
+
+    const currentHead = this.head;
+    this.head = currentHead.next; // Move head to next node
+    this.length--;
+
+    if (this.length === 0) {
+      this.head = null; // Clean up if list is now empty
+    }
+
+    return currentHead.value; // Return removed value
+  }
+
+  // Add to beginning - O(1) time
+  unshift(value) {
+    const newNode = new Node(value); // Create new node
+
+    if (!this.head) {
+      this.head = newNode; // If empty, set as head
+    } else {
+      newNode.next = this.head; // New node points to current head
+      this.head = newNode; // Update head to new node
+    }
+
+    this.length++;
+    return this; // Return list for chaining
+  }
+
+  // Get node at index - O(n) time
+  get(index) {
+    if (index < 0 || index >= this.length) return null; // Invalid index
+
+    let counter = 0;
+    let current = this.head;
+
+    // Traverse until reaching the index
+    while (counter !== index) {
+      current = current.next;
+      counter++;
+    }
+
+    return current; // Return node at index
+  }
+
+  // Set value at index - O(n) time
+  set(index, value) {
+    const foundNode = this.get(index); // Reuse get method
+
+    if (foundNode) {
+      foundNode.value = value; // Update value if node exists
+      return true;
+    }
+
+    return false; // Return false if index invalid
+  }
+
+  // Insert at index - O(n) time
+  insertAt(index, value) {
+    if (index < 0 || index > this.length) return false; // Invalid index
+    if (index === 0) return !!this.unshift(value); // Insert at head
+    if (index === this.length) return !!this.push(value); // Insert at tail
+
+    const newNode = new Node(value); // Create new node
+    const prevNode = this.get(index - 1); // Get previous node
+
+    // Insert new node between prev and prev.next
+    newNode.next = prevNode.next;
+    prevNode.next = newNode;
+
+    this.length++;
+    return true;
+  }
+
+  // Remove at index - O(n) time
+  remove(index) {
+    if (index < 0 || index >= this.length) return undefined; // Invalid index
+    if (index === 0) return this.shift(); // Remove from head
+    if (index === this.length - 1) return this.pop(); // Remove from tail
+
+    const prevNode = this.get(index - 1); // Get previous node
+    const removedNode = prevNode.next; // Node to be removed
+
+    // Bypass the removed node
+    prevNode.next = removedNode.next;
+    this.length--;
+
+    return removedNode.value; // Return removed value
+  }
+
+  // Reverse the list - O(n) time
+  reverse() {
+    let previousNode = null;
+    let currentNode = this.head;
+    let nextNode = null;
+
+    while (currentNode !== null) {
+      // Store the next node before we overwrite currentNode.next
+      nextNode = currentNode.next;
+
+      // Reverse the link
+      currentNode.next = previousNode;
+
+      // Move pointers one position ahead
+      previousNode = currentNode;
+      currentNode = nextNode;
+    }
+
+    // At the end, previousNode will be the new head
+    return previousNode;
+  }
+
+  // Print list values - O(n) time
+  print() {
+    const values = [];
+    let current = this.head;
+
+    while (current) {
+      values.push(current.value);
+      current = current.next;
+    }
+
+    console.log(values.join(" -> "));
+    return this; // Return list for chaining
+  }
+}
+```
+
+## Time and Space Complexity Analysis
+
+1. **Push**: O(n) time (must traverse to end), O(1) space
+2. **Pop**: O(n) time (must traverse to end), O(1) space
+3. **Shift**: O(1) time, O(1) space
+4. **Unshift**: O(1) time, O(1) space
+5. **Get**: O(n) time (worst case), O(1) space
+6. **Set**: O(n) time (due to get), O(1) space
+7. **InsertAt**: O(n) time (worst case), O(1) space
+8. **Remove**: O(n) time (worst case), O(1) space
+9. **Reverse**: O(n) time, O(1) space
+10. **Print**: O(n) time, O(n) space (for storing values)
+
+## Alternative Approaches
+
+1. **Tail Pointer Optimization**: We could add a `tail` property to make push operations O(1):
+
+```javascript
+class SinglyLinkedList {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+
+  push(value) {
+    const newNode = new Node(value);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    this.length++;
+    return this;
+  }
+  // ... other methods would need to maintain tail pointer
+}
+```
+
+Trade-off: Slightly more complex code to maintain tail pointer, but O(1) push.
+
+2. **Recursive Methods**: Some methods could be implemented recursively (like reverse), but this would typically use O(n) space for the call stack.
+
+# LC-237 Deleting a Node in a Singly-Linked List (JavaScript)
+
+In this problem, we need to delete a given node from a singly-linked list when we don't have access to the head node. Here are all possible approaches to solve this problem in JavaScript:
+
+## Approach 1: Copy Next Node's Value and Delete Next Node
+
+This is the optimal approach since we can't access the previous node directly in a singly-linked list.
+
+```javascript
+/**
+ * Definition for singly-linked list node
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+
+/**
+ * Delete a node (except the tail) in a singly-linked list, given only access to that node.
+ * @param {ListNode} node - The node to be deleted
+ * @return {void} Do not return anything, modify the linked list in-place instead.
+ */
+function deleteNode(node) {
+  // Since we can't access the previous node, we copy the next node's value
+  // to the current node and then skip the next node
+  node.val = node.next.val; // Copy the value from next node
+  node.next = node.next.next; // Skip the next node
+}
+```
+
+### Dry Run Examples:
+
+1. **Example 1: Delete middle node**
+
+   - Input: [4,5,1,9], delete node with value 5
+   - Steps:
+     - Copy next node's value (1) to current node: node.val = 1 → [4,1,1,9]
+     - Skip the next node: node.next = node.next.next → [4,1,9]
+   - Output: [4,1,9]
+
+2. **Example 2: Delete first node (when node is head)**
+
+   - Input: [1,2,3,4], delete node with value 1
+   - Steps:
+     - Copy next node's value (2) to current node: [2,2,3,4]
+     - Skip the next node: [2,3,4]
+   - Output: [2,3,4]
+
+3. **Example 3: Delete second last node**
+
+   - Input: [1,2,3,4], delete node with value 3
+   - Steps:
+     - Copy next node's value (4) to current node: [1,2,4,4]
+     - Skip the next node: [1,2,4]
+   - Output: [1,2,4]
+
+4. **Example 4: List with only two nodes**
+
+   - Input: [1,2], delete node with value 1
+   - Steps:
+     - Copy next node's value (2) to current node: [2,2]
+     - Skip the next node: [2]
+   - Output: [2]
+
+5. **Example 5: Long list delete**
+   - Input: [1,2,3,4,5,6,7], delete node with value 4
+   - Steps:
+     - Copy next node's value (5) to current node: [1,2,3,5,5,6,7]
+     - Skip the next node: [1,2,3,5,6,7]
+   - Output: [1,2,3,5,6,7]
+
+# Doubly Linked List Implementation Without Tail Property
+
+```javascript
+class Node {
+  constructor(val) {
+    this.val = val; // Value stored in the node
+    this.next = null; // Pointer to the next node
+    this.prev = null; // Pointer to the previous node
+  }
+}
+
+class DoublyLinkedList {
+  constructor() {
+    this.head = null; // First node in the list
+    this.length = 0; // Number of nodes in the list
+  }
+
+  // Add a node to the end of the list - O(n) time, O(1) space
+  push(val) {
+    const newNode = new Node(val); // Create new node
+
+    if (this.length === 0) {
+      // If list is empty
+      this.head = newNode; // Set new node as head
+    } else {
+      let current = this.head;
+      while (current.next) {
+        // Traverse to last node
+        current = current.next;
       }
+      current.next = newNode; // Set new node as next of last node
+      newNode.prev = current; // Set last node as prev of new node
+    }
+    this.length++; // Increment length
+    return this; // Return the list
+  }
+
+  // Remove and return the last node - O(n) time, O(1) space
+  pop() {
+    if (this.length === 0) return undefined; // Empty list case
+
+    let current = this.head;
+    while (current.next) {
+      // Traverse to last node
+      current = current.next;
+    }
+
+    if (this.length === 1) {
+      // Only one node case
+      this.head = null;
     } else {
-      tToS.set(charT, charS);
+      current.prev.next = null; // Remove reference to last node
     }
+
+    this.length--; // Decrement length
+    return current; // Return removed node
   }
 
-  return true;
-}
-```
+  // Remove and return the first node - O(1) time, O(1) space
+  shift() {
+    if (this.length === 0) return undefined; // Empty list case
 
-- **Time Complexity**: O(n), where n is the length of the strings. We iterate through each character once.
-- **Space Complexity**: O(1) or O(min(m, n)), where m is the size of the character set (ASCII has 256 characters, so O(1)).
+    let curr = this.head; // Store current head
 
----
+    // If new head exists
+    if (curr) curr.next.prev = null; // Remove its prev reference
 
-# 796. Rotate String --2
+    // Move head to next node
+    this.head = curr.next;
 
-The problem requires us to determine if one string (`s`) can be transformed into another string (`goal`) by performing a series of shifts. A shift is defined as moving the leftmost character of `s` to the rightmost position. For example, shifting "abcde" once results in "bcdea", and shifting it again results in "cdeab", and so on.
-
-## Intuition
-
-To check if `s` can become `goal` after some number of shifts, we can consider the following:
-
-1. If `s` and `goal` are of different lengths, it's impossible to make them equal through shifts, so we can immediately return `false`.
-2. If we concatenate `s` with itself (`s + s`), the resulting string will contain all possible shifted versions of `s` as substrings. For example, if `s = "abcde"`, then `s + s = "abcdeabcde"`, which includes "bcdea", "cdeab", etc., as substrings.
-3. Therefore, if `goal` is a substring of `s + s`, then `s` can be shifted to become `goal`; otherwise, it cannot.
-
-## Concatenation and Substring Check approach:
-
-- Check if the lengths of `s` and `goal` are the same. If not, return `false`.
-- Concatenate `s` with itself and check if `goal` is a substring of this concatenated string.
-- This approach leverages the fact that all possible shifts of `s` are contained within `s + s`.
-
-```javascript
-/**
- * Check if string `s` can become `goal` after some number of shifts.
- * @param {string} s - The original string.
- * @param {string} goal - The target string.
- * @return {boolean} - True if `s` can become `goal` via shifts, false otherwise.
- */
-function canBecomeGoal(s, goal) {
-  // If lengths are different, it's impossible
-  if (s.length !== goal.length) {
-    return false;
-  }
-  // Concatenate s with itself and check if goal is a substring
-  const concatenated = s + s;
-  return concatenated.includes(goal);
-}
-```
-
-- **Time Complexity**: O(n), because `includes` is O(n) for each character, and we do this for each of the n characters.
-- **Space Complexity**: O(n)
-
-## Approach 1: Using Modular Arithmetic -partially similar to the right rotate array
-
-```javascript
-/**
- * Checks if string s can become goal after some number of left-to-right shifts.
- * A shift moves the leftmost character to the rightmost position.
- * @param {string} s - The original string.
- * @param {string} goal - The target string to match.
- * @return {boolean} - True if s can become goal after some shifts, false otherwise.
- */
-var rotateString = function (s, goal) {
-  if (s.length !== goal.length) return false; // Early exit if lengths differ.
-
-  for (let rotation = 0; rotation < s.length; rotation++) {
-    let matchedChars = 0;
-    // Compare s with goal rotated by 'rotation' positions.
-    while (
-      matchedChars < s.length &&
-      s[matchedChars] === goal[(matchedChars + rotation) % s.length]
-    ) {
-      matchedChars++;
-    }
-    if (matchedChars === s.length) return true; // All characters matched.
-  }
-  return false; // No rotation matched.
-};
-```
-
-**Time Complexity**: O(n^2)
-
-### **Dry Run 1: `s = "abcde"`, `goal = "cdeab"`**
-
-**Goal:** Check if rotating `"abcde"` can become `"cdeab"`.
-
-#### **Step-by-Step Execution:**
-
-1. **Initial Check:** - Lengths of `s` (`5`) and `goal` (`5`) are equal → Proceed.
-
-2. **Rotation `i = 0`:** - Compare `s[0]` (`'a'`) with `goal[(0 + 0) % 5]` (`goal[0] = 'c'`).
-
-   - `'a' === 'c'`? **No** → Break inner loop, try next rotation.
-
-3. **Rotation `i = 1`:**
-
-   - Compare `s[0]` (`'a'`) with `goal[(0 + 1) % 5]` (`goal[1] = 'd'`).
-     - `'a' === 'd'`? **No** → Break inner loop, try next rotation.
-
-4. **Rotation `i = 2`:**
-
-   - Compare `s[0]` (`'a'`) with `goal[(0 + 2) % 5]` (`goal[2] = 'e'`).
-     - `'a' === 'e'`? **No** → Break inner loop, try next rotation.
-
-5. **Rotation `i = 3`:**
-   - Compare `s[0]` (`'a'`) with `goal[(0 + 3) % 5]` (`goal[3] = 'a'`).
-     - `'a' === 'a'`? **Yes** → Move to next character (`matchedChars = 1`).
-   - Compare `s[1]` (`'b'`) with `goal[(1 + 3) % 5]` (`goal[4] = 'b'`).
-     - `'b' === 'b'`? **Yes** → Move to next character (`matchedChars = 2`).
-   - Compare `s[2]` (`'c'`) with `goal[(2 + 3) % 5]` (`goal[0] = 'c'`).
-     - `'c' === 'c'`? **Yes** → Move to next character (`matchedChars = 3`).
-   - Compare `s[3]` (`'d'`) with `goal[(3 + 3) % 5]` (`goal[1] = 'd'`).
-     - `'d' === 'd'`? **Yes** → Move to next character (`matchedChars = 4`).
-   - Compare `s[4]` (`'e'`) with `goal[(4 + 3) % 5]` (`goal[2] = 'e'`).
-     - `'e' === 'e'`? **Yes** → `matchedChars = 5` (equal to `s.length`).
-   - **All characters matched for `i = 3`** → Return `true`.
-
----
-
-# 451. Sort Characters By Frequency --3
-
-Given a string `s`, sort it in decreasing order based on the frequency of the characters.
-The frequency of a character is the number of times it appears in the string.
-Sort the characters in descending order by frequency.Return the sorted string.
-
-Note: It is guaranteed that the answer is unique.
-
-- Example 1: Input: s = `tree` Output: `eert` Explanation: `e` appears twice while `t` and `r` both appear once. So `e` must appear before both `t` and `r`.
-- Example 2: Input: s = `cccaaa` Output: `aaaccc` Explanation: `c` appears three times while `a` appears twice. So `c` must appear before `a` in the result.
-
-## Approach: 1-Using Array and Custom Sorting
-
-```javascript
-function frequencySort(s) {
-  // Convert string to array of characters
-  const chars = [...s];
-
-  // Count frequencies
-  const frequency = {};
-
-  for (const char of chars) {
-    frequency[char] = (frequency[char] || 0) + 1;
+    this.length--; // Decrement length
+    return curr; // Return removed node
   }
 
-  // Sort characters based on frequency
-  chars.sort((a, b) => {
-    // If frequencies are different, sort by frequency (descending)
-    if (frequency[b] !== frequency[a]) {
-      return frequency[b] - frequency[a];
-    }
-    // If frequencies are same, sort by character code (ascending)
-    return a.localeCompare(b);
-  });
+  // Add a node to the beginning - O(1) time, O(1) space
+  unshift(val) {
+    const newNode = new Node(val); // Create new node
 
-  return chars.join("");
-}
-```
-
----
-
-# 1614. Maximum Nesting Depth of the Parentheses --4
-
-Given a valid parentheses string s, return the nesting depth of s. The nesting depth is the maximum number of nested parentheses.
-
-- Example 1: Input: s = `(1+(2*3)+((8)/4))+1` Output: 3, Explanation: Digit 8 is inside of 3 nested parentheses in the string.
-
-```javascript
-/**
- * @param {string} s
- * @return {number}
- */
-var maxDepth = function (s) {
-  let balance = 0;
-  let max = -Infinity;
-
-  for (let ch of s) {
-    if (ch === "(") {
-      balance += 1;
-    } else if (ch === ")") {
-      balance -= 1;
-    }
-    max = Math.max(max, balance);
-  }
-  return max;
-};
-```
-
----
-
-# 13. Roman to Integer --5
-
-```javascript
-/**
- * Converts Roman numerals to integer using left-to-right approach
- * @param {string} s - Roman numeral string
- * @return {number} - Converted integer
- */
-function romanToInt(s) {
-  // Create a mapping of Roman numeral characters to their values
-  const romanValues = {
-    I: 1,
-    V: 5,
-    X: 10,
-    L: 50,
-    C: 100,
-    D: 500,
-    M: 1000,
-  };
-
-  let total = 0; // Initialize the total value
-
-  // Loop through each character in the string from left to right
-  for (let i = 0; i < s.length; i++) {
-    const currentValue = romanValues[s[i]]; // Get value of current character
-    const nextValue = romanValues[s[i + 1]]; // Get value of next character
-
-    // Check if subtraction case exists (current value < next value)
-    if (nextValue > currentValue) {
-      // Add the difference (nextValue - currentValue) to total
-      total += nextValue - currentValue;
-      i++; // Skip the next character since we've already processed it
+    if (this.length === 0) {
+      // Empty list case
+      this.head = newNode;
     } else {
-      // Normal case: add current value to total
-      total += currentValue;
+      newNode.next = this.head; // Point new node to current head
+      this.head.prev = newNode; // Point current head back to new node
+      this.head = newNode; // Update head to new node
     }
+
+    this.length++; // Increment length
+    return this; // Return the list
   }
 
-  return total; // Return the computed total
+  // Get node at specific index - O(n) time, O(1) space
+  get(index) {
+    if (index < 0 || index >= this.length) return null; // Invalid index
+
+    let current = this.head;
+    for (let i = 0; i < index; i++) {
+      // Traverse to index
+      current = current.next;
+    }
+
+    return current; // Return node at index
+  }
+
+  // Set value of node at specific index - O(n) time, O(1) space
+  set(index, val) {
+    const node = this.get(index); // Get node at index
+    if (!node) return false; // If node doesn't exist
+
+    node.val = val; // Update node's value
+    return true; // Return success
+  }
+
+  // Insert node at specific index - O(n) time, O(1) space
+  insertAt(index, val) {
+    if (index < 0 || index > this.length) return false; // Invalid index
+    if (index === 0) return !!this.unshift(val); // Insert at start
+    if (index === this.length) return !!this.push(val); // Insert at end
+
+    const newNode = new Node(val); // Create new node
+    const beforeNode = this.get(index - 1); // Get node before insertion point
+    const afterNode = beforeNode.next; // Get node after insertion point
+
+    // Update links for new node
+    newNode.prev = beforeNode;
+    newNode.next = afterNode;
+
+    // Update links of surrounding nodes
+    beforeNode.next = newNode;
+    afterNode.prev = newNode;
+
+    this.length++; // Increment length
+    return true; // Return success
+  }
+
+  // Remove node at specific index - O(n) time, O(1) space
+  remove(index) {
+    if (index < 0 || index >= this.length) return undefined; // Invalid index
+    if (index === 0) return this.shift(); // Remove from start
+    if (index === this.length - 1) return this.pop(); // Remove from end
+
+    const removedNode = this.get(index); // Get node to remove
+
+    // Update links of surrounding nodes to bypass removed node
+    removedNode.prev.next = removedNode.next;
+    removedNode.next.prev = removedNode.prev;
+
+    this.length--; // Decrement length
+    return removedNode; // Return removed node
+  }
+
+  // Print the list values - O(n) time, O(1) space
+  print() {
+    let current = this.head;
+    const values = [];
+    while (current) {
+      values.push(current.val);
+      current = current.next;
+    }
+    console.log(values.join(" <-> "));
+  }
+
+  // Reverse the list - O(n) time, O(1) space
+  reverse() {
+    let current = this.head;
+    let temp = null;
+
+    while (current) {
+      // Swap next and prev pointers
+      temp = current.prev;
+      current.prev = current.next;
+      current.next = temp;
+
+      // Move to next node (which is now prev due to swap)
+      current = current.prev;
+    }
+
+    // Update head to point to new first node
+    if (temp) {
+      this.head = temp.prev;
+    }
+
+    return this;
+  }
 }
 ```
 
-**Time Complexity:** O(n) - We traverse the string once
-**Space Complexity:** O(1) - We use constant space for the value mapping
+## Time and Space Complexity Analysis
 
-### Example 3: "MCMXCIV" (Edge case with all subtraction combinations)
-
-1. i=6: 'V' (5), prev=0 → add 5 (total=5)
-2. i=5: 'I' (1), prev=5 → subtract 1 (total=4)
-3. i=4: 'C' (100), prev=1 → add 100 (total=104)
-4. i=3: 'X' (10), prev=100 → subtract 10 (total=94)
-5. i=2: 'M' (1000), prev=10 → add 1000 (total=1094)
-6. i=1: 'C' (100), prev=1000 → subtract 100 (total=994)
-7. i=0: 'M' (1000), prev=100 → add 1000 (total=1994)
-   Result: 1994
-
----
-
-# 12. Integer to Roman --6
-
-The goal is to convert a positive integer into a Roman numeral string based on the given rules.
-Roman numerals are constructed by processing the decimal place values (thousands, hundreds, tens, units) from `highest to lowest`, converting each into the appropriate symbols `(M, D, C, L, X, V, I)` while respecting the subtractive notation (e.g., IV for 4, IX for 9) and the rule against repeating certain symbols more than three times.
-
-## Intuition
-
-The problem requires converting a decimal number to a Roman numeral following specific rules. Roman numerals are constructed by combining letters from a fixed set where each letter represents a specific value. The key challenges are:
-
-1. Handling subtractive combinations (like IV for 4 or IX for 9)
-2. Ensuring symbols aren't repeated more than allowed (max 3 for I, X, C, M)
-3. Building the numeral from largest to smallest value
-
-```javascript
-function intToRoman(num) {
-  // Create an array of value-symbol pairs in descending order
-  // This includes both regular symbols and subtractive combinations
-  const valueSymbols = [
-    [1000, "M"], // 1000 -> M
-    [900, "CM"], // 900 -> CM (subtractive)
-    [500, "D"], // 500 -> D
-    [400, "CD"], // 400 -> CD (subtractive)
-    [100, "C"], // 100 -> C
-    [90, "XC"], // 90 -> XC (subtractive)
-    [50, "L"], // 50 -> L
-    [40, "XL"], // 40 -> XL (subtractive)
-    [10, "X"], // 10 -> X
-    [9, "IX"], // 9 -> IX (subtractive)
-    [5, "V"], // 5 -> V
-    [4, "IV"], // 4 -> IV (subtractive)
-    [1, "I"], // 1 -> I
-  ];
-
-  let roman = ""; // Initialize the result string
-
-  // Iterate through each value-symbol pair
-  for (const [value, symbol] of valueSymbols) {
-    // While the current number is greater than or equal to the current value
-    while (num >= value) {
-      roman += symbol; // Append the symbol to the result
-      num -= value; // Subtract the value from the number
-    }
-    // Early exit if we've reduced the number to zero
-    if (num === 0) break;
-  }
-
-  return roman; // Return the constructed Roman numeral
-}
-```
+1. **push(val)**: O(n) time (must traverse entire list), O(1) space
+2. **pop()**: O(n) time (must traverse entire list), O(1) space
+3. **shift()**: O(1) time, O(1) space
+4. **unshift(val)**: O(1) time, O(1) space
+5. **get(index)**: O(n) time (worst case), O(1) space
+6. **set(index, val)**: O(n) time (due to get), O(1) space
+7. **insertAt(index, val)**: O(n) time (worst case), O(1) space
+8. **remove(index)**: O(n) time (worst case), O(1) space
+9. **print()**: O(n) time, O(n) space (for storing values)
+10. **reverse()**: O(n) time, O(1) space
 
 ## Dry Run Examples
 
-### Example 1: 3749
+### Example 1: Basic Operations
 
-1. Greedy Approach:
+```javascript
+const dll = new DoublyLinkedList();
+dll.push(10); // List: 10
+dll.push(20); // List: 10 <-> 20
+dll.push(30); // List: 10 <-> 20 <-> 30
+dll.unshift(5); // List: 5 <-> 10 <-> 20 <-> 30
+dll.pop(); // Removes 30, List: 5 <-> 10 <-> 20
+dll.shift(); // Removes 5, List: 10 <-> 20
+dll.print(); // Output: 10 <-> 20
+```
 
-   - 3749 >= 1000: 'M', num = 2749
-   - 2749 >= 1000: 'MM', num = 1749
-   - 1749 >= 1000: 'MMM', num = 749
-   - 749 >= 500: 'MMMD', num = 249
-   - 249 >= 100: 'MMMDC', num = 149
-   - 149 >= 100: 'MMMDCC', num = 49
-   - 49 >= 40: 'MMMDCCXL', num = 9
-   - 9 >= 9: 'MMMDCCXLIX', num = 0
-   - Result: "MMMDCCXLIX"
+### Example 2: Edge Cases
+
+```javascript
+const dll = new DoublyLinkedList();
+dll.pop(); // Returns undefined (empty list)
+dll.push(100); // List: 100
+dll.pop(); // Removes 100, List is empty
+dll.push(200); // List: 200
+dll.shift(); // Removes 200, List is empty
+dll.insertAt(0, 50); // List: 50
+dll.remove(0); // Removes 50, List is empty
+dll.print(); // Output: (empty)
+```
+
+### Example 3: Complex Operations
+
+```javascript
+const dll = new DoublyLinkedList();
+dll.push(1).push(2).push(3); // List: 1 <-> 2 <-> 3
+dll.insertAt(1, 1.5); // List: 1 <-> 1.5 <-> 2 <-> 3
+dll.set(2, 99); // List: 1 <-> 1.5 <-> 99 <-> 3
+dll.remove(1); // Removes 1.5, List: 1 <-> 99 <-> 3
+dll.reverse(); // List: 3 <-> 99 <-> 1
+dll.get(1).val; // Returns 99
+dll.print(); // Output: 3 <-> 99 <-> 1
+```
+
+This implementation maintains all the functionality of a doubly linked list without using a tail property, though some operations (like push and pop) become O(n) instead of O(1) since we need to traverse the entire list to reach the end.
+
+# Reversing a Singly Linked List in JavaScript
+
+Given a singly linked list, reverse the order of its nodes. For example, if the input is 1 -> 2 -> 3 -> 4, the output should be 4 -> 3 -> 2 -> 1.
+
+## Intuition and Approach
+
+To reverse a singly linked list, we need to change the direction of each node’s pointer to point to its previous node instead of the next one. Since a singly linked list only has forward pointers (next), we must traverse the list and adjust pointers carefully to avoid losing track of nodes.
+The optimal approach to reverse a singly linked list involves iterating through the list while reversing the links between nodes.
+We maintain **three pointers**:
+
+- `previousNode`: Tracks the node that will become the next node in the reversed list
+- `currentNode`: The current node being processed
+- `nextNode`: Temporarily stores the next node before we modify the current node's pointer
+
+**Pointer Manipulation**: For each node, we:
+
+- Save the next node (next = current.next).
+- Reverse the link by pointing current.next to previous.
+- Move previous and current one step forward.
+
+**Edge Cases:**
+
+- Empty list (head is null): Return null.
+- Single node (head.next is null): Return the same node.
+- Multiple nodes: Reverse as described.
+
+This iterative approach is optimal because it uses constant extra space (just three pointers) and traverses the list once.
+
+```javascript
+/**
+ * Definition for singly-linked list node
+ */
+class ListNode {
+  constructor(value, next = null) {
+    this.value = value;
+    this.next = next;
+  }
+}
+
+/**
+ * Iterative approach using three pointers
+ * Time Complexity: O(n)
+ * Space Complexity: O(1)
+ */
+function reverseLinkedListIterative(head) {
+  let previousNode = null;
+  let currentNode = head;
+  let nextNode = null;
+
+  while (currentNode !== null) {
+    // Store the next node before we overwrite currentNode.next
+    nextNode = currentNode.next;
+
+    // Reverse the link
+    currentNode.next = previousNode;
+
+    // Move pointers one position ahead
+    previousNode = currentNode;
+    currentNode = nextNode;
+  }
+
+  // At the end, previousNode will be the new head
+  return previousNode;
+}
+```
+
+**Time Complexity**: O(n) - We traverse the entire list once, where n is the number of nodes in the list.
+**Space Complexity**: O(1) - We use a constant amount of extra space regardless of the input size (just a few pointers).
+
+## Dry run
+
+### inp
+
+```
+1 → 2 → 3 → 4 → 5 → null
+```
+
+## op
+
+```
+5 → 4 → 3 → 2 → 1 → null
+```
+
+### Initial State:
+
+- `previousNode = null`
+- `currentNode = 1` (head of the list)
+- `nextNode = null`
+
+#### **Step 1: First Iteration (currentNode = 1)**
+
+1. **Store next node**:  
+   `nextNode = currentNode.next` → `nextNode = 2`
+2. **Reverse the link**:  
+   `currentNode.next = previousNode` → `1.next = null`  
+   Now: `1 → null`
+3. **Move pointers**:
+   - `previousNode = currentNode` → `previousNode = 1`
+   - `currentNode = nextNode` → `currentNode = 2`
+
+**List State**:
+
+```
+1 → null
+2 → 3 → 4 → 5 → null
+```
+
+#### **Step 2: Second Iteration (currentNode = 2)**
+
+1. **Store next node**:  
+   `nextNode = currentNode.next` → `nextNode = 3`
+2. **Reverse the link**:  
+   `currentNode.next = previousNode` → `2.next = 1`  
+   Now: `2 → 1 → null`
+3. **Move pointers**:
+   - `previousNode = currentNode` → `previousNode = 2`
+   - `currentNode = nextNode` → `currentNode = 3`
+
+**List State**:
+
+```
+2 → 1 → null
+3 → 4 → 5 → null
+```
+
+#### **Step 3: Third Iteration (currentNode = 3)**
+
+1. **Store next node**:  
+   `nextNode = currentNode.next` → `nextNode = 4`
+2. **Reverse the link**:  
+   `currentNode.next = previousNode` → `3.next = 2`  
+   Now: `3 → 2 → 1 → null`
+3. **Move pointers**:
+   - `previousNode = currentNode` → `previousNode = 3`
+   - `currentNode = nextNode` → `currentNode = 4`
+
+**List State**:
+
+```
+3 → 2 → 1 → null
+4 → 5 → null
+```
+
+#### **Step 4: Fourth Iteration (currentNode = 4)**
+
+1. **Store next node**:  
+   `nextNode = currentNode.next` → `nextNode = 5`
+2. **Reverse the link**:  
+   `currentNode.next = previousNode` → `4.next = 3`  
+   Now: `4 → 3 → 2 → 1 → null`
+3. **Move pointers**:
+   - `previousNode = currentNode` → `previousNode = 4`
+   - `currentNode = nextNode` → `currentNode = 5`
+
+**List State**:
+
+```
+4 → 3 → 2 → 1 → null
+5 → null
+```
+
+#### **Step 5: Fifth Iteration (currentNode = 5)**
+
+1. **Store next node**:  
+   `nextNode = currentNode.next` → `nextNode = null`
+2. **Reverse the link**:  
+   `currentNode.next = previousNode` → `5.next = 4`  
+   Now: `5 → 4 → 3 → 2 → 1 → null`
+3. **Move pointers**:
+   - `previousNode = currentNode` → `previousNode = 5`
+   - `currentNode = nextNode` → `currentNode = null`
+
+**List State**:
+
+```
+5 → 4 → 3 → 2 → 1 → null
+```
+
+#### **Termination (currentNode = null)**
+
+- The loop ends because `currentNode` is now `null`.
+- `previousNode` holds the new head (`5`).
+
+```
+5 → 4 → 3 → 2 → 1 → null
+```
 
 ---

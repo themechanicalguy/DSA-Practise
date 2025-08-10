@@ -347,16 +347,16 @@ class DoublyLinkedList {
   shift() {
     if (this.length === 0) return undefined; // Empty list case
 
-    const oldHead = this.head; // Store current head
-    this.head = oldHead.next; // Move head to next node
+    let curr = this.head; // Store current head
 
-    if (this.head) {
-      // If new head exists
-      this.head.prev = null; // Remove its prev reference
-    }
+    // If new head exists
+    if (curr) curr.next.prev = null; // Remove its prev reference
+
+    // Move head to next node
+    this.head = curr.next;
 
     this.length--; // Decrement length
-    return oldHead; // Return removed node
+    return curr; // Return removed node
   }
 
   // Add a node to the beginning - O(1) time, O(1) space
