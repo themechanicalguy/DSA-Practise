@@ -1,75 +1,101 @@
-## LC 328. Odd Even Linked List
+# LC 328. Odd Even Linked List
 
-### **Problem Understanding and Intuition**
+Given the head of a singly linked list, group all nodes at odd positions (1st, 3rd, 5th, etc.) followed by nodes at even positions (2nd, 4th, 6th, etc.), while maintaining their relative order within each group.
 
-**Problem Statement:**  
-Given the head of a singly linked list, group all nodes at odd positions (1st, 3rd, 5th, etc.) followed by nodes at even positions (2nd, 4th, 6th, etc.), while maintaining their relative order within each group. The solution should have O(1) space complexity (in-place) and O(n) time complexity.
+The solution should have `O(1)` space complexity (in-place) and `O(n)` time complexity.
 
-**Key Observations:**
+## Problem Understanding
 
-1. **Odd and Even Indices:** The first node is odd, the second is even, and so on.
-2. **Relative Order:** The order of odd nodes and even nodes among themselves should not change.
-3. **In-Place Requirement:** We cannot use extra space proportional to the input (like an array), but we can use a few pointers.
+- **Input**: Head of a singly linked list (e.g., `1 -> 2 -> 3 -> 4 -> 5`).
+- **Task**: Reorder the list such that all nodes at odd indices (1-based indexing: 1st, 3rd, 5th, etc.) come first, followed by nodes at even indices (2nd, 4th, 6th, etc.). The first node is odd, the second is even, and so on.
+- **Constraints**:
+  - Maintain the `relative order` within odd and even groups.
+  - Use `O(1)` extra space (excluding recursive call stack if applicable).
+  - Achieve `O(n)` time complexity, where `n` is the number of nodes.
+- **Examples**:
+  - [1,2,3,4,5] → [1,3,5,2,4]
+  - [2,1,3,5,6,4,7] → [2,3,6,7,1,5,4]
 
-**Intuition:**  
-We can separate the original linked list into two sublists: one for odd-positioned nodes and another for even-positioned nodes. Then, we can link the end of the odd sublist to the head of the even sublist.
+## Intuition:
 
-### **Approach**
+The goal is to split the list into two groups (odd-indexed nodes and even-indexed nodes) while preserving their relative order and reconnecting them. Since we need `O(1)` extra space, we must manipulate the list in-place by adjusting the `next` pointers of the nodes.
 
-1. **Initial Checks:** If the list is empty or has only one node, return it as-is.
-2. **Separate Odd and Even Lists:**
-   - Use two pointers, `oddHead` and `evenHead`, to keep track of the heads of the odd and even sublists.
-   - Use `oddCurrent` and `evenCurrent` to traverse and build the sublists.
-   - The original `head` will be the `oddHead`, and `head.next` will be the `evenHead`.
-3. **Traverse and Reorganize:**
-   - For each node, update the `next` pointers of the odd and even lists.
-   - The odd nodes will point to the next odd node (current odd node's next is even node's next).
-   - Similarly, even nodes will point to the next even node.
-4. **Merge the Two Lists:**
-   - After traversal, link the last node of the odd sublist to the head of the even sublist.
-5. **Return the Result:** The `oddHead` will now be the head of the reordered list.
+**Key Insight:**
 
-### **Solution Code in JavaScript**
+- The list can be thought of as interleaved odd and even nodes: `odd1 -> even1 -> odd2 -> even2 -> ....`
+- We can separate the odd and even nodes into two sublists by adjusting pointers:
+  - Odd nodes: `odd1 -> odd2 -> odd3 -> ...`
+  - Even nodes: `even1 -> even2 -> even3 -> ...`
+- Finally, connect the last odd node to the head of the even sublist.
+- To achieve `O(1)` space, we avoid using additional data structures like arrays or temporary lists.
+- To achieve `O(n)` time, we traverse the list once to rewire the pointers.
 
-#### **Approach 1: In-Place Separation and Merging**
+**Challenges:**
+
+- Handle edge cases: empty list, single node, or two nodes.
+- Ensure the relative order is preserved within each group.
+- Manage pointer updates carefully to avoid breaking the list.
+
+## Approach 1: Optimal In-Place Pointer Manipulation
+
+**Intuition:**
+
+- Use two pointers: one for the odd nodes and one for the even nodes.
+- Traverse the list, rewiring the `next` pointers to separate odd and even nodes into two sublists.
+- Keep track of the head of the even sublist to connect it to the end of the odd sublist.
+- Adjust pointers in-place to achieve O(1) space complexity.
+
+**Steps:**
+
+- If the list is empty or has one node, return as is (no changes needed).
+- Initialize `odd` pointer to the head (first odd node) and `even` pointer to the second node (first even node).
+- Store the head of the even sublist (evenHead) for later connection.
+- While there are nodes to process:
+  - Set `odd.next` to the next odd node (skip the even node).
+  - Set `even.next` to the next even node (skip the odd node).
+  - Move `odd` and `even` pointers forward.
+- Connect the last odd node to the head of the even sublist.
+- Return the head of the reordered list.
 
 ```javascript
+// Definition for singly-linked list node
+class ListNode {
+  constructor(val = 0, next = null) {
+    this.val = val;
+    this.next = next;
+  }
+}
+
 /**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
+ * Reorders the linked list to group odd-indexed nodes followed by even-indexed nodes.
+ * @param {ListNode} head - Head of the singly linked list
+ * @return {ListNode} - Head of the reordered list
  */
-/**
- * @param {ListNode} head
- * @return {ListNode}
- */
-const oddEvenList = function (head) {
-  if (!head || !head.next) {
-    return head; // No rearrangement needed for empty or single-node list
+function oddEvenList(head) {
+  // Handle empty list or single node
+  if (!head || !head.next) return head;
+
+  // Initialize pointers
+  let odd = head; // Points to current odd node
+  let even = head.next; // Points to current even node
+  let evenHead = head.next; // Store head of even sublist for final connection
+
+  // Traverse and rewire pointers
+  while (even && even.next) {
+    // Connect odd node to next odd node (skip even)
+    odd.next = even.next;
+    odd = odd.next;
+
+    // Connect even node to next even node (skip odd)
+    even.next = odd.next;
+    even = even.next;
   }
 
-  let oddHead = head; // The first node is odd
-  let evenHead = head.next; // The second node is even
-  let oddCurrent = oddHead;
-  let evenCurrent = evenHead;
+  // Connect last odd node to head of even sublist
+  odd.next = evenHead;
 
-  while (evenCurrent && evenCurrent.next) {
-    // Link odd node to the next odd node (evenCurrent.next)
-    oddCurrent.next = evenCurrent.next;
-    oddCurrent = oddCurrent.next;
-
-    // Link even node to the next even node (oddCurrent.next)
-    evenCurrent.next = oddCurrent.next;
-    evenCurrent = evenCurrent.next;
-  }
-
-  // Merge the two lists
-  oddCurrent.next = evenHead;
-
-  return oddHead;
-};
+  return head;
+}
 ```
 
 #### **Dry Run for Example 1:**
@@ -77,75 +103,27 @@ const oddEvenList = function (head) {
 **Input:** `[1,2,3,4,5]`
 
 1. Initial state:
-   - `oddHead = 1`, `evenHead = 2`
-   - `oddCurrent = 1`, `evenCurrent = 2`
+
+   - `head = 1`,
+   - `odd = 1, even = 2, evenHead = 2`
+
 2. First iteration:
-   - `oddCurrent.next = 3` (since `evenCurrent.next` is 3)
-   - `oddCurrent` moves to 3
-   - `evenCurrent.next = 4` (since `oddCurrent.next` is 4)
-   - `evenCurrent` moves to 4
+
+   - `odd.next = even.next → 1.next = 3`
+   - `odd = odd.next → odd = 3`
+   - `even.next = odd.next → 2.next = 4`
+   - `even = even.next → even = 4`
+   - `List: 1 -> 3, 2 -> 4 -> 5`
+
 3. Second iteration:
-   - `oddCurrent.next = 5` (since `evenCurrent.next` is 5)
-   - `oddCurrent` moves to 5
-   - `evenCurrent.next = null` (since `oddCurrent.next` is null)
-   - `evenCurrent` moves to null (loop ends)
-4. Merge: `oddCurrent.next = evenHead` (5's next is 2)
+
+   - `odd.next = even.next → 3.next = 5`
+   - `odd = odd.next → odd = 5`
+   - `even.next = odd.next → 4.next = null`
+   - `even = even.next → even = null`
+   - `List: 1 -> 3 -> 5, 2 -> 4`
+
+4. Final Connection: `odd.next = evenHead → 5.next = 2`
 5. Final list: `1 -> 3 -> 5 -> 2 -> 4`
 
 **Output:** `[1,3,5,2,4]`
-
-#### **Dry Run for Example 2:**
-
-**Input:** `[2,1,3,5,6,4,7]`
-
-1. Initial state:
-   - `oddHead = 2`, `evenHead = 1`
-   - `oddCurrent = 2`, `evenCurrent = 1`
-2. First iteration:
-   - `oddCurrent.next = 3` (since `evenCurrent.next` is 3)
-   - `oddCurrent` moves to 3
-   - `evenCurrent.next = 5` (since `oddCurrent.next` is 5)
-   - `evenCurrent` moves to 5
-3. Second iteration:
-   - `oddCurrent.next = 6` (since `evenCurrent.next` is 6)
-   - `oddCurrent` moves to 6
-   - `evenCurrent.next = 4` (since `oddCurrent.next` is 4)
-   - `evenCurrent` moves to 4
-4. Third iteration:
-   - `oddCurrent.next = 7` (since `evenCurrent.next` is 7)
-   - `oddCurrent` moves to 7
-   - `evenCurrent.next = null` (since `oddCurrent.next` is null)
-   - `evenCurrent` moves to null (loop ends)
-5. Merge: `oddCurrent.next = evenHead` (7's next is 1)
-6. Final list: `2 -> 3 -> 6 -> 7 -> 1 -> 5 -> 4`
-
-**Output:** `[2,3,6,7,1,5,4]`
-
-#### **Dry Run for Example 3:**
-
-**Input:** `[1]`
-
-- Only one node, so return `[1]`.
-
-```javascript
-/**
- * Helper function to create a linked list from an array of values.
- * @param {Array} values - The array of values to convert into a linked list.
- * @return {ListNode} - The head of the created linked list.
- */
-function createLinkedList(values) {
-  if (!values || values.length === 0) {
-    return null;
-  }
-
-  let head = new ListNode(values[0]);
-  let current = head;
-
-  for (let i = 1; i < values.length; i++) {
-    current.next = new ListNode(values[i]);
-    current = current.next;
-  }
-
-  return head;
-}
-```

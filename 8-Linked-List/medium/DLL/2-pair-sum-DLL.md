@@ -35,33 +35,6 @@ Since the list is sorted, we can use a two-pointer approach similar to what we'd
 ## Solution Code (All Approaches)
 
 ```javascript
-class Node {
-  constructor(data) {
-    this.data = data;
-    this.prev = null;
-    this.next = null;
-  }
-}
-
-class DoublyLinkedList {
-  constructor() {
-    this.head = null;
-    this.tail = null;
-  }
-
-  append(data) {
-    const newNode = new Node(data);
-    if (!this.head) {
-      this.head = newNode;
-      this.tail = newNode;
-    } else {
-      newNode.prev = this.tail;
-      this.tail.next = newNode;
-      this.tail = newNode;
-    }
-  }
-}
-
 // Approach 1: Brute Force (Nested Loops)
 function findPairsBruteForce(dll, target) {
   const pairs = [];

@@ -39,7 +39,7 @@ function removeDuplicates(head) {
 
   let current = head; // Start from the head of the list
 
-  while (current !== null && current.next !== null) {
+  while (current && current.next) {
     if (current.data === current.next.data) {
       // Found a duplicate
       let duplicate = current.next; // Store the duplicate node

@@ -46,7 +46,7 @@ const getIntersectionNodeBruteForce = function (headA, headB) {
 };
 ```
 
-**Time Complexity:** O(m\*n)  
+**Time Complexity:** `O(m*n)`  
 **Space Complexity:** O(1)
 
 Compare each node of list A with every node of list B until we find a match.

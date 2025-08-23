@@ -47,9 +47,9 @@ class Node {
 }
 
 // Approach 1: Iterative Deletion
-function deleteAllOccurrencesIterative(head_ref, key) {
-  let current = head_ref;
-  let newHead = head_ref;
+function deleteAllOccurrencesIterative(head, key) {
+  let current = head;
+  let newHead = head;
 
   while (current !== null) {
     if (current.data === key) {
@@ -97,31 +97,31 @@ A recursive approach where we process the current node and then recurse for the 
 
 ```javascript
 // Approach 2: Recursive Deletion
-function deleteAllOccurrencesRecursive(head_ref, key) {
+function deleteAllOccurrencesRecursive(head, key) {
   // Base case: empty list
-  if (head_ref === null) {
+  if (head === null) {
     return null;
   }
 
   // Process the rest of the list first
-  const newNext = deleteAllOccurrencesRecursive(head_ref.next, key);
+  const newNext = deleteAllOccurrencesRecursive(head.next, key);
 
   // If current node needs to be deleted
-  if (head_ref.data === key) {
+  if (head.data === key) {
     // Link the newNext's prev to our prev if exists
     if (newNext !== null) {
-      newNext.prev = head_ref.prev;
+      newNext.prev = head.prev;
     }
     // Return the processed list (skip current node)
     return newNext;
   }
 
   // Current node stays - update its next
-  head_ref.next = newNext;
+  head.next = newNext;
   if (newNext !== null) {
-    newNext.prev = head_ref;
+    newNext.prev = head;
   }
-  return head_ref;
+  return head;
 }
 ```
 
@@ -140,12 +140,12 @@ This approach uses a dummy node to simplify edge cases where the head needs to b
 
 ```javascript
 // Approach 3: Using Dummy Node
-function deleteAllOccurrencesDummy(head_ref, key) {
+function deleteAllOccurrencesDummy(head, key) {
   // Create a dummy node before the head
   const dummy = new Node(0);
-  dummy.next = head_ref;
-  if (head_ref !== null) {
-    head_ref.prev = dummy;
+  dummy.next = head;
+  if (head !== null) {
+    head.prev = dummy;
   }
 
   let current = dummy.next;
