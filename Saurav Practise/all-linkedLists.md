@@ -1651,6 +1651,40 @@ function addOneReverse(head) {
 }
 ```
 
+## Dry Run with Examples
+
+### Example 1: 4->5->6
+
+1. Original: 4->5->6 (456)
+2. Reverse: 6->5->4
+3. Add 1 with carry:
+   - 6+1=7 (carry 0)
+   - 5+0=5
+   - 4+0=4
+4. Reverse back: 4->5->7 (457)
+
+### Example 2: 9->9->9
+
+1. Original: 9->9->9 (999)
+2. Reverse: 9->9->9
+3. Add 1 with carry:
+   - 9+1=0 (carry 1)
+   - 9+1=0 (carry 1)
+   - 9+1=0 (carry 1)
+   - Add new node for carry
+4. List becomes 0->0->0->1
+5. Reverse back: 1->0->0->0 (1000)
+
+### Example 3: 1->2->3 (Edge case - no carry propagation)
+
+1. Original: 1->2->3 (123)
+2. Reverse: 3->2->1
+3. Add 1 with carry:
+   - 3+1=4 (carry 0)
+   - 2+0=2
+   - 1+0=1
+4. Reverse back: 1->2->4 (124)
+
 # LC-2. Add Two Numbers
 
 ### Problem Pattern Identification
@@ -1950,6 +1984,41 @@ function findPairsHashTable(head, target) {
     // Add current value to seen values
     seenValues.add(current.data);
     current = current.next;
+  }
+
+  return pairs;
+}
+```
+
+```javascript
+function findPairsTwoPointers(dll, target) {
+  const pairs = [];
+
+  let curr = dll.head;
+
+  while (curr) curr = curr.next;
+
+  let left = dll.head;
+  let right = curr;
+
+  // Move pointers towards each other
+  while (
+    left !== null &&
+    right !== null &&
+    left !== right &&
+    right.next !== left
+  ) {
+    const sum = left.data + right.data;
+
+    if (sum === target) {
+      pairs.push([left.data, right.data]);
+      left = left.next; // Move both pointers to find other possible pairs
+      right = right.prev;
+    } else if (sum < target) {
+      left = left.next; // Need a larger sum, move left forward
+    } else {
+      right = right.prev; // Need a smaller sum, move right backward
+    }
   }
 
   return pairs;

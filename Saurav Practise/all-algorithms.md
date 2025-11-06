@@ -172,3 +172,470 @@ function sortColors(nums) {
   }
 }
 ```
+
+# Euclidean Algorithm: Finding Greatest Common Divisor (GCD)
+
+## Problem Understanding
+
+The Euclidean Algorithm is used to find the Greatest Common Divisor (GCD) of two integers. The GCD is the largest positive integer that divides both numbers without leaving a remainder.
+
+**Key Properties:**
+
+- GCD(a, 0) = |a|
+- GCD(a, b) = GCD(b, a mod b)
+- GCD is commutative: GCD(a, b) = GCD(b, a)
+
+---
+
+## Approach 1: Euclidean Algorithm (Subtraction-based)
+
+### Intuition
+
+Repeatedly subtract the smaller number from the larger number until both numbers become equal.
+
+```javascript
+/**
+ * Euclidean Algorithm using subtraction
+ * @param {number} num1 - First number
+ * @param {number} num2 - Second number
+ * @return {number} - GCD of the two numbers
+ */
+function gcdSubtraction(num1, num2) {
+  // Convert to absolute values since GCD is always positive
+  let a = Math.abs(num1);
+  let b = Math.abs(num2);
+
+  // Handle edge case where both numbers are zero
+  if (a === 0 && b === 0) return 0;
+
+  // GCD(a, 0) = a
+  if (a === 0) return b;
+  if (b === 0) return a;
+
+  // Repeatedly subtract smaller from larger
+  while (a !== b) {
+    if (a > b) {
+      a = a - b;
+    } else {
+      b = b - a;
+    }
+  }
+
+  return a;
+}
+```
+
+**Time Complexity:** O(max(a, b)) - Can be inefficient for large numbers  
+**Space Complexity:** O(1)
+
+---
+
+## Approach 2: Euclidean Algorithm (Division-based - Optimal)
+
+### Intuition
+
+Use modulus operation instead of subtraction for faster convergence. This is the standard Euclidean algorithm.
+
+```javascript
+/**
+ * Standard Euclidean Algorithm using modulus (Optimal)
+ * @param {number} num1 - First number
+ * @param {number} num2 - Second number
+ * @return {number} - GCD of the two numbers
+ */
+function gcdEuclidean(num1, num2) {
+  // Convert to absolute values
+  let a = Math.abs(num1);
+  let b = Math.abs(num2);
+
+  // Handle edge cases
+  if (a === 0 && b === 0) return 0;
+  if (a === 0) return b;
+  if (b === 0) return a;
+
+  // Euclidean algorithm using modulus
+  while (b !== 0) {
+    const remainder = a % b;
+    a = b;
+    b = remainder;
+  }
+
+  return a;
+}
+```
+
+**Time Complexity:** O(log(min(a, b))) - Much faster than subtraction  
+**Space Complexity:** O(1)
+
+---
+
+## Approach 3: Recursive Euclidean Algorithm
+
+### Intuition
+
+A recursive implementation of the Euclidean algorithm for cleaner code.
+
+```javascript
+/**
+ * Recursive implementation of Euclidean Algorithm
+ * @param {number} num1 - First number
+ * @param {number} num2 - Second number
+ * @return {number} - GCD of the two numbers
+ */
+function gcdRecursive(num1, num2) {
+  // Convert to absolute values
+  const a = Math.abs(num1);
+  const b = Math.abs(num2);
+
+  // Base cases
+  if (a === 0 && b === 0) return 0;
+  if (a === 0) return b;
+  if (b === 0) return a;
+
+  // Recursive case
+  if (a % b === 0) {
+    return b;
+  } else {
+    return gcdRecursive(b, a % b);
+  }
+}
+```
+
+**Time Complexity:** O(log(min(a, b)))  
+**Space Complexity:** O(log(min(a, b))) - Due to recursion stack
+
+---
+
+## Approach 4: Extended Euclidean Algorithm
+
+### Intuition
+
+Finds GCD and also coefficients x, y such that: ax + by = gcd(a, b)
+
+```javascript
+/**
+ * Extended Euclidean Algorithm
+ * Finds GCD and coefficients x, y such that: ax + by = gcd(a, b)
+ * @param {number} num1 - First number
+ * @param {number} num2 - Second number
+ * @return {Object} - Object containing gcd, x, and y coefficients
+ */
+function extendedEuclidean(num1, num2) {
+  let a = Math.abs(num1);
+  let b = Math.abs(num2);
+
+  // Handle edge cases
+  if (a === 0 && b === 0) return { gcd: 0, x: 0, y: 0 };
+  if (a === 0) return { gcd: b, x: 0, y: 1 };
+  if (b === 0) return { gcd: a, x: 1, y: 0 };
+
+  let x = 1,
+    y = 0; // Coefficients for a
+  let prevX = 0,
+    prevY = 1; // Coefficients for b
+
+  while (b !== 0) {
+    const quotient = Math.floor(a / b);
+
+    // Update a and b
+    const temp = b;
+    b = a % b;
+    a = temp;
+
+    // Update coefficients
+    const tempX = x;
+    const tempY = y;
+    x = prevX - quotient * x;
+    y = prevY - quotient * y;
+    prevX = tempX;
+    prevY = tempY;
+  }
+
+  // Adjust signs based on original inputs
+  if (num1 < 0) prevX = -prevX;
+  if (num2 < 0) prevY = -prevY;
+
+  return {
+    gcd: a,
+    x: prevX,
+    y: prevY,
+  };
+}
+```
+
+**Time Complexity:** O(log(min(a, b)))  
+**Space Complexity:** O(1)
+
+---
+
+## Dry Run of Optimal Approach (Division-based)
+
+### Example 1: gcd(56, 98)
+
+```
+Initial: a = 56, b = 98
+
+Iteration 1:
+  remainder = 56 % 98 = 56
+  a = 98, b = 56
+
+Iteration 2:
+  remainder = 98 % 56 = 42
+  a = 56, b = 42
+
+Iteration 3:
+  remainder = 56 % 42 = 14
+  a = 42, b = 14
+
+Iteration 4:
+  remainder = 42 % 14 = 0
+  a = 14, b = 0
+
+Loop exits (b = 0)
+Return a = 14
+
+GCD(56, 98) = 14 ✓
+```
+
+### Example 2: gcd(270, 192)
+
+```
+Initial: a = 270, b = 192
+
+Iteration 1:
+  remainder = 270 % 192 = 78
+  a = 192, b = 78
+
+Iteration 2:
+  remainder = 192 % 78 = 36
+  a = 78, b = 36
+
+Iteration 3:
+  remainder = 78 % 36 = 6
+  a = 36, b = 6
+
+Iteration 4:
+  remainder = 36 % 6 = 0
+  a = 6, b = 0
+
+Loop exits (b = 0)
+Return a = 6
+
+GCD(270, 192) = 6 ✓
+```
+
+### Example 3: gcd(17, 13) - Co-prime numbers
+
+```
+Initial: a = 17, b = 13
+
+Iteration 1:
+  remainder = 17 % 13 = 4
+  a = 13, b = 4
+
+Iteration 2:
+  remainder = 13 % 4 = 1
+  a = 4, b = 1
+
+Iteration 3:
+  remainder = 4 % 1 = 0
+  a = 1, b = 0
+
+Loop exits (b = 0)
+Return a = 1
+
+GCD(17, 13) = 1 ✓ (co-prime)
+```
+
+### Edge Case Examples:
+
+**Example 4: gcd(0, 15)**
+
+```
+a = 0, b = 15
+Since a === 0, immediately return b = 15
+GCD(0, 15) = 15 ✓
+```
+
+**Example 5: gcd(0, 0)**
+
+```
+a = 0, b = 0
+Special case: return 0
+GCD(0, 0) = 0 ✓
+```
+
+**Example 6: gcd(-24, 18)**
+
+```
+Convert to absolute values: a = 24, b = 18
+
+Iteration 1:
+  remainder = 24 % 18 = 6
+  a = 18, b = 6
+
+Iteration 2:
+  remainder = 18 % 6 = 0
+  a = 6, b = 0
+
+Return a = 6
+GCD(-24, 18) = 6 ✓
+```
+
+---
+
+## Complete Solution with All Approaches
+
+```javascript
+/**
+ * Euclidean Algorithm - Complete Implementation
+ */
+
+// Approach 1: Subtraction-based
+function gcdSubtraction(num1, num2) {
+  let a = Math.abs(num1);
+  let b = Math.abs(num2);
+
+  if (a === 0 && b === 0) return 0;
+  if (a === 0) return b;
+  if (b === 0) return a;
+
+  while (a !== b) {
+    if (a > b) {
+      a = a - b;
+    } else {
+      b = b - a;
+    }
+  }
+
+  return a;
+}
+
+// Approach 2: Division-based (Optimal)
+function gcdEuclidean(num1, num2) {
+  let a = Math.abs(num1);
+  let b = Math.abs(num2);
+
+  if (a === 0 && b === 0) return 0;
+  if (a === 0) return b;
+  if (b === 0) return a;
+
+  while (b !== 0) {
+    const remainder = a % b;
+    a = b;
+    b = remainder;
+  }
+
+  return a;
+}
+
+// Approach 3: Recursive
+function gcdRecursive(num1, num2) {
+  const a = Math.abs(num1);
+  const b = Math.abs(num2);
+
+  if (a === 0 && b === 0) return 0;
+  if (a === 0) return b;
+  if (b === 0) return a;
+
+  if (a % b === 0) {
+    return b;
+  } else {
+    return gcdRecursive(b, a % b);
+  }
+}
+
+// Approach 4: Extended Euclidean Algorithm
+function extendedEuclidean(num1, num2) {
+  let a = Math.abs(num1);
+  let b = Math.abs(num2);
+
+  if (a === 0 && b === 0) return { gcd: 0, x: 0, y: 0 };
+  if (a === 0) return { gcd: b, x: 0, y: 1 };
+  if (b === 0) return { gcd: a, x: 1, y: 0 };
+
+  let x = 1,
+    y = 0;
+  let prevX = 0,
+    prevY = 1;
+
+  while (b !== 0) {
+    const quotient = Math.floor(a / b);
+
+    const temp = b;
+    b = a % b;
+    a = temp;
+
+    const tempX = x;
+    const tempY = y;
+    x = prevX - quotient * x;
+    y = prevY - quotient * y;
+    prevX = tempX;
+    prevY = tempY;
+  }
+
+  if (num1 < 0) prevX = -prevX;
+  if (num2 < 0) prevY = -prevY;
+
+  return {
+    gcd: a,
+    x: prevX,
+    y: prevY,
+  };
+}
+
+// Utility function to verify extended Euclidean result
+function verifyExtendedEuclidean(a, b, result) {
+  const verification = a * result.x + b * result.y;
+  return verification === result.gcd;
+}
+
+// Test cases
+console.log("Testing Euclidean Algorithm Implementations:");
+const testCases = [
+  [56, 98],
+  [270, 192],
+  [17, 13],
+  [0, 15],
+  [15, 0],
+  [0, 0],
+  [-24, 18],
+  [48, 18],
+  [101, 103], // Prime numbers
+];
+
+testCases.forEach(([a, b]) => {
+  console.log(`\nGCD(${a}, ${b}):`);
+  console.log(`Subtraction: ${gcdSubtraction(a, b)}`);
+  console.log(`Euclidean: ${gcdEuclidean(a, b)}`);
+  console.log(`Recursive: ${gcdRecursive(a, b)}`);
+
+  const extendedResult = extendedEuclidean(a, b);
+  console.log(
+    `Extended: GCD = ${extendedResult.gcd}, coefficients: x = ${extendedResult.x}, y = ${extendedResult.y}`
+  );
+  console.log(
+    `Verification: ${a}*${extendedResult.x} + ${b}*${extendedResult.y} = ${
+      extendedResult.gcd
+    } (${verifyExtendedEuclidean(a, b, extendedResult)})`
+  );
+});
+```
+
+## Complexity Analysis Summary
+
+| Approach           | Time Complexity   | Space Complexity  | Use Case                        |
+| ------------------ | ----------------- | ----------------- | ------------------------------- |
+| Subtraction        | O(max(a, b))      | O(1)              | Educational, small numbers      |
+| Division (Optimal) | O(log(min(a, b))) | O(1)              | General purpose, most efficient |
+| Recursive          | O(log(min(a, b))) | O(log(min(a, b))) | Clean code, small numbers       |
+| Extended           | O(log(min(a, b))) | O(1)              | When coefficients needed        |
+
+## Key Insights
+
+1. **Mathematical Foundation**: GCD(a, b) = GCD(b, a mod b)
+2. **Edge Cases**: Handle zeros and negative numbers properly
+3. **Efficiency**: Division-based approach is optimal for practical use
+4. **Extended Version**: Useful for solving linear Diophantine equations and modular inverses
+
+**Recommendation**: Use the division-based Euclidean algorithm for general GCD calculations due to its optimal time complexity and constant space usage.
