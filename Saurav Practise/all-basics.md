@@ -588,96 +588,6 @@ function isArmstrongMathematical(n) {
 
 ---
 
-## Approach 3: Single Pass Mathematical
-
-### Intuition
-
-Combine digit counting and sum calculation in a single pass by storing digits temporarily.
-
-```javascript
-/**
- * Check Armstrong number with single pass (stores digits)
- * @param {number} n - The number to check
- * @return {boolean} - True if Armstrong number, false otherwise
- */
-function isArmstrongSinglePass(n) {
-  if (n < 0) return false;
-  if (n < 10) return true;
-
-  const digits = [];
-  let temp = n;
-
-  // Extract all digits and store them
-  while (temp > 0) {
-    digits.push(temp % 10);
-    temp = Math.floor(temp / 10);
-  }
-
-  const numDigits = digits.length;
-  let sum = 0;
-
-  // Calculate sum using stored digits
-  for (let i = 0; i < numDigits; i++) {
-    sum += Math.pow(digits[i], numDigits);
-  }
-
-  return sum === n;
-}
-```
-
-**Time Complexity:** O(d)  
-**Space Complexity:** O(d) for storing digits array
-
----
-
-## Approach 4: Optimized with Exponentiation Optimization
-
-### Intuition
-
-Pre-calculate powers to avoid repeated Math.pow calls.
-
-```javascript
-/**
- * Check Armstrong number with power pre-calculation
- * @param {number} n - The number to check
- * @return {boolean} - True if Armstrong number, false otherwise
- */
-function isArmstrongOptimized(n) {
-  if (n < 0) return false;
-  if (n < 10) return true;
-
-  // Count digits and extract them simultaneously
-  const digits = [];
-  let temp = n;
-  let numDigits = 0;
-
-  while (temp > 0) {
-    digits.push(temp % 10);
-    temp = Math.floor(temp / 10);
-    numDigits++;
-  }
-
-  // Pre-calculate powers for each possible digit (0-9)
-  const powers = [];
-  for (let i = 0; i <= 9; i++) {
-    powers[i] = Math.pow(i, numDigits);
-  }
-
-  // Calculate sum using pre-computed powers
-  let sum = 0;
-  for (let i = 0; i < numDigits; i++) {
-    sum += powers[digits[i]];
-  }
-
-  return sum === n;
-}
-```
-
-**Time Complexity:** O(d)  
-**Space Complexity:** O(d + 10) = O(d)
-
----
-
 ## Dry Run of Optimal Approach (Mathematical)
 
 ### Example 1: n = 153
@@ -760,9 +670,18 @@ Negative number → immediately return false ✓
 
 # Divisors of a Number
 
-## Intuition
+You are given an integer `n`. You need to find all the divisors of `n`. Return all the divisors of `n` as an array or list in a `sorted` order.
 
-Divisors come in pairs: if `i` divides `n`, then `n/i` also divides `n`. We can leverage this property to optimize our solution.
+**A number which completely divides another number is called it's divisor.**
+
+Examples:
+Input: n = 6
+Output = [1, 2, 3, 6]
+Explanation: The divisors of 6 are 1, 2, 3, 6.
+
+Input: n = 8
+Output: [1, 2, 4, 8]
+Explanation: The divisors of 8 are 1, 2, 4, 8.
 
 ## Approach 1: Brute Force
 
@@ -786,202 +705,20 @@ function findDivisorsBruteForce(n) {
 }
 ```
 
-## Approach 2: Optimized (Square Root Method)
-
-```javascript
-/**
- * Optimized Approach - Check up to sqrt(n)
- * Time Complexity: O(√n)
- * Space Complexity: O(d) where d is number of divisors
- */
-function findDivisorsOptimized(n) {
-  const divisors = [];
-
-  // Handle edge case
-  if (n <= 0) return divisors;
-
-  // Iterate only up to sqrt(n)
-  for (let i = 1; i <= Math.sqrt(n); i++) {
-    if (n % i === 0) {
-      // Add the smaller divisor
-      divisors.push(i);
-
-      // If it's not a perfect square, add the larger divisor
-      if (i !== n / i) {
-        divisors.push(n / i);
-      }
-    }
-  }
-
-  // Sort the divisors
-  divisors.sort((a, b) => a - b);
-  return divisors;
-}
-```
-
-## Approach 3: Two Arrays Method (More Efficient)
-
-```javascript
-/**
- * Two Arrays Approach - Separate smaller and larger divisors
- * Time Complexity: O(√n)
- * Space Complexity: O(d) where d is number of divisors
- */
-function findDivisorsTwoArrays(n) {
-  const smallerDivisors = [];
-  const largerDivisors = [];
-
-  // Handle edge case
-  if (n <= 0) return [];
-
-  // Iterate up to sqrt(n)
-  for (let i = 1; i <= Math.sqrt(n); i++) {
-    if (n % i === 0) {
-      // Add smaller divisor
-      smallerDivisors.push(i);
-
-      // If not perfect square, add larger divisor to separate array
-      if (i !== n / i) {
-        largerDivisors.unshift(n / i);
-      }
-    }
-  }
-
-  // Combine arrays: smaller divisors + larger divisors (in reverse)
-  return [...smallerDivisors, ...largerDivisors];
-}
-```
-
-## Dry Run with Examples
-
-### Example 1: n = 6
-
-```
-i = 1: 6%1=0 → divisors: [1], larger: [6]
-i = 2: 6%2=0 → divisors: [1,2], larger: [3,6]
-Result: [1,2,3,6] ✓
-```
-
-### Example 2: n = 8
-
-```
-i = 1: 8%1=0 → divisors: [1], larger: [8]
-i = 2: 8%2=0 → divisors: [1,2], larger: [4,8]
-Result: [1,2,4,8] ✓
-```
-
-### Example 3: n = 16 (Perfect Square)
-
-```
-i = 1: 16%1=0 → divisors: [1], larger: [16]
-i = 2: 16%2=0 → divisors: [1,2], larger: [8,16]
-i = 3: 16%3≠0 → skip
-i = 4: 16%4=0 → divisors: [1,2,4], larger: [4,8,16]
-Result: [1,2,4,8,16] ✓
-```
-
-## Complete Solution with All Approaches
-
-```javascript
-/**
- * Comprehensive divisor finder with multiple approaches
- */
-
-// Approach 1: Brute Force
-function divisorsBruteForce(n) {
-  if (n <= 0) return [];
-
-  const result = [];
-  for (let i = 1; i <= n; i++) {
-    if (n % i === 0) {
-      result.push(i);
-    }
-  }
-  return result;
-}
-
-// Approach 2: Optimized (Recommended)
-function divisorsOptimized(n) {
-  if (n <= 0) return [];
-
-  const result = [];
-  const sqrtN = Math.sqrt(n);
-
-  for (let i = 1; i <= sqrtN; i++) {
-    if (n % i === 0) {
-      result.push(i);
-      if (i !== n / i) {
-        result.push(n / i);
-      }
-    }
-  }
-
-  result.sort((a, b) => a - b);
-  return result;
-}
-
-// Approach 3: Two Arrays (Most Efficient)
-function divisorsTwoArrays(n) {
-  if (n <= 0) return [];
-
-  const smaller = [];
-  const larger = [];
-  const sqrtN = Math.sqrt(n);
-
-  for (let i = 1; i <= sqrtN; i++) {
-    if (n % i === 0) {
-      smaller.push(i);
-      if (i !== n / i) {
-        larger.unshift(n / i);
-      }
-    }
-  }
-
-  return [...smaller, ...larger];
-}
-
-// Test function
-function testDivisors() {
-  const testCases = [6, 8, 16, 1, 25, 100];
-
-  testCases.forEach((n) => {
-    console.log(`\nDivisors of ${n}:`);
-    console.log(`Brute Force:     [${divisorsBruteForce(n)}]`);
-    console.log(`Optimized:       [${divisorsOptimized(n)}]`);
-    console.log(`Two Arrays:      [${divisorsTwoArrays(n)}]`);
-  });
-}
-
-// Run tests
-testDivisors();
-```
-
-## Complexity Analysis
-
-| Approach    | Time Complexity | Space Complexity | When to Use        |
-| ----------- | --------------- | ---------------- | ------------------ |
-| Brute Force | O(n)            | O(d)             | Small numbers only |
-| Optimized   | O(√n)           | O(d)             | General purpose    |
-| Two Arrays  | O(√n)           | O(d)             | Most efficient     |
-
-**Note:**
-
-- `d` represents the number of divisors (typically much smaller than `n`)
-- For large numbers, the optimized approaches are significantly faster
-- The Two Arrays approach avoids sorting, making it the most efficient
-
-## Edge Cases Handled
-
-- n = 1 → [1]
-- n = 0 → []
-- n < 0 → []
-- Perfect squares (like 16, 25) → handled correctly without duplicates
-
-The **Two Arrays approach** is recommended for most use cases as it's efficient and handles all edge cases properly.
-
 ---
 
 # Check for prime numbers
+
+You are given an integer n. You need to check if the number is prime or not. Return true if it is a prime number, otherwise return false.
+
+A prime number is a number which has no divisors except 1 and itself.
+
+Examples:
+Input: n = 5
+
+Output: true
+
+Explanation: The only divisors of 5 are 1 and 5 , So the number 5 is prime.
 
 ## Approach 1: Naive Approach
 
@@ -1019,33 +756,6 @@ function isPrimeSqrt(n) {
   if (n % 2 === 0 || n % 3 === 0) return false;
 
   // Check divisibility up to square root of n
-  for (let i = 5; i * i <= n; i += 6) {
-    if (n % i === 0 || n % (i + 2) === 0) {
-      return false;
-    }
-  }
-
-  return true;
-}
-```
-
-**Time Complexity**: O(√n)  
-**Space Complexity**: O(1)
-
-## Approach 3: 6k ± 1 Optimization
-
-**Intuition**: All primes greater than 3 are of the form 6k±1.
-
-```javascript
-function isPrimeOptimized(n) {
-  // Handle edge cases
-  if (n <= 1) return false;
-  if (n <= 3) return true;
-
-  // Eliminate even numbers and multiples of 3
-  if (n % 2 === 0 || n % 3 === 0) return false;
-
-  // Check for divisors in the form of 6k ± 1
   for (let i = 5; i * i <= n; i += 6) {
     if (n % i === 0 || n % (i + 2) === 0) {
       return false;
@@ -1159,3 +869,305 @@ n <= 1? Yes → Return false ✓
 ---
 
 # Learn Basic Recurssion
+
+## 1- Print number from N to 1.
+
+```javascript
+function counter(N) {
+  if (N < 1) return;
+  console.log(N);
+  counter(N - 1);
+}
+// counter(5);
+```
+
+## 2- Print sum of number from a given range
+
+```javascript
+function sumRange(num) {
+  if (num == 1) return 1;
+  return num + sumRange(num - 1);
+}
+// sumRange(3);
+```
+
+## 3 - Print factorial for a given number
+
+```javascript
+function fact(N) {
+  if (N === 1) return 1;
+  return N * fact(N - 1);
+}
+// fact(6);
+```
+
+## 4 - return the odd number array from a given array, using helper function recurssion
+
+```javascript
+function recrFunction(array, resultArr) {
+  if (array.length === 0) {
+    return resultArr;
+  }
+  if (array[0] % 2 !== 0) {
+    resultArr?.push(array[0]);
+  }
+  recrFunction(array.slice(1), resultArr);
+}
+function helperFunction(arr) {
+  const resultArr = [];
+  recrFunction(arr, resultArr);
+  return resultArr;
+}
+helperFunction([1, 2, 3, 4, 5]);
+
+// 5 - with pure recurssionfunction pureRecurssion(arr) { - pure recurssion is least applicable. it can be applied to only simple tasks
+function pureRecurssion(arr) {
+  let resArr = [];
+  if (arr.length === 0) return resArr;
+
+  if (arr[0] % 2 !== 0) resArr.push(arr[0]);
+  // arr.slice(arr.concat(pureRecurssion(arr)))
+  resArr = resArr.concat(pureRecurssion(arr.slice(1)));
+  return resArr;
+}
+
+pureRecurssion([1, 2, 3, 4, 5]);
+```
+
+## Write a function to find factorial of a number using recurssion
+
+```javascript
+/**
+ * 5! = 5 * 4 * 3 * 2 * 1
+ * 5! = 5 * 4!
+ * recurrence relation = f(n) = n * f(n-1)
+ * Base Case = N == 0, return 1;
+ */
+
+function fact(N) {
+  //base case
+  if (N === 0) return 1;
+  //recurrence relation
+  let factorial = N * fact(N - 1);
+  return factorial;
+}
+
+const res = fact(5);
+console.log(res);
+```
+
+## Given a number n, the task is to return the list/vector of the factorial numbers smaller than or equal to n
+
+```javascript
+//https://www.geeksforgeeks.org/problems/find-all-factorial-numbers-less-than-or-equal-to-n3548/0
+
+// Input: n = 3
+// Output: 1 2
+// Explanation: The first factorial number is 1 which is less than equal to n. The second number is 2 which is less than equal to n,but the third factorial number is 6 which is greater than n. So we print only 1 and 2.
+
+// Input: n = 6
+// Output: 1 2 6
+// Explanation: The first three factorial numbers are less than equal to n but the fourth factorial number 24 is greater than n. So we print only first three factorial numbers.
+
+// Approach 1: Recursive
+function factorialNumbers(n) {
+  const result = [];
+  const getFactorialNumbers = (n, fact = 1, i = 1) => {
+    if (fact > n) return result; // Base case: stop when factorial exceeds n
+
+    result.push(fact); // Add the factorial to the result list
+
+    if (fact * (i + 1) > n) return result; // Ensure the next factorial does not exceed n
+
+    return getFactorialNumbers(n, fact * (i + 1), i + 1); // Recursive call
+  };
+
+  return getFactorialNumbers(n);
+}
+
+// Approach 2: Iterative
+function getFactorialNumbersIterative(n) {
+  let result = [],
+    fact = 1,
+    i = 1;
+  while (fact <= n) {
+    result.push(fact);
+    i++;
+    fact *= i;
+  }
+  return result;
+}
+```
+
+## Write a function to return 8th fibonacci number
+
+```javascript
+// 0,1,1,2,3,5,8,13,21,34 ==> Output 13
+
+function findFibonacci(N) {
+  //base case
+  if (N == 0) return 0;
+  if (N == 1) return 1;
+  //recursive relation
+  //f(n) = f(n-1) + f(n-2);
+  return findFibonacci(N - 1) + findFibonacci(N - 2);
+}
+
+let res = findFibonacci(8);
+console.log(res);
+
+//print fibonacci upto a number------------------------------------
+
+function printFibonacci(n) {
+  let num = "";
+  function fibonacci(n) {
+    //base cases
+    if (n === 0) return 0;
+    if (n === 1) return 1;
+    //recurssive relation
+    return fibonacci(n - 1) + fibonacci(n - 2);
+  }
+  for (let i = 0; i < n; i++) {
+    num += fibonacci(i) + " ";
+  }
+  return num;
+}
+printFibonacci(10);
+
+/**
+ * @param {number} n
+ * @return {number}
+ *----------------------------------------*/
+var fib = function (n) {
+  let memo = new Array(n);
+  if (n < 2) return n;
+  if (memo[n]) return memo[n];
+  return (memo[n] = fib(n - 1) + fib(n - 2));
+};
+```
+
+## Given a string, print the string in reverse order.
+
+```javascript
+function reverseString(str, start, end) {
+  if (start > end) return str;
+
+  // swapping using destructuring assignment
+  [str[start], str[end]] = [str[end], str[start]];
+  console.log(str[start], str[end]);
+
+  return reverseString(str, start + 1, end - 1);
+  // return str;
+}
+
+let str = "abcde";
+let res = reverseString(str, 0, str.length - 1);
+console.log(res);
+```
+
+## Given a string, check if it is palindrome or not.
+
+```javascript
+function palindromeCheck(str, s, e) {
+  if (s > e) return true;
+  if (str[s] !== str[e]) return false;
+  return palindromeCheck(str, s + 1, e - 1);
+}
+
+let str = "abba";
+console.log(palindromeCheck(str, 0, str.length - 1));
+```
+
+## You have been given a no. of stairs..
+
+```javascript
+/**
+ * You have been given a no. of stairs. Initially, you are at the 0th stair, and you need to reach the Nth stair. Each time you can either climb one step or two steps. you are supposed to return the no. of distinct ways in which you can climb from 0th step to Nth step.
+ */
+
+function countDistinctWayToClimb(N) {
+  //base case
+  if (N < 0) return 0;
+  if (N == 0) return 1;
+
+  //recurence relation
+  return countDistinctWayToClimb(N - 1) + countDistinctWayToClimb(N - 2);
+}
+
+console.log(countDistinctWayToClimb(4));
+```
+
+## Given a string and a character. find the last occurence of the char
+
+```javascript
+function getlastOccurence(str, i, char, ans) {
+  if (i >= str.length) return ans;
+  if (str[i] == char) ans = i;
+  return getlastOccurence(str, i + 1, char, ans);
+}
+
+function lastOccurence(str, char) {
+  let ans;
+  let res = getlastOccurence(str, 0, char, ans);
+  return res + 1;
+}
+
+lastOccurence("adajaafferetatajilkillljjim", "m");
+
+lastOccurence("adajaafferetatajilkillljjim", "m");
+
+lastOccurence("adaj", "a");
+```
+
+## given a number print all its digits in words
+
+```javascript
+//
+// 412 i.e four one two
+
+function sayDigits(N) {
+  //0
+  let arr = [
+    "zero",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+  ];
+  if (N === 0) return; //FFT
+  let digit = N % 10; //4
+
+  sayDigits(Number.parseInt(N / 10)); //0
+  console.log(arr[digit]);
+}
+
+sayDigits(412);
+```
+
+## Given a 2, base , exp numbers, return the result
+
+```javascript
+// i.e 3,3 = 9
+// 2,3 = 8
+
+function power(a, b) {
+  //base case
+  if (b === 0) return 1;
+  if (b === 1) return a;
+
+  // recurssive call
+  let ans = power(a, Number.parseInt(b / 2));
+
+  if (b % 2 === 0) return ans * ans;
+  else return a * ans * ans;
+}
+
+let res = power(2, 3);
+console.log(res);
+```
