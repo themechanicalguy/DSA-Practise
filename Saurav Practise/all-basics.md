@@ -45,6 +45,26 @@ function countDigitsLogarithm(n) {
 }
 ```
 
+## Understanding Math.log10
+
+## What is Math.log10?
+
+Math.log10 is a function that tells you the power you need to raise 10 to get a given number.
+
+## Simple Explanation
+
+- If you have a number like 100, `Math.log10(100)` asks: "10 raised to what exponent equals 100?" The answer is 2, because 10² = 100.
+- For 1000, it’s 3 (10³ = 1000).
+- For numbers between 0 and 1, like 0.01, the answer is negative: 10⁻² = 0.01, so `log10(0.01) = –2`.
+
+## Key Points
+
+- It only works for positive numbers (greater than 0).
+- It can be thought of as the "order of magnitude" – e.g., `log10(500)` is about 2.7, meaning 500 is between 10² = 100 and 10³ = 1000, closer to 1000.
+- It’s used in many real‑world contexts: measuring sound intensity (decibels), earthquake strength (Richter scale), acidity (pH), and comparing things that vary over huge ranges.
+
+**Math.log10 gives the exponent when the number is written as a power of 10.**
+
 ## Approach 3: Iterative Division
 
 ```javascript
@@ -164,119 +184,146 @@ The problem requires reversing the digits of a signed 32-bit integer while handl
 2. **Trailing zeros** - should be removed when reversed
 3. **Integer overflow** - if reversed number exceeds 32-bit range, return 0
 4. **Environment constraint** - cannot use 64-bit integers
+---
 
-## Approach 3: Optimized Mathematical with Early Exit
+### Refactor 1: Direct Simplification
+
 
 ```javascript
 /**
  * @param {number} x
  * @return {number}
  */
-var reverse = function (nums) {
-  let isNeg = false;
-  let revNum = 0;
-  if (nums < 0) {
-    isNeg = true;
-    nums = -1 * nums;
+var reverse = function(x) {
+  let reversedNum = 0;
+  
+  // Math.abs handles the negative sign natively
+  let num = Math.abs(x); 
+
+  while (num > 0) {
+    let lastDigit = num % 10;
+    reversedNum = (reversedNum * 10) + lastDigit;
+    num = Math.floor(num / 10);
   }
 
-  while (nums > 0) {
-    let ld = nums % 10;
-    revNum = revNum * 10 + ld;
-    nums = Math.floor(nums / 10);
+  // Restore the negative sign if the original input was negative
+  if (x < 0) reversedNum *= -1;
+
+  // Use defined constants instead of calculating Math.pow on every run
+  const INT_MAX = 2147483647;  // 2^31 - 1
+  const INT_MIN = -2147483648; // -2^31
+  
+  // Check bounds
+  if (reversedNum > INT_MAX || reversedNum < INT_MIN) {
+    return 0;
   }
 
-  if (isNeg) revNum = revNum * -1;
-
-  return revNum >= Math.pow(2, 31) - 1 || revNum <= Math.pow(-2, 31)
-    ? 0
-    : revNum;
+  return reversedNum;
 };
 ```
 
 - **Time Complexity**: O(log₁₀(n)) - Same as approach 1
 - **Space Complexity**: O(1) - Constant space
 
-## Dry Run of Optimal Approach (Approach 1)
+## Dry Run: Refactor 1 (Direct Simplification)
 
-### Example 1: x = 123
+Here is a step-by-step dry run of the `Refactor 1: Direct Simplification` approach using three distinct examples, including edge cases.
 
-```
-Iteration 1:
-  x = 123, reversed = 0
-  lastDigit = 123 % 10 = 3
-  x = Math.trunc(123 / 10) = 12
-  reversed = 0 * 10 + 3 = 3
+**Constants used in all runs:**
+* `INT_MAX = 2147483647`
+* `INT_MIN = -2147483648`
 
-Iteration 2:
-  x = 12, reversed = 3
-  lastDigit = 12 % 10 = 2
-  x = Math.trunc(12 / 10) = 1
-  reversed = 3 * 10 + 2 = 32
+---
 
-Iteration 3:
-  x = 1, reversed = 32
-  lastDigit = 1 % 10 = 1
-  x = Math.trunc(1 / 10) = 0
-  reversed = 32 * 10 + 1 = 321
+### Example 1: `x = 120` (Positive Number Ending in Zero)
 
-Result: 321
-```
+* **Initialization:**
+  * `x = 120`
+  * `reversedNum = 0`
+  * `num = Math.abs(120) = 120`
 
-### Example 2: x = -123
+* **Iteration 1:**
+  * Condition: `num > 0` (`120 > 0`) ➔ **True**
+  * `lastDigit = 120 % 10 = 0`
+  * `reversedNum = (0 * 10) + 0 = 0`
+  * `num = Math.floor(120 / 10) = 12`
 
-```
-Iteration 1:
-  x = -123, reversed = 0
-  lastDigit = -123 % 10 = -3
-  x = Math.trunc(-123 / 10) = -12
-  reversed = 0 * 10 + (-3) = -3
+* **Iteration 2:**
+  * Condition: `num > 0` (`12 > 0`) ➔ **True**
+  * `lastDigit = 12 % 10 = 2`
+  * `reversedNum = (0 * 10) + 2 = 2`
+  * `num = Math.floor(12 / 10) = 1`
 
-Iteration 2:
-  x = -12, reversed = -3
-  lastDigit = -12 % 10 = -2
-  x = Math.trunc(-12 / 10) = -1
-  reversed = -3 * 10 + (-2) = -32
+* **Iteration 3:**
+  * Condition: `num > 0` (`1 > 0`) ➔ **True**
+  * `lastDigit = 1 % 10 = 1`
+  * `reversedNum = (2 * 10) + 1 = 21`
+  * `num = Math.floor(1 / 10) = 0`
 
-Iteration 3:
-  x = -1, reversed = -32
-  lastDigit = -1 % 10 = -1
-  x = Math.trunc(-1 / 10) = 0
-  reversed = -32 * 10 + (-1) = -321
+* **Iteration 4:**
+  * Condition: `num > 0` (`0 > 0`) ➔ **False** (Loop terminates)
 
-Result: -321
-```
+* **Post-Loop Processing:**
+  * **Sign Restoration:** Is `x < 0`? (`120 < 0`) ➔ **False**. `reversedNum` remains `21`.
+  * **Bounds Check:** Is `21 > 2147483647` OR `21 < -2147483648`? ➔ **False**.
+* **Final Output:** `21`
 
-### Example 3: x = 120
+---
 
-```
-Iteration 1:
-  x = 120, reversed = 0
-  lastDigit = 120 % 10 = 0
-  x = Math.trunc(120 / 10) = 12
-  reversed = 0 * 10 + 0 = 0
+### Example 2: `x = -123` (Negative Number)
 
-Iteration 2:
-  x = 12, reversed = 0
-  lastDigit = 12 % 10 = 2
-  x = Math.trunc(12 / 10) = 1
-  reversed = 0 * 10 + 2 = 2
+* **Initialization:**
+  * `x = -123`
+  * `reversedNum = 0`
+  * `num = Math.abs(-123) = 123` *(Sign is temporarily stripped)*
 
-Iteration 3:
-  x = 1, reversed = 2
-  lastDigit = 1 % 10 = 1
-  x = Math.trunc(1 / 10) = 0
-  reversed = 2 * 10 + 1 = 21
+* **Iteration 1:**
+  * Condition: `num > 0` (`123 > 0`) ➔ **True**
+  * `lastDigit = 123 % 10 = 3`
+  * `reversedNum = (0 * 10) + 3 = 3`
+  * `num = Math.floor(123 / 10) = 12`
 
-Result: 21
-```
+* **Iteration 2:**
+  * Condition: `num > 0` (`12 > 0`) ➔ **True**
+  * `lastDigit = 12 % 10 = 2`
+  * `reversedNum = (3 * 10) + 2 = 32`
+  * `num = Math.floor(12 / 10) = 1`
 
-### Edge Case: x = 1534236469 (would overflow)
+* **Iteration 3:**
+  * Condition: `num > 0` (`1 > 0`) ➔ **True**
+  * `lastDigit = 1 % 10 = 1`
+  * `reversedNum = (32 * 10) + 1 = 321`
+  * `num = Math.floor(1 / 10) = 0`
 
-```
-This number when reversed becomes 9646324351 which is > INT_MAX
-The algorithm detects overflow during the iteration and returns 0
-```
+* **Iteration 4:**
+  * Condition: `num > 0` (`0 > 0`) ➔ **False** (Loop terminates)
+
+* **Post-Loop Processing:**
+  * **Sign Restoration:** Is `x < 0`? (`-123 < 0`) ➔ **True**. `reversedNum = 321 * -1 = -321`.
+  * **Bounds Check:** Is `-321 > 2147483647` OR `-321 < -2147483648`? ➔ **False**.
+* **Final Output:** `-321`
+
+---
+
+### Example 3: `x = 1534236469` (Overflow Scenario)
+*Note: If we reverse this mathematically, it becomes `9646324351`, which is greater than `INT_MAX` (2147483647).*
+
+* **Initialization:**
+  * `x = 1534236469`
+  * `reversedNum = 0`
+  * `num = Math.abs(1534236469) = 1534236469`
+
+* **Iterations 1 through 10:**
+  * *Fast-forwarding through the extraction and building process...*
+  * The loop extracts digits one by one (`9`, `6`, `4`, `6`, etc.) and builds `reversedNum`.
+  * Upon finishing the final iteration, `reversedNum = 9646324351` and `num = 0`. Loop terminates.
+
+* **Post-Loop Processing:**
+  * **Sign Restoration:** Is `x < 0`? (`1534236469 < 0`) ➔ **False**. `reversedNum` remains `9646324351`.
+  * **Bounds Check:** Is `reversedNum > INT_MAX`? (`9646324351 > 2147483647`) ➔ **True**!
+  * Because the condition is met, the function immediately returns `0`.
+* **Final Output:** `0`
+
 
 # LC 9. Palindrome Number
 
