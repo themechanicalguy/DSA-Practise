@@ -184,25 +184,25 @@ The problem requires reversing the digits of a signed 32-bit integer while handl
 2. **Trailing zeros** - should be removed when reversed
 3. **Integer overflow** - if reversed number exceeds 32-bit range, return 0
 4. **Environment constraint** - cannot use 64-bit integers
+
 ---
 
 ### Refactor 1: Direct Simplification
-
 
 ```javascript
 /**
  * @param {number} x
  * @return {number}
  */
-var reverse = function(x) {
+var reverse = function (x) {
   let reversedNum = 0;
-  
+
   // Math.abs handles the negative sign natively
-  let num = Math.abs(x); 
+  let num = Math.abs(x);
 
   while (num > 0) {
     let lastDigit = num % 10;
-    reversedNum = (reversedNum * 10) + lastDigit;
+    reversedNum = reversedNum * 10 + lastDigit;
     num = Math.floor(num / 10);
   }
 
@@ -210,9 +210,9 @@ var reverse = function(x) {
   if (x < 0) reversedNum *= -1;
 
   // Use defined constants instead of calculating Math.pow on every run
-  const INT_MAX = 2147483647;  // 2^31 - 1
+  const INT_MAX = 2147483647; // 2^31 - 1
   const INT_MIN = -2147483648; // -2^31
-  
+
   // Check bounds
   if (reversedNum > INT_MAX || reversedNum < INT_MIN) {
     return 0;
@@ -230,100 +230,101 @@ var reverse = function(x) {
 Here is a step-by-step dry run of the `Refactor 1: Direct Simplification` approach using three distinct examples, including edge cases.
 
 **Constants used in all runs:**
-* `INT_MAX = 2147483647`
-* `INT_MIN = -2147483648`
+
+- `INT_MAX = 2147483647`
+- `INT_MIN = -2147483648`
 
 ---
 
 ### Example 1: `x = 120` (Positive Number Ending in Zero)
 
-* **Initialization:**
-  * `x = 120`
-  * `reversedNum = 0`
-  * `num = Math.abs(120) = 120`
+- **Initialization:**
+  - `x = 120`
+  - `reversedNum = 0`
+  - `num = Math.abs(120) = 120`
 
-* **Iteration 1:**
-  * Condition: `num > 0` (`120 > 0`) ➔ **True**
-  * `lastDigit = 120 % 10 = 0`
-  * `reversedNum = (0 * 10) + 0 = 0`
-  * `num = Math.floor(120 / 10) = 12`
+- **Iteration 1:**
+  - Condition: `num > 0` (`120 > 0`) ➔ **True**
+  - `lastDigit = 120 % 10 = 0`
+  - `reversedNum = (0 * 10) + 0 = 0`
+  - `num = Math.floor(120 / 10) = 12`
 
-* **Iteration 2:**
-  * Condition: `num > 0` (`12 > 0`) ➔ **True**
-  * `lastDigit = 12 % 10 = 2`
-  * `reversedNum = (0 * 10) + 2 = 2`
-  * `num = Math.floor(12 / 10) = 1`
+- **Iteration 2:**
+  - Condition: `num > 0` (`12 > 0`) ➔ **True**
+  - `lastDigit = 12 % 10 = 2`
+  - `reversedNum = (0 * 10) + 2 = 2`
+  - `num = Math.floor(12 / 10) = 1`
 
-* **Iteration 3:**
-  * Condition: `num > 0` (`1 > 0`) ➔ **True**
-  * `lastDigit = 1 % 10 = 1`
-  * `reversedNum = (2 * 10) + 1 = 21`
-  * `num = Math.floor(1 / 10) = 0`
+- **Iteration 3:**
+  - Condition: `num > 0` (`1 > 0`) ➔ **True**
+  - `lastDigit = 1 % 10 = 1`
+  - `reversedNum = (2 * 10) + 1 = 21`
+  - `num = Math.floor(1 / 10) = 0`
 
-* **Iteration 4:**
-  * Condition: `num > 0` (`0 > 0`) ➔ **False** (Loop terminates)
+- **Iteration 4:**
+  - Condition: `num > 0` (`0 > 0`) ➔ **False** (Loop terminates)
 
-* **Post-Loop Processing:**
-  * **Sign Restoration:** Is `x < 0`? (`120 < 0`) ➔ **False**. `reversedNum` remains `21`.
-  * **Bounds Check:** Is `21 > 2147483647` OR `21 < -2147483648`? ➔ **False**.
-* **Final Output:** `21`
+- **Post-Loop Processing:**
+  - **Sign Restoration:** Is `x < 0`? (`120 < 0`) ➔ **False**. `reversedNum` remains `21`.
+  - **Bounds Check:** Is `21 > 2147483647` OR `21 < -2147483648`? ➔ **False**.
+- **Final Output:** `21`
 
 ---
 
 ### Example 2: `x = -123` (Negative Number)
 
-* **Initialization:**
-  * `x = -123`
-  * `reversedNum = 0`
-  * `num = Math.abs(-123) = 123` *(Sign is temporarily stripped)*
+- **Initialization:**
+  - `x = -123`
+  - `reversedNum = 0`
+  - `num = Math.abs(-123) = 123` _(Sign is temporarily stripped)_
 
-* **Iteration 1:**
-  * Condition: `num > 0` (`123 > 0`) ➔ **True**
-  * `lastDigit = 123 % 10 = 3`
-  * `reversedNum = (0 * 10) + 3 = 3`
-  * `num = Math.floor(123 / 10) = 12`
+- **Iteration 1:**
+  - Condition: `num > 0` (`123 > 0`) ➔ **True**
+  - `lastDigit = 123 % 10 = 3`
+  - `reversedNum = (0 * 10) + 3 = 3`
+  - `num = Math.floor(123 / 10) = 12`
 
-* **Iteration 2:**
-  * Condition: `num > 0` (`12 > 0`) ➔ **True**
-  * `lastDigit = 12 % 10 = 2`
-  * `reversedNum = (3 * 10) + 2 = 32`
-  * `num = Math.floor(12 / 10) = 1`
+- **Iteration 2:**
+  - Condition: `num > 0` (`12 > 0`) ➔ **True**
+  - `lastDigit = 12 % 10 = 2`
+  - `reversedNum = (3 * 10) + 2 = 32`
+  - `num = Math.floor(12 / 10) = 1`
 
-* **Iteration 3:**
-  * Condition: `num > 0` (`1 > 0`) ➔ **True**
-  * `lastDigit = 1 % 10 = 1`
-  * `reversedNum = (32 * 10) + 1 = 321`
-  * `num = Math.floor(1 / 10) = 0`
+- **Iteration 3:**
+  - Condition: `num > 0` (`1 > 0`) ➔ **True**
+  - `lastDigit = 1 % 10 = 1`
+  - `reversedNum = (32 * 10) + 1 = 321`
+  - `num = Math.floor(1 / 10) = 0`
 
-* **Iteration 4:**
-  * Condition: `num > 0` (`0 > 0`) ➔ **False** (Loop terminates)
+- **Iteration 4:**
+  - Condition: `num > 0` (`0 > 0`) ➔ **False** (Loop terminates)
 
-* **Post-Loop Processing:**
-  * **Sign Restoration:** Is `x < 0`? (`-123 < 0`) ➔ **True**. `reversedNum = 321 * -1 = -321`.
-  * **Bounds Check:** Is `-321 > 2147483647` OR `-321 < -2147483648`? ➔ **False**.
-* **Final Output:** `-321`
+- **Post-Loop Processing:**
+  - **Sign Restoration:** Is `x < 0`? (`-123 < 0`) ➔ **True**. `reversedNum = 321 * -1 = -321`.
+  - **Bounds Check:** Is `-321 > 2147483647` OR `-321 < -2147483648`? ➔ **False**.
+- **Final Output:** `-321`
 
 ---
 
 ### Example 3: `x = 1534236469` (Overflow Scenario)
-*Note: If we reverse this mathematically, it becomes `9646324351`, which is greater than `INT_MAX` (2147483647).*
 
-* **Initialization:**
-  * `x = 1534236469`
-  * `reversedNum = 0`
-  * `num = Math.abs(1534236469) = 1534236469`
+_Note: If we reverse this mathematically, it becomes `9646324351`, which is greater than `INT_MAX` (2147483647)._
 
-* **Iterations 1 through 10:**
-  * *Fast-forwarding through the extraction and building process...*
-  * The loop extracts digits one by one (`9`, `6`, `4`, `6`, etc.) and builds `reversedNum`.
-  * Upon finishing the final iteration, `reversedNum = 9646324351` and `num = 0`. Loop terminates.
+- **Initialization:**
+  - `x = 1534236469`
+  - `reversedNum = 0`
+  - `num = Math.abs(1534236469) = 1534236469`
 
-* **Post-Loop Processing:**
-  * **Sign Restoration:** Is `x < 0`? (`1534236469 < 0`) ➔ **False**. `reversedNum` remains `9646324351`.
-  * **Bounds Check:** Is `reversedNum > INT_MAX`? (`9646324351 > 2147483647`) ➔ **True**!
-  * Because the condition is met, the function immediately returns `0`.
-* **Final Output:** `0`
+- **Iterations 1 through 10:**
+  - _Fast-forwarding through the extraction and building process..._
+  - The loop extracts digits one by one (`9`, `6`, `4`, `6`, etc.) and builds `reversedNum`.
+  - Upon finishing the final iteration, `reversedNum = 9646324351` and `num = 0`. Loop terminates.
 
+- **Post-Loop Processing:**
+  - **Sign Restoration:** Is `x < 0`? (`1534236469 < 0`) ➔ **False**. `reversedNum` remains `9646324351`.
+  - **Bounds Check:** Is `reversedNum > INT_MAX`? (`9646324351 > 2147483647`) ➔ **True**!
+  - Because the condition is met, the function immediately returns `0`.
+- **Final Output:** `0`
 
 # LC 9. Palindrome Number
 
@@ -816,104 +817,87 @@ function isPrimeSqrt(n) {
 **Time Complexity**: O(√n)  
 **Space Complexity**: O(1)
 
-## Approach 4: Sieve of Eratosthenes (for multiple queries)
+---
 
-**Intuition**: Precompute primes up to a limit for multiple queries.
+# GCD of Two numbers
+
+**Problem Statement:** Given two integers `N1` and `N2`, find their greatest common divisor.
+
+- The Greatest Common Divisor of any two integers is the largest number that divides both integers.
+
+## Approach 1
 
 ```javascript
-class PrimeChecker {
-  constructor(maxLimit = 1000000) {
-    this.maxLimit = maxLimit;
-    this.sieve = this.generateSieve();
-  }
+function findGcd(n1, n2) {
+  // Initialize gcd to 1
+  let gcd = 1;
 
-  generateSieve() {
-    const sieve = new Array(this.maxLimit + 1).fill(true);
-    sieve[0] = sieve[1] = false;
-
-    for (let i = 2; i * i <= this.maxLimit; i++) {
-      if (sieve[i]) {
-        for (let j = i * i; j <= this.maxLimit; j += i) {
-          sieve[j] = false;
-        }
-      }
+  // Iterate from 1 up to the minimum of n1 and n2
+  for (let i = 1; i <= Math.min(n1, n2); i++) {
+    // Check if i is a common factor of both n1 and n2
+    if (n1 % i === 0 && n2 % i === 0) {
+      // Update gcd to the current common factor i
+      gcd = i;
     }
-
-    return sieve;
   }
 
-  isPrime(n) {
-    if (n < 0 || n > this.maxLimit) {
-      throw new Error(`Number ${n} is out of precomputed range`);
-    }
-    return this.sieve[n];
-  }
-}
-
-// Usage for single number check
-function isPrimeWithSieve(n) {
-  if (n <= 1) return false;
-  if (n <= 3) return true;
-  if (n % 2 === 0 || n % 3 === 0) return false;
-
-  const limit = Math.sqrt(n);
-  for (let i = 5; i <= limit; i += 6) {
-    if (n % i === 0 || n % (i + 2) === 0) return false;
-  }
-
-  return true;
+  // Return the greatest common divisor (gcd)
+  return gcd;
 }
 ```
 
-**Time Complexity**:
+- Time Complexity: O(min(N1, N2)) where N1 and N2 is the input number.
 
-- Precomputation: O(n log log n)
-- Query: O(1)  
-  **Space Complexity**: O(n)
+## Approach 2
 
-## Dry Run of Optimal Approach (Approach 3)
+```javascript
+/**
+ * Eulids Algorithm -  gcd(a,b) = gcd(a-b,b)
+ */
+function gcd(a, b) {
+  if (a === 0) return b;
+  if (b === 0) return a;
 
-Let's test with 3 examples:
-
-### Example 1: n = 17 (Prime)
-
-```
-n = 17
-n <= 1? No
-n <= 3? No
-n % 2 === 0? 17 % 2 = 1 ≠ 0
-n % 3 === 0? 17 % 3 = 2 ≠ 0
-
-Loop: i from 5 to √17 ≈ 4.12 (so loop doesn't execute)
-Return true ✓
-```
-
-### Example 2: n = 15 (Composite)
-
-```
-n = 15
-n <= 1? No
-n <= 3? No
-n % 2 === 0? 15 % 2 = 1 ≠ 0
-n % 3 === 0? 15 % 3 = 0 ✓ → Return false ✓
+  while (a > 0 && b > 0) {
+    if (a > b) {
+      a = a - b;
+    } else {
+      b = b - a;
+    }
+  }
+  return a === 0 ? b : a;
+}
 ```
 
-### Example 3: n = 2 (Edge case - Prime)
-
-```
-n = 2
-n <= 1? No
-n <= 3? Yes → Return true ✓
-```
-
-### Example 4: n = 1 (Edge case - Not prime)
-
-```
-n = 1
-n <= 1? Yes → Return false ✓
-```
+- Time Complexity: O(min(N1, N2)) where N1 and N2 is the input number.
 
 ---
+
+## Given a number n, the task is to return the list/vector of the factorial numbers smaller than or equal to n
+
+**Input:** n = 3
+**Output:** 1 2
+**Explanation:** The first factorial number is 1 which is less than equal to n. The second number is 2 which is less than equal to n,but the third factorial number is 6 which is greater than n. So we print only 1 and 2.
+
+**Input:** n = 6
+**Output:** 1 2 6
+**Explanation:** The first three factorial numbers are less than equal to n but the fourth factorial number 24 is greater than n. So we print only first three factorial numbers.
+
+```javascript
+//https://www.geeksforgeeks.org/problems/find-all-factorial-numbers-less-than-or-equal-to-n3548/0
+
+function getFactorialNumbersIterative(n) {
+  let result = [],
+    fact = 1,
+    i = 1;
+  while (fact <= n) {
+    result.push(fact);
+    i++;
+    fact *= i;
+  }
+  return result;
+}
+```
 
 # Learn Basic Recurssion
 
@@ -981,72 +965,7 @@ function pureRecurssion(arr) {
 pureRecurssion([1, 2, 3, 4, 5]);
 ```
 
-## Write a function to find factorial of a number using recurssion
-
-```javascript
-/**
- * 5! = 5 * 4 * 3 * 2 * 1
- * 5! = 5 * 4!
- * recurrence relation = f(n) = n * f(n-1)
- * Base Case = N == 0, return 1;
- */
-
-function fact(N) {
-  //base case
-  if (N === 0) return 1;
-  //recurrence relation
-  let factorial = N * fact(N - 1);
-  return factorial;
-}
-
-const res = fact(5);
-console.log(res);
-```
-
-## Given a number n, the task is to return the list/vector of the factorial numbers smaller than or equal to n
-
-```javascript
-//https://www.geeksforgeeks.org/problems/find-all-factorial-numbers-less-than-or-equal-to-n3548/0
-
-// Input: n = 3
-// Output: 1 2
-// Explanation: The first factorial number is 1 which is less than equal to n. The second number is 2 which is less than equal to n,but the third factorial number is 6 which is greater than n. So we print only 1 and 2.
-
-// Input: n = 6
-// Output: 1 2 6
-// Explanation: The first three factorial numbers are less than equal to n but the fourth factorial number 24 is greater than n. So we print only first three factorial numbers.
-
-// Approach 1: Recursive
-function factorialNumbers(n) {
-  const result = [];
-  const getFactorialNumbers = (n, fact = 1, i = 1) => {
-    if (fact > n) return result; // Base case: stop when factorial exceeds n
-
-    result.push(fact); // Add the factorial to the result list
-
-    if (fact * (i + 1) > n) return result; // Ensure the next factorial does not exceed n
-
-    return getFactorialNumbers(n, fact * (i + 1), i + 1); // Recursive call
-  };
-
-  return getFactorialNumbers(n);
-}
-
-// Approach 2: Iterative
-function getFactorialNumbersIterative(n) {
-  let result = [],
-    fact = 1,
-    i = 1;
-  while (fact <= n) {
-    result.push(fact);
-    i++;
-    fact *= i;
-  }
-  return result;
-}
-```
-
-## Write a function to return 8th fibonacci number
+## 5 Write a function to return 8th fibonacci number
 
 ```javascript
 // 0,1,1,2,3,5,8,13,21,34 ==> Output 13
@@ -1093,7 +1012,33 @@ var fib = function (n) {
 };
 ```
 
-## Given a string, print the string in reverse order.
+## 6 Reverse a given Array
+
+**Problem Statement:** You are given an array. The task is to reverse the array and print it.
+
+```javascript
+function reverseArrayRecursive(arr, start = 0, end = arr.length - 1) {
+  // Base case: If start pointer meets or crosses end pointer, we are done
+  if (start >= end) {
+    return arr;
+  }
+
+  // Swap the elements
+  let temp = arr[start];
+  arr[start] = arr[end];
+  arr[end] = temp;
+
+  // Recursive call: move start right by 1, move end left by 1
+  return reverseArrayRecursive(arr, start + 1, end - 1);
+}
+
+// Example usage
+let array2 = [10, 20, 30, 40];
+console.log("Recursive:", reverseArrayRecursive(array2));
+// Output: [40, 30, 20, 10]
+```
+
+## 7 Given a string, print the string in reverse order.
 
 ```javascript
 function reverseString(str, start, end) {
@@ -1112,7 +1057,7 @@ let res = reverseString(str, 0, str.length - 1);
 console.log(res);
 ```
 
-## Given a string, check if it is palindrome or not.
+## 8 Given a string, check if it is palindrome or not.
 
 ```javascript
 function palindromeCheck(str, s, e) {
@@ -1125,79 +1070,7 @@ let str = "abba";
 console.log(palindromeCheck(str, 0, str.length - 1));
 ```
 
-## You have been given a no. of stairs..
-
-```javascript
-/**
- * You have been given a no. of stairs. Initially, you are at the 0th stair, and you need to reach the Nth stair. Each time you can either climb one step or two steps. you are supposed to return the no. of distinct ways in which you can climb from 0th step to Nth step.
- */
-
-function countDistinctWayToClimb(N) {
-  //base case
-  if (N < 0) return 0;
-  if (N == 0) return 1;
-
-  //recurence relation
-  return countDistinctWayToClimb(N - 1) + countDistinctWayToClimb(N - 2);
-}
-
-console.log(countDistinctWayToClimb(4));
-```
-
-## Given a string and a character. find the last occurence of the char
-
-```javascript
-function getlastOccurence(str, i, char, ans) {
-  if (i >= str.length) return ans;
-  if (str[i] == char) ans = i;
-  return getlastOccurence(str, i + 1, char, ans);
-}
-
-function lastOccurence(str, char) {
-  let ans;
-  let res = getlastOccurence(str, 0, char, ans);
-  return res + 1;
-}
-
-lastOccurence("adajaafferetatajilkillljjim", "m");
-
-lastOccurence("adajaafferetatajilkillljjim", "m");
-
-lastOccurence("adaj", "a");
-```
-
-## given a number print all its digits in words
-
-```javascript
-//
-// 412 i.e four one two
-
-function sayDigits(N) {
-  //0
-  let arr = [
-    "zero",
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-    "ten",
-  ];
-  if (N === 0) return; //FFT
-  let digit = N % 10; //4
-
-  sayDigits(Number.parseInt(N / 10)); //0
-  console.log(arr[digit]);
-}
-
-sayDigits(412);
-```
-
-## Given a 2, base , exp numbers, return the result
+## 9 Given a 2, base , exp numbers, return the result
 
 ```javascript
 // i.e 3,3 = 9
